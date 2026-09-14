@@ -4,9 +4,10 @@
    arte-library-line.css + arte-library-docs.css 재사용, 여기서는 카드형만 추가.
    · 갱신(fileKey weJUFzS3ekDRZrzokWEe3e / node 19492:5156, 2026-09-14): 카드 3종
      - 단일 영상(.vidcard-body, 메타 표기) / 재생목록 미리보기(.vidcard-btn, 아웃라인 버튼) /
-     재생목록 묶음(.vidcard-thumb--collage + .vidcard-btn--fill, 재생시간 대신 "동영상 N개")
+     재생목록 묶음(.vidcard-thumb--collage, 재생시간 대신 "동영상 N개")
      로 구성이 바뀌어 각 행마다 3종이 한 번씩만 나오도록 재배치. 재생목록 묶음형 썸네일의
      기존 "회색 사각형 2장" 목업을 실제 흐린 배경 + 실사 썸네일 콜라주로 교체.
+     "전체 재생목록 보기" 버튼은 카드 종류와 무관하게 기본 아웃라인 / 호버 시 검정 채움으로 통일.
    ========================================================================== */
 
 /* 결과 카드 — 3열 그리드 */
@@ -64,12 +65,6 @@
 .vidcard:hover .vidcard-btn { background: var(--ink); color: #fff; }
 .vidcard:hover .vidcard-btn-icon .ic-default { opacity: 0; }
 .vidcard:hover .vidcard-btn-icon .ic-hover { opacity: 1; }
-
-/* 재생목록 묶음형 카드의 버튼은 기본 상태부터 채워짐 (Figma node 19492:5326) */
-.vidcard-btn--fill { background: var(--ink); color: #fff; }
-.vidcard-btn--fill .vidcard-btn-icon .ic-default { opacity: 0; }
-.vidcard-btn--fill .vidcard-btn-icon .ic-hover { opacity: 1; }
-.vidcard:hover .vidcard-btn--fill { background: var(--blue); }
 
 /* ---- 모바일 ------------------------------------------------------------- */
 
