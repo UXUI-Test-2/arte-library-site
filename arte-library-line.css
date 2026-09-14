@@ -589,34 +589,10 @@ h1, h2, h3, h4, p { margin: 0; }
 .news-col { display: flex; flex-direction: column; gap: 40px; align-self: stretch; }
 
 .ev { display: block; }
-.ev-visual {
-  position: relative; background: #a1e7e0; aspect-ratio: 700 / 240; overflow: hidden;
-}
-.ev-photo {
-  position: absolute; left: 50%; top: 17%; width: 57%; height: auto;
-  mix-blend-mode: color-burn; opacity: 0.8;
-}
-/* Figma: 사진 위에 블랙 레이어를 덮고 그 위에 데코 그래픽을 얹는다 */
-.ev-visual::before { content: ''; position: absolute; inset: 0; background: #000; }
-.ev-deco { position: absolute; left: -43%; top: -19%; width: 184%; height: auto; }
-.ev-box {
-  position: absolute; left: 9.6%; top: 10.8%; width: 31.7%; height: 78%;
-  background: #09412e; padding: 4% 3%;
-  display: flex; flex-direction: column; justify-content: space-between;
-}
-.ev-rule { width: 81%; height: 3px; background: #7b8c61; }
-.ev-box-t { margin-top: 6%; font-size: clamp(12px, 1.48vw, 28px); font-weight: 500; line-height: 1.15; color: #7b8c61; }
-.ev-box-s { margin-top: 4%; font-size: clamp(12px, 1.48vw, 28px); font-weight: 500; color: #7b8c61; }
-.ev-box-api { font-size: clamp(7px, 0.74vw, 14px); font-weight: 500; color: #fff; }
-.ev-date { position: absolute; left: 57%; top: 12%; color: #fff; }
-.ev-yr { font-size: clamp(14px, 1.67vw, 32px); font-weight: 600; line-height: 1; }
-.ev-d1, .ev-d2 {
-  display: flex; align-items: center; gap: 6px;
-  font-family: 'Paperlogy', 'Pretendard', sans-serif; font-weight: 600;
-  font-size: clamp(32px, 4.28vw, 82px); line-height: 1.1; letter-spacing: -0.08em;
-}
-.ev-d1 img { width: clamp(14px, 1.83vw, 35px); height: auto; }
-.ev-line { width: 84%; height: 7px; background: #fff; margin: 2% 0; }
+/* Figma 노드 20561:6427("알림판")을 이미지로 그대로 캡처해서 쓴다 — 그리드 패턴·컬러번 블렌드·
+   날짜 숫자까지 전부 이미지 한 장에 포함되어 있어 레이어별 CSS 재현보다 실측 캡처가 정확하다 */
+.ev-visual { aspect-ratio: 700 / 240; overflow: hidden; }
+.ev-visual-img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .ev-body { display: flex; flex-direction: column; gap: 10px; padding: 24px 24px 24px 40px; border: 1px solid var(--ink); border-top: 0; }
 .ev-badges { display: flex; gap: 10px; }
 .ev-t { font-size: clamp(18px, 1.35vw, 26px); font-weight: 600; line-height: 1.5; }
