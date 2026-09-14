@@ -56,6 +56,25 @@
   }
 
   /* --------------------------------------------------------------------
+     1-c. 히어로 백그라운드 스크롤 페이드 — 스크롤할수록 .kv-bg(그리드+웨이브 배경)가
+     옅어져서 흰 배경(.kv 자체 배경색)으로 자연스럽게 이어지고, 그 아래 섹션과 연결된다.
+     루프 애니메이션(kv-bg-wave)과는 별개로 순수 스크롤 위치에 1:1로 따라붙는 값이라
+     reduced-motion과 무관하게 항상 켜둔다.
+     -------------------------------------------------------------------- */
+  function kvBgFade() {
+    var kv = document.querySelector('.kv');
+    var kvBg = kv && kv.querySelector('.kv-bg');
+    if (!kv || !kvBg) return;
+    function update() {
+      var fadeDistance = kv.offsetHeight || 1;
+      var progress = Math.min(1, Math.max(0, window.scrollY / fadeDistance));
+      kvBg.style.opacity = 1 - progress;
+    }
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+  }
+
+  /* --------------------------------------------------------------------
      2. 서브페이지 타이틀 등장 모션 (영상 · 추천)
      참고: uxui-test-1.github.io/arte-main/arte-location.html
      .title-reveal 스코프: 브레드크럼은 정적으로 두고, h1과 (있다면) 상단 분류
@@ -177,6 +196,7 @@
   document.addEventListener('DOMContentLoaded', function () {
     heroReveal();
     heroShrink();
+    kvBgFade();
     titleReveal();
     scrollReveal();
     pageTransitions();
