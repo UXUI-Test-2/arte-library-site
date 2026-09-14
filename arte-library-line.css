@@ -146,14 +146,27 @@ h1, h2, h3, h4, p { margin: 0; }
 }
 .mh-flag { width: 24px; height: 16px; flex: none; }
 
-.hd { background: var(--white); }
+/* 스크롤 시 헤더가 좁아지지만(참고: uxui-test-1.github.io/arte-main), 로고는 아이콘 마크로
+   바꾸지 않고 아르떼라이브러리 워드마크 그대로 유지한다 — arte-header.js가 is-scrolled 토글 */
+.hd { background: var(--white); position: sticky; top: 0; z-index: 50; }
 .hd-in {
   width: min(1920px, 100%);
   margin-inline: auto;
   padding: 30px var(--side);
   display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  transition: padding 0.3s ease;
 }
+.hd.is-scrolled .hd-in { padding-top: 16px; padding-bottom: 16px; }
 .hd-logo img { width: 199px; height: 28px; object-fit: contain; }
+
+@media (min-width: 769px) {
+  .gnb, .hd-account { transition: opacity 0.3s ease; }
+  .hd.is-scrolled .gnb,
+  .hd.is-scrolled .hd-account { opacity: 0; pointer-events: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hd-in, .gnb, .hd-account { transition: none; }
+}
 
 .gnb { display: flex; align-items: center; }
 .gnb a {
