@@ -471,21 +471,29 @@ h1, h2, h3, h4, p { margin: 0; }
 .reco-img { height: clamp(120px, 10.6vw, 204px); overflow: hidden; background: var(--white); }
 .reco-img img { width: 100%; height: 100%; object-fit: contain; }
 .reco-img .reco-img--cover { object-fit: cover; }
-.reco-body { padding: 28px; display: flex; flex-direction: column; gap: 40px; background: var(--white); }
+/* Figma는 더보기가 하단이 아니라 텍스트 옆(우측)에 나란히 있다 — row로 수정 */
+.reco-body { padding: 28px; display: flex; gap: 40px; align-items: flex-start; background: var(--white); }
+.reco-body > div:first-child { flex: 1 1 0; min-width: 0; }
 .reco-t { font-size: clamp(20px, 1.88vw, 36px); font-weight: 500; line-height: 1.5; }
 .reco-d { margin-top: 2px; font-size: clamp(14px, 0.94vw, 18px); font-weight: 500; color: var(--gray-888); line-height: 1.5; }
-/* 북 큐레이션 패널(항상 검정)과 같은 톤으로, 호버 시 텍스트 패널이 검정+흰 글씨로 어두워진다 —
-   지역별 정보 리스트 행의 호버(배경 검정 전환) 패턴과 동일 규칙 */
+.link-more { flex: none; }
+.link-more svg { width: 24px; height: 24px; transform: rotate(-90deg); }
+/* 북 큐레이션 패널(항상 검정)과 같은 톤으로, 호버 시 텍스트 패널이 검정+흰 글씨로 어두워지고
+   더보기 화살표만 지역별 정보와 동일한 레드(#FF2268)로 바뀐다 */
 .reco:hover .reco-body { background: var(--ink); }
-.reco:hover .reco-t { color: #fff; }
+.reco:hover .reco-t,
+.reco:hover .link-more { color: #fff; }
+.reco:hover .link-more svg { color: #ff2268; }
 
+/* 기본은 흰 배경 + 검정 테두리(지역 발간물과 동일) — 검정 배경은 호버 상태였다 */
 .bookcur {
   flex: 1 1 0; min-width: 0; align-self: stretch;
-  background: var(--ink); color: #fff;
+  background: var(--white); color: var(--ink); border: 1px solid var(--ink);
   display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between;
   padding: clamp(32px, 4.17vw, 80px) clamp(24px, 2.08vw, 40px);
   overflow: hidden;
 }
+.bookcur:hover { background: var(--ink); color: #fff; }
 .bookcur-top { display: flex; align-items: flex-start; gap: 24px; width: 100%; }
 .bookcur-left { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
 .bookcur-label { font-size: clamp(14px, 0.94vw, 18px); font-weight: 500; color: var(--gray-888); }
@@ -495,7 +503,10 @@ h1, h2, h3, h4, p { margin: 0; }
   font-family: 'Paperlogy', 'Pretendard', sans-serif; font-weight: 600;
   font-size: clamp(26px, 2.5vw, 48px); line-height: 1; letter-spacing: -0.02em; color: #fff;
 }
-.bookcur-arw { flex: none; width: 40px; height: 40px; transform: rotate(-90deg); filter: brightness(0) invert(1); }
+/* icon-arrow-md.svg 원본 stroke가 #FF2268 — 기본은 검정으로 덮어쓰고, 호버 시 필터를 걷어
+   원래의 레드를 그대로 드러낸다 (지역별 정보/추천 카드와 동일한 호버 레드) */
+.bookcur-arw { flex: none; width: 40px; height: 40px; transform: rotate(-90deg); filter: brightness(0); }
+.bookcur:hover .bookcur-arw { filter: none; }
 
 .bookcur-books { display: flex; gap: 28px; width: 100%; }
 .bc { position: relative; flex: 0 0 clamp(140px, 12.97vw, 249px); aspect-ratio: 249 / 341; overflow: hidden; }
@@ -596,6 +607,7 @@ h1, h2, h3, h4, p { margin: 0; }
 .ev-rule { width: 81%; height: 3px; background: #7b8c61; }
 .ev-box-t { margin-top: 6%; font-size: clamp(12px, 1.48vw, 28px); font-weight: 500; line-height: 1.15; color: #7b8c61; }
 .ev-box-s { margin-top: 4%; font-size: clamp(12px, 1.48vw, 28px); font-weight: 500; color: #7b8c61; }
+.ev-box-api { font-size: clamp(7px, 0.74vw, 14px); font-weight: 500; color: #fff; }
 .ev-date { position: absolute; left: 57%; top: 12%; color: #fff; }
 .ev-yr { font-size: clamp(14px, 1.67vw, 32px); font-weight: 600; line-height: 1; }
 .ev-d1, .ev-d2 {
