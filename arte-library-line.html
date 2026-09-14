@@ -229,13 +229,15 @@
       <!-- PC: 리스트 + 지역 발간물 -->
       <div class="rg-body only-pc">
         <div class="rg-list">
-          <a class="rg-row rg-row--on" href="arte-library-region.html">
+          <a class="rg-row" href="arte-library-region.html">
             <div class="rg-row-top">
               <div class="rg-row-label">
                 <span class="rg-num">01</span>
                 <h3 class="rg-t">프로그램</h3>
               </div>
-              <img class="rg-arw" src="assets/icon-arrow-white.svg" alt="" width="40" height="40">
+              <svg class="rg-arw" width="40" height="40" viewBox="0 0 72 72" fill="none" aria-hidden="true">
+                <path d="M36 12L36 60M18 42L36 60L54 42" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
             </div>
             <p class="rg-d">지역별 문화예술교육 프로그램 정보를 검색하고 조회할 수 있습니다.</p>
           </a>
@@ -245,7 +247,9 @@
                 <span class="rg-num">02</span>
                 <h3 class="rg-t">운영단체</h3>
               </div>
-              <img class="rg-arw" src="assets/icon-arrow-black.svg" alt="" width="40" height="40">
+              <svg class="rg-arw" width="40" height="40" viewBox="0 0 72 72" fill="none" aria-hidden="true">
+                <path d="M36 12L36 60M18 42L36 60L54 42" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
             </div>
             <p class="rg-d">전국의 문화예술교육을 실행하는 단체·시설·기관 정보를 제공합니다.</p>
           </a>
@@ -258,7 +262,9 @@
                 <span class="rg-num">03</span>
                 <h3 class="rg-t">지역 발간물</h3>
               </div>
-              <img class="rg-arw" src="assets/icon-arrow-black.svg" alt="" width="40" height="40">
+              <svg class="rg-arw" width="40" height="40" viewBox="0 0 72 72" fill="none" aria-hidden="true">
+                <path d="M36 12L36 60M18 42L36 60L54 42" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
             </div>
             <p class="rg-d">전국의 문화예술교육 운영단체가 발간한 지역별 자료를 확인하실 수 있습니다.</p>
           </a>
@@ -324,53 +330,55 @@
         <h2 class="sec-title">추천</h2>
       </div>
 
-      <div class="reco-grid">
-        <a class="reco" href="#">
-          <div class="reco-img"><img src="assets/reco-curation.svg" alt="" loading="lazy"></div>
-          <div class="reco-body">
-            <div>
-              <h3 class="reco-t">주제별 큐레이션</h3>
-              <p class="reco-d">아르떼라이브러리의 다양한 주제별 추천자료를 서비스합니다.</p>
+      <div class="reco-row">
+        <div class="reco-grid">
+          <a class="reco" href="#">
+            <div class="reco-img"><img class="reco-img--cover" src="assets/reco-curation.svg" alt="" loading="lazy"></div>
+            <div class="reco-body">
+              <div>
+                <h3 class="reco-t">주제별 큐레이션</h3>
+                <p class="reco-d">아르떼라이브러리의 다양한 주제별 추천자료를 서비스합니다.</p>
+              </div>
+              <span class="link-more">더보기 <img src="assets/icon-arrow-sm.svg" alt="" width="24" height="24"></span>
             </div>
-            <span class="link-more">더보기 <img src="assets/icon-arrow-sm.svg" alt="" width="24" height="24"></span>
-          </div>
-        </a>
+          </a>
 
-        <a class="reco" href="#">
-          <div class="reco-img"><img class="reco-img--cover" src="assets/reco-latest.png" alt="" loading="lazy"></div>
-          <div class="reco-body">
-            <div>
-              <h3 class="reco-t">최신·인기 자료</h3>
-              <p class="reco-d">아르떼라이브러리의 최신 자료와 인기 자료를 소개합니다.</p>
+          <a class="reco" href="#">
+            <div class="reco-img"><img class="reco-img--cover" src="assets/reco-latest.png" alt="" loading="lazy"></div>
+            <div class="reco-body">
+              <div>
+                <h3 class="reco-t">최신·인기 자료</h3>
+                <p class="reco-d">아르떼라이브러리의 최신 자료와 인기 자료를 소개합니다.</p>
+              </div>
+              <span class="link-more">더보기 <img src="assets/icon-arrow-sm.svg" alt="" width="24" height="24"></span>
             </div>
-            <span class="link-more">더보기 <img src="assets/icon-arrow-sm.svg" alt="" width="24" height="24"></span>
-          </div>
-        </a>
-      </div>
-
-      <div class="bookcur">
-        <div class="bookcur-left">
-          <div>
-            <p class="bookcur-label">북 큐레이션</p>
-            <p class="bookcur-tag">#미래/AI</p>
-            <img class="bookcur-arw" src="assets/icon-arrow-md.svg" alt="" width="40" height="40">
-          </div>
-          <p class="bookcur-date">2026. 07.</p>
+          </a>
         </div>
 
-        <div class="bookcur-books">
-          <a class="bc" href="#">
-            <img src="assets/bookcur-01.png" alt="예술과 인공지능 표지" loading="lazy">
-            <div class="bc-body"><h4>예술과 인공지능</h4><p>이재박, 2021</p></div>
-          </a>
-          <a class="bc" href="#">
-            <img src="assets/bookcur-02.png" alt="AI 시대의 사진 표지" loading="lazy">
-            <div class="bc-body"><h4>AI 시대의 사진</h4><p>김경훈, 2026</p></div>
-          </a>
-          <a class="bc" href="#">
-            <img src="assets/bookcur-03.png" alt="AI, 예술의 미래를 묻다 표지" loading="lazy">
-            <div class="bc-body"><h4>AI, 예술의 미래를 묻다</h4><p>장병탁, 2024</p></div>
-          </a>
+        <div class="bookcur">
+          <div class="bookcur-top">
+            <div class="bookcur-left">
+              <p class="bookcur-label">북 큐레이션</p>
+              <p class="bookcur-date">2026. 07.</p>
+              <p class="bookcur-tag">#미래/AI</p>
+            </div>
+            <img class="bookcur-arw" src="assets/icon-arrow-md.svg" alt="" width="40" height="40">
+          </div>
+
+          <div class="bookcur-books">
+            <a class="bc" href="#">
+              <img src="assets/bookcur-01.png" alt="예술과 인공지능 표지" loading="lazy">
+              <div class="bc-body"><h4>예술과 인공지능</h4><p>이재박, 2021</p></div>
+            </a>
+            <a class="bc" href="#">
+              <img src="assets/bookcur-02.png" alt="AI 시대의 사진 표지" loading="lazy">
+              <div class="bc-body"><h4>AI 시대의 사진</h4><p>김경훈, 2026</p></div>
+            </a>
+            <a class="bc" href="#">
+              <img src="assets/bookcur-03.png" alt="AI, 예술의 미래를 묻다 표지" loading="lazy">
+              <div class="bc-body"><h4>AI, 예술의 미래를 묻다</h4><p>장병탁, 2024</p></div>
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -429,7 +437,6 @@
               <div class="ev-rule" aria-hidden="true"></div>
               <p class="ev-box-t">7월<br>초성 퀴즈<br>이벤트</p>
               <p class="ev-box-s">arte event</p>
-              <p class="ev-box-api">GET /api/v1/archive/videos</p>
             </div>
             <div class="ev-date">
               <p class="ev-yr">26’</p>

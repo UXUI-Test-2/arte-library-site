@@ -16,21 +16,70 @@
 }
 
 :root {
-  --blue: #0078d7;          /* KV 헤드라인 */
-  --blue-badge: #0428da;    /* 배지·강조 */
-  --blue-dot: #256ef4;      /* 캐러셀 활성 도트 */
-  --ink: #000000;
-  --ink-soft: #1e2124;
-  --gray-888: #888888;
-  --gray-999: #999999;
-  --gray-555: #555555;
-  --gray-line: #cdd1d5;
-  --gray-bg: #f3f4f6;
+  /* ---- Primitive/Color (Figma dsg_01_color, 20543:2372 · v1.0 2026-09-14) ---- */
+  --gray-0: #ffffff;
+  --gray-50: #f3f3f3;
+  --gray-200: #d9d9d9;
+  --gray-400: #999999;
+  --gray-600: #555555;
+  --gray-700: #333333;
+  --gray-800: #1e2124;
+  --gray-1000: #000000;
+  --brand-primary: #007ade;   /* Blue/500 — Text/Accent · Brand/Primary */
+  --brand-light: #eff6ff;    /* Blue/50 */
+  --accent-red: #ed1a3c;     /* Red/500 (= Danger) */
+  --accent-pink: #ff2268;    /* Pink/500 */
+  --accent-yellow: #eab308;  /* Yellow/500 */
+  --accent-green: #22c55e;   /* Green/500 */
+  --accent-purple: #8b5cf6;  /* Purple/500 */
+  --navy: #07102f;
+  --navy-text: #b8c4e0;
+
+  /* ---- Semantic/Color — 기존 변수명 유지, 값만 v1.0 기준으로 정리 ----
+     2026-09-14: --blue-badge(#0428da)/--blue-dot(#256ef4)은 Figma dsg_01_color에
+     별도 정의가 없다 — 단일 Brand/Primary(#007ADE)로 통합 (다색 브랜드블루 폐기) */
+  --blue: var(--brand-primary);        /* KV 헤드라인 */
+  --blue-badge: var(--brand-primary);  /* 배지·강조 */
+  --blue-dot: var(--brand-primary);    /* 캐러셀 활성 도트 */
+  --ink: var(--gray-1000);
+  --ink-soft: var(--gray-800);
+  --gray-888: #888888;                 /* Figma dsg_01엔 없는 보조 톤 — 태그/메타용으로 유지 */
+  --gray-999: var(--gray-400);
+  --gray-555: var(--gray-600);
+  --gray-line: #cdd1d5;                /* 기존 헤어라인 — Figma Border/Default(#D9D9D9)와 별개로 유지 */
+  --gray-bg: var(--gray-50);           /* BG/Subtle */
   --gray-bg2: #efefef;
   --gray-thumb: #e8e8e8;
-  --surface-mast: #eef2f7;
+  --surface-mast: #eef2f7;             /* BG/Masthead */
   --surface-ft: #f4f5f6;
-  --white: #ffffff;
+  --white: var(--gray-0);
+
+  /* ---- Spacing scale (Figma dsg_03_spacing, 20543:2660) ---- */
+  --spacing-1: 4px;   --spacing-2: 8px;   --spacing-3: 12px;  --spacing-4: 16px;
+  --spacing-5: 20px;  --spacing-6: 24px;  --spacing-7: 28px;  --spacing-8: 32px;
+  --spacing-9: 40px;  --spacing-10: 48px; --spacing-11: 64px; --spacing-12: 80px;
+  --spacing-13: 120px;
+  --spacing-none: var(--spacing-1);  --spacing-xs: var(--spacing-2);
+  --spacing-sm: var(--spacing-3);    --spacing-md: var(--spacing-4);
+  --spacing-lg: var(--spacing-6);    --spacing-xl: var(--spacing-8);
+  --spacing-2xl: var(--spacing-9);   --spacing-3xl: var(--spacing-10);
+  --spacing-4xl: var(--spacing-11);  --spacing-5xl: var(--spacing-12);
+  --spacing-6xl: var(--spacing-13);
+
+  /* ---- Radius scale ---- */
+  --radius-none: 0; --radius-2: 2px; --radius-xs: 4px; --radius-7: 7px;
+  --radius-8: 8px; --radius-10: 10px; --radius-sm: 12px; --radius-md: 16px;
+  --radius-lg: 18px; --radius-xl: 20px; --radius-2xl: 24px; --radius-26: 26px;
+  --radius-3xl: 32px; --radius-4xl: 40px; --radius-full: 999px;
+
+  /* ---- Effects (Figma dsg_05_effects_variables, 20543:3182) ---- */
+  --shadow-card: 0 2px 8px 0 rgba(0, 0, 0, .08);
+  --shadow-dropdown: 0 4px 12px 0 rgba(0, 0, 0, .08);
+  --shadow-hover: 0 4px 16px 0 rgba(0, 0, 0, .08);
+  --shadow-modal: 0 4px 24px 0 rgba(0, 0, 0, .12);
+  --shadow-toast: 0 8px 32px 0 rgba(0, 0, 0, .12);
+  --shadow-overlay: 0 12px 40px 0 rgba(0, 0, 0, .16);
+  --shadow-inner-subtle: inset 0 1px 2px 0 rgba(0, 0, 0, .06);
 
   --side: clamp(20px, 8.33vw, 160px);   /* Figma px-160 */
   --content: 1600px;
@@ -143,19 +192,38 @@ h1, h2, h3, h4, p { margin: 0; }
   color: var(--blue);
   font-weight: 600;
   word-break: keep-all;
+  transition: font-size 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.kv-search { margin-top: clamp(40px, 6.25vw, 120px); display: flex; flex-direction: column; gap: 32px; }
+.kv-search {
+  margin-top: clamp(40px, 6.25vw, 120px);
+  display: flex; flex-direction: column; gap: 32px;
+  transition: margin-top 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
 
 .kvs {
   display: flex; align-items: center; gap: clamp(16px, 2.5vw, 48px);
   border-bottom: 6px solid var(--ink);
   padding: 20px 0 26px;
+  transition: padding 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .kvs input {
   flex: 1; min-width: 0; border: 0; outline: 0; background: none;
   font-family: inherit; font-weight: 600;
   font-size: clamp(18px, 2.29vw, 44px); line-height: 1.2;
   letter-spacing: -0.02em; color: var(--ink);
+  transition: font-size 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* 축소 인터렉션 — Figma 노드 20516:23920 "축소인터렉션" 1:1
+   타이틀 100→80px, kv-search 여백 120→60px, 검색어 44→36px, 입력창 하단 패딩 26→16px.
+   letter-spacing은 em 단위라 폰트 크기에 자동 비례하므로 값 변경 불필요. */
+.kv.is-compact .kv-title { font-size: clamp(20px, 4.17vw, 80px); }
+.kv.is-compact .kv-search { margin-top: clamp(20px, 3.13vw, 60px); }
+.kv.is-compact .kvs { padding: 20px 0 16px; }
+.kv.is-compact .kvs input { font-size: clamp(15px, 1.88vw, 36px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .kv-title, .kv-search, .kvs, .kvs input { transition: none; }
 }
 .kvs input::placeholder { color: var(--ink); }
 .kvs-go {
@@ -330,7 +398,7 @@ h1, h2, h3, h4, p { margin: 0; }
    Figma 'main'(20425:126638 PC / 20425:138866 모바일) 2026-09-11 갱신
    ========================================================================== */
 
-.rg-body { margin-top: 40px; display: flex; gap: 40px; align-items: stretch; }
+.rg-body { margin-top: 40px; display: flex; gap: 0; align-items: stretch; }
 .rg-list { flex: 0 0 clamp(320px, 33.5vw, 644px); display: flex; flex-direction: column; }
 .rg-row {
   flex: 1;
@@ -340,25 +408,26 @@ h1, h2, h3, h4, p { margin: 0; }
   background: var(--white);
 }
 .rg-row:first-child { border-top: 1px solid var(--ink); }
-.rg-row--on { background: var(--ink); }
 .rg-row-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
 .rg-row-label { display: flex; flex-direction: column; gap: 4px; }
 .rg-num { font-size: clamp(14px, 1.04vw, 20px); font-weight: 500; color: var(--gray-888); }
 .rg-t { font-size: clamp(20px, 2.08vw, 40px); font-weight: 600; line-height: 1.5; }
-.rg-row--on .rg-t { color: #fff; }
 .rg-d { font-size: clamp(14px, 1.04vw, 20px); font-weight: 500; color: var(--gray-888); }
-.rg-arw { flex: none; width: 40px; height: auto; transform: rotate(-90deg); }
+.rg-arw { flex: none; width: 40px; height: auto; transform: rotate(-90deg); color: var(--ink); }
 .rg-row:hover { background: var(--ink); }
 .rg-row:hover .rg-t { color: #fff; }
-.rg-row:hover .rg-arw { filter: brightness(0) invert(1); }
 
 .rg-pub {
   flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: clamp(24px, 3.13vw, 60px);
   border: 1px solid var(--ink); padding: clamp(20px, 2.08vw, 40px);
 }
 .rg-pub-head { display: flex; flex-direction: column; gap: 12px; }
+.rg-pub:hover { background: var(--ink); }
 .rg-pub:hover .rg-t,
-.rg-pub:hover .rg-d { color: var(--blue-badge); }
+.rg-pub:hover .rg-pub-t { color: #fff; }
+
+.rg-row:hover .rg-arw,
+.rg-pub:hover .rg-arw { color: #ff2268; }
 
 .rg-pub-grid { display: flex; gap: 40px; }
 .rg-pub-card { flex: 1 1 0; min-width: 0; display: flex; gap: 12px; align-items: center; }
@@ -395,33 +464,40 @@ h1, h2, h3, h4, p { margin: 0; }
    추천 + 북 큐레이션
    ========================================================================== */
 
-.reco-grid { margin-top: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+/* 좌측(주제별 큐레이션/최신·인기 자료 2단 스택) + 우측(북 큐레이션, 1단 통높이) 좌우 배치 — Figma 20516:21364 1:1 */
+.reco-row { margin-top: 40px; display: flex; gap: 40px; align-items: stretch; }
+.reco-grid { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 40px; }
 .reco { display: flex; flex-direction: column; border: 1px solid var(--ink); overflow: hidden; }
 .reco-img { height: clamp(120px, 10.6vw, 204px); overflow: hidden; background: var(--white); }
 .reco-img img { width: 100%; height: 100%; object-fit: contain; }
 .reco-img .reco-img--cover { object-fit: cover; }
-.reco-body { padding: 28px; display: flex; flex-direction: column; gap: 40px; }
+.reco-body { padding: 28px; display: flex; flex-direction: column; gap: 40px; background: var(--white); }
 .reco-t { font-size: clamp(20px, 1.88vw, 36px); font-weight: 500; line-height: 1.5; }
 .reco-d { margin-top: 2px; font-size: clamp(14px, 0.94vw, 18px); font-weight: 500; color: var(--gray-888); line-height: 1.5; }
-.reco:hover .reco-t { color: var(--blue-badge); }
+/* 북 큐레이션 패널(항상 검정)과 같은 톤으로, 호버 시 텍스트 패널이 검정+흰 글씨로 어두워진다 —
+   지역별 정보 리스트 행의 호버(배경 검정 전환) 패턴과 동일 규칙 */
+.reco:hover .reco-body { background: var(--ink); }
+.reco:hover .reco-t { color: #fff; }
 
 .bookcur {
-  margin-top: 40px; background: var(--ink); color: #fff;
-  display: flex; align-items: center; justify-content: space-between; gap: 40px;
-  padding: clamp(32px, 4.17vw, 80px) clamp(24px, 5.21vw, 100px);
+  flex: 1 1 0; min-width: 0; align-self: stretch;
+  background: var(--ink); color: #fff;
+  display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between;
+  padding: clamp(32px, 4.17vw, 80px) clamp(24px, 2.08vw, 40px);
   overflow: hidden;
 }
-.bookcur-left { align-self: stretch; display: flex; flex-direction: column; justify-content: space-between; gap: 32px; }
+.bookcur-top { display: flex; align-items: flex-start; gap: 24px; width: 100%; }
+.bookcur-left { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
 .bookcur-label { font-size: clamp(14px, 0.94vw, 18px); font-weight: 500; color: var(--gray-888); }
+.bookcur-date { font-size: clamp(18px, 1.25vw, 24px); font-weight: 500; }
 .bookcur-tag {
-  display: inline-block; margin-top: 12px; padding: 2px 6px; background: #ff2268;
+  display: inline-block; padding: 2px 6px; background: #ff2268;
   font-family: 'Paperlogy', 'Pretendard', sans-serif; font-weight: 600;
   font-size: clamp(26px, 2.5vw, 48px); line-height: 1; letter-spacing: -0.02em; color: #fff;
 }
-.bookcur-arw { margin-top: 12px; width: 40px; height: 40px; transform: rotate(-90deg); filter: brightness(0) invert(1); }
-.bookcur-date { font-size: 16px; font-weight: 500; }
+.bookcur-arw { flex: none; width: 40px; height: 40px; transform: rotate(-90deg); filter: brightness(0) invert(1); }
 
-.bookcur-books { display: flex; gap: 28px; }
+.bookcur-books { display: flex; gap: 28px; width: 100%; }
 .bc { position: relative; flex: 0 0 clamp(140px, 12.97vw, 249px); aspect-ratio: 249 / 341; overflow: hidden; }
 .bc img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .bc-body {
@@ -449,6 +525,10 @@ h1, h2, h3, h4, p { margin: 0; }
 
 /* 공용 차트 뼈대 (막대+선/누적막대 공용) */
 .pchart { width: 100%; }
+.pchart-title {
+  margin: 0 0 12px; text-align: left;
+  font-size: clamp(12px, 0.83vw, 15px); font-weight: 600; color: var(--ink);
+}
 .pchart-body { display: flex; gap: 8px; align-items: stretch; }
 .pchart-yaxis {
   flex: none; display: flex; flex-direction: column; justify-content: space-between;
@@ -457,6 +537,8 @@ h1, h2, h3, h4, p { margin: 0; }
 .pchart-plot { position: relative; flex: 1; min-width: 0; height: 152px; }
 .pchart-grid { position: absolute; left: 0; right: 0; height: 1px; background: #f3f4f6; }
 .pchart-bars { position: absolute; inset: 0; display: flex; align-items: flex-end; overflow: hidden; }
+[data-chart="admin"] .pchart-bars { gap: 10px; }
+[data-chart="survey"] .pchart-bars { gap: 28px; }
 .pchart-col { flex: 1; min-width: 0; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; gap: 1px; }
 .pchart-bar { width: 100%; background: #173bff; border-radius: 1px 1px 0 0; }
 .pchart-seg { width: 100%; display: flex; align-items: center; justify-content: center; overflow: hidden; }
@@ -469,18 +551,23 @@ h1, h2, h3, h4, p { margin: 0; }
   color: #173bff; white-space: nowrap;
 }
 .pchart-xaxis { display: flex; margin-top: 4px; }
+[data-chart="admin"] .pchart-xaxis { gap: 10px; }
+[data-chart="survey"] .pchart-xaxis { gap: 28px; }
 .pchart-xaxis span {
   flex: 1; min-width: 0; text-align: center; font-size: clamp(7px, 0.55vw, 9px);
-  color: var(--gray-999); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  color: var(--gray-999); overflow: hidden; text-overflow: ellipsis; white-space: pre-line; line-height: 1.3;
 }
 
-/* 자료통계 — 원그래프 */
-.pchart-pie-wrap { display: flex; align-items: center; gap: 24px; }
-.pchart-pie { flex: none; width: 132px; height: 132px; border-radius: 999px; }
-.pchart-legend { display: flex; flex-direction: column; gap: 8px; font-size: clamp(11px, 0.83vw, 14px); }
-.pchart-legend li { display: flex; align-items: center; gap: 8px; color: var(--gray-888); }
-.pchart-legend b { color: var(--ink); font-weight: 600; }
-.pchart-dot { flex: none; width: 8px; height: 8px; border-radius: 999px; }
+/* 자료통계 — 원그래프 (SVG path arc + 균일 stroke). 값 라벨은 옆 범례 목록이 아니라
+   Figma 실측(20516:21721)대로 각 조각 바깥에 각도별로 흩어진 텍스트로 표시한다. */
+.pchart-pie-wrap { display: flex; align-items: center; justify-content: center; width: 100%; }
+.pchart-pie-stage { position: relative; }
+.pchart-pie { display: block; }
+.pchart-pie-labels { position: absolute; inset: 0; }
+.pchart-pie-label {
+  position: absolute; white-space: nowrap;
+  font-size: clamp(11px, 0.83vw, 14px); font-weight: 500;
+}
 
 /* ==========================================================================
    이벤트·행사 + 공지·소식
@@ -509,7 +596,6 @@ h1, h2, h3, h4, p { margin: 0; }
 .ev-rule { width: 81%; height: 3px; background: #7b8c61; }
 .ev-box-t { margin-top: 6%; font-size: clamp(12px, 1.48vw, 28px); font-weight: 500; line-height: 1.15; color: #7b8c61; }
 .ev-box-s { margin-top: 4%; font-size: clamp(12px, 1.48vw, 28px); font-weight: 500; color: #7b8c61; }
-.ev-box-api { font-size: clamp(7px, 0.74vw, 14px); color: #fff; }
 .ev-date { position: absolute; left: 57%; top: 12%; color: #fff; }
 .ev-yr { font-size: clamp(14px, 1.67vw, 32px); font-weight: 600; line-height: 1; }
 .ev-d1, .ev-d2 {
@@ -694,6 +780,68 @@ h1, h2, h3, h4, p { margin: 0; }
 .arw { color: var(--blue-badge); font-size: 15px; }
 
 /* ==========================================================================
+   디자인 시스템 v1.0 컴포넌트 — Button / Badge / Tab / Input
+   Figma '[디자인 시스템 가이드]_v1.0 (26.09.14)' dsg_04_components(20543:2795) 1:1.
+   기존 .chip/.more/.nav-btn/.tabs 등은 그대로 두고, 신규 페이지에서 쓸 수 있도록
+   이 원자 컴포넌트들을 별도 이름으로 추가한다 (기존 마크업 교체 아님).
+   ========================================================================== */
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 49px; padding: 0 var(--spacing-6);
+  border: 0; border-radius: var(--radius-none);
+  font-family: inherit; font-size: 16px; font-weight: 600;
+  background: var(--ink); color: var(--white);
+}
+.btn:hover { background: #1a1a1a; }
+.btn:disabled { background: var(--gray-200); color: var(--gray-600); cursor: not-allowed; }
+
+.btn--md { height: 41px; }
+.btn--sm { height: 34px; font-size: 14px; }
+
+.btn--outline { background: var(--white); color: var(--ink); border: 1px solid var(--gray-200); }
+.btn--outline:hover { background: var(--gray-50); }
+.btn--outline:disabled { background: var(--white); color: var(--gray-400); border-color: var(--gray-200); }
+
+.btn--accent { background: var(--brand-primary); color: var(--white); }
+.btn--accent:hover { background: #056bc7; }
+
+.btn--ghost { background: none; color: var(--ink); }
+.btn--ghost:hover { background: var(--gray-50); }
+
+.badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: var(--spacing-1) var(--spacing-3);
+  font-size: 13px; font-weight: 500; color: var(--white);
+  background: var(--ink); border-radius: var(--radius-none);
+}
+.badge--outlined { background: var(--white); color: var(--ink); border: 1px solid var(--ink); }
+.badge--active { background: var(--brand-primary); }
+.badge--active.badge--outlined { background: var(--white); color: var(--brand-primary); border-color: var(--brand-primary); }
+.badge--completed { background: var(--gray-400); }
+.badge--completed.badge--outlined { background: var(--white); color: var(--gray-400); border-color: var(--gray-400); }
+.badge--upcoming { background: #fa7317; }
+.badge--new { background: var(--accent-red); }
+.badge--category { background: var(--gray-50); color: var(--ink); }
+
+.tab-item {
+  display: inline-flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: var(--spacing-3) var(--spacing-5);
+  border: 0; border-bottom: 2px solid transparent;
+  background: none; font-family: inherit; font-size: 22px; font-weight: 500; color: var(--gray-600);
+}
+.tab-item.is-active { border-bottom-color: var(--ink); color: var(--ink); font-weight: 800; }
+
+.field {
+  display: flex; align-items: center; height: 56px; padding: 0 var(--spacing-4);
+  background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius-none);
+  font-family: inherit; font-size: 16px; color: var(--ink);
+}
+.field:focus-within { border-color: var(--brand-primary); }
+.field:has(:disabled) { background: var(--gray-50); }
+.field--md { height: 48px; }
+
+/* ==========================================================================
    모바일 (768px 이하)
    ========================================================================== */
 
@@ -751,10 +899,11 @@ h1, h2, h3, h4, p { margin: 0; }
   .book-cover { width: 100%; aspect-ratio: 16 / 10; }
   .book-body { padding: 20px; }
 
-  .reco-grid { grid-template-columns: 1fr; gap: 20px; }
+  .reco-row { flex-direction: column; gap: 20px; }
+  .reco-grid { gap: 20px; }
   .reco-body { padding: 20px; gap: 20px; }
 
-  .bookcur { flex-direction: column; align-items: flex-start; gap: 24px; padding: 24px; }
+  .bookcur { gap: 24px; padding: 24px; }
   .bookcur-books { width: 100%; overflow-x: auto; scrollbar-width: none; }
   .bookcur-books::-webkit-scrollbar { display: none; }
   /* 좁은 카드(140px)에서는 고정 50% 오버레이에 2줄 제목+저자가 다 안 들어가 이미지 위로

@@ -40,6 +40,22 @@
   }
 
   /* --------------------------------------------------------------------
+     1-b. 히어로 KV 축소 인터렉션 — 진입 모션이 끝나고 잠시 뒤 타이틀/검색 간격을 축소
+     Figma 노드 20516:22073(초기진입) → 20516:23920(축소인터렉션):
+       타이틀 100px→80px, kv-search 여백 120px→60px, 검색어 44px→36px,
+       검색 인풋 하단 패딩 26px→16px (letter-spacing은 em 단위라 자동 비례, 값 그대로).
+     실제 축소는 CSS transition(arte-library-line.css .kv.is-compact)이 담당하고,
+     여기서는 홈 진입 후 한 번만 트리거 클래스를 붙인다.
+     -------------------------------------------------------------------- */
+  function heroShrink() {
+    var kv = document.querySelector('.kv');
+    if (!kv || reduceMotion) return;
+    window.setTimeout(function () {
+      kv.classList.add('is-compact');
+    }, 2200);
+  }
+
+  /* --------------------------------------------------------------------
      2. 서브페이지 타이틀 등장 모션 (영상 · 추천)
      참고: uxui-test-1.github.io/arte-main/arte-location.html
      .title-reveal 스코프: 브레드크럼은 정적으로 두고, h1과 (있다면) 상단 분류
@@ -69,7 +85,7 @@
 
       if (tabMasks.length) {
         var tabEls = Array.prototype.map.call(tabMasks, function (m) { return m.firstElementChild; });
-        tl.fromTo(tabEls, { yPercent: 100 }, { yPercent: 0, duration: 0.5, ease: 'expo.out', stagger: 0.06 }, '-=0.25');
+        tl.fromTo(tabEls, { yPercent: 100 }, { yPercent: 0, duration: 0.5, ease: 'expo.out', stagger: 0.15 }, '-=0.25');
       }
 
       if (content) {
@@ -160,6 +176,7 @@
 
   document.addEventListener('DOMContentLoaded', function () {
     heroReveal();
+    heroShrink();
     titleReveal();
     scrollReveal();
     pageTransitions();

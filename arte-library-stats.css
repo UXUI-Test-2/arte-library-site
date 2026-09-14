@@ -34,10 +34,12 @@
 /* ---- 상단 탭 (행정/조사/자료통계) ---- */
 
 .stat-tabs { display: flex; gap: 8px; }
+.stat-tabs .reveal-mask { flex: 1; overflow: hidden; display: block; }
+.stat-tabs .reveal-mask > * { display: block; }
 .stat-tab {
-  flex: 1; padding: clamp(12px, 0.83vw, 16px) 0;
-  border: 1px solid var(--ink); background: var(--white);
-  font-size: clamp(15px, 1.46vw, 28px); font-weight: 600;
+  width: 100%; padding: 16px 0;
+  border: 1.4px solid var(--ink); background: var(--white);
+  font-size: clamp(17px, 1.67vw, 32px); font-weight: 600;
 }
 .stat-tab.is-active { background: var(--ink); color: #fff; border-color: var(--ink); }
 .stat-tab:hover:not(.is-active) { background: var(--gray-bg); }
@@ -226,7 +228,7 @@
   .crumb { display: none; }
   .sub-h1 { margin-bottom: 20px; }
 
-  .stat-tab { font-size: 13px; padding: 12px 0; }
+  .stat-tab { padding: 12px 0; }
   .stat-desc { font-size: 13px; margin: 20px 0 16px; }
   .stat-divider { height: 3px; margin-bottom: 20px; }
 

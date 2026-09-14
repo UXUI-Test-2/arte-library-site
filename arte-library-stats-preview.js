@@ -29,7 +29,7 @@
       { year: '2023', value: 14049 },
       { year: '2024', value: 12577 },
       { year: '2025', value: 11994 },
-      { year: "'26.2Q", value: 8487 }
+      { year: '2026\n2분기', value: 8487 }
     ]
   };
 
@@ -47,12 +47,16 @@
     ]
   };
 
+  /* 2026-09-14: Figma 실측(20516:21158, 자료통계 원그래프) 확인 결과 레인보우 팔레트가
+     아니라 행정통계/조사통계와 같은 블루 계열 그라데이션이다 — 색상을 실측값으로 교체.
+     textColor는 각 라벨 전용 색(20516:21721 실측) — 조각 원색을 텍스트로 그대로 쓰면
+     밝은 색(문서/영상/지역별 정보)은 흰 배경에서 잘 안 읽혀서 더 진한 톤을 따로 쓴다. */
   var PIE = [
-    { label: '문서', value: 4793, color: '#007ade' },
-    { label: '도서', value: 12374, color: '#eab308' },
-    { label: '영상', value: 2063, color: '#16a34a' },
-    { label: '추천', value: 6444, color: '#712eec' },
-    { label: '지역별 정보', value: 6314, color: '#76aaff' }
+    { label: '문서', value: 4793, color: '#76aaff', textColor: '#5e88cc' },
+    { label: '도서', value: 12374, color: '#173bff', textColor: '#173bff' },
+    { label: '영상', value: 2063, color: '#18daa3', textColor: '#66c39b' },
+    { label: '추천', value: 6444, color: '#007ade', textColor: '#007ade' },
+    { label: '지역별 정보', value: 6314, color: '#39d1ff', textColor: '#2da7cc' }
   ];
 
   function el(tag, cls) {
@@ -127,8 +131,9 @@
     requestAnimationFrame(function () {
       var rect = bars.getBoundingClientRect();
       if (!rect.width || !rect.height) return;
-      var n = ADMIN.points.length;
-      var colW = rect.width / n;
+      /* 막대 사이 10px 갭(.pchart-bars gap)이 생기면서 컬럼 폭이 더는 균등폭
+         나누기(rect.width/n)로 안 맞는다 — 실제 렌더된 컬럼의 위치를 그대로 읽는다 */
+      var cols = bars.querySelectorAll('.pchart-col');
       var svgNS = 'http://www.w3.org/2000/svg';
       var svg = document.createElementNS(svgNS, 'svg');
       svg.setAttribute('class', 'pchart-line');
@@ -137,7 +142,8 @@
       var d = '';
       var points = [];
       ADMIN.points.forEach(function (p, i) {
-        var x = colW * (i + 0.5);
+        var colRect = cols[i].getBoundingClientRect();
+        var x = (colRect.left - rect.left) + colRect.width / 2;
         var y = rect.height - (p.value / ADMIN.max) * rect.height;
         d += (i === 0 ? 'M' : 'L') + x + ',' + y + ' ';
         points.push({ x: x, y: y, value: p.value });
@@ -155,10 +161,8 @@
       });
       plot.appendChild(svg);
 
-      /* 값 라벨은 겹치기 쉬워서(17개년) 3개마다 하나만 표시 — 실제 통계 페이지도
-         카드 폭이 좁을 땐 값 표시를 생략하는 것과 같은 판단 */
-      points.forEach(function (pt, i) {
-        if (i % 3 !== 0 && i !== points.length - 1) return;
+      /* Figma 실측은 17개년 값이 전부 표시되어 있다 — 일부만 보이던 것을 전부 표시로 수정 */
+      points.forEach(function (pt) {
         var label = el('span', 'pchart-value');
         label.textContent = pt.value.toLocaleString();
         label.style.left = pt.x + 'px';
@@ -170,6 +174,9 @@
 
   function renderSurvey(root) {
     var chart = el('div', 'pchart');
+    var title = el('p', 'pchart-title');
+    title.textContent = '문화예술교육 관심도';
+    chart.appendChild(title);
     var body = el('div', 'pchart-body');
     var plot = el('div', 'pchart-plot');
     buildGridlines(plot, SURVEY.steps, SURVEY.max);
@@ -202,34 +209,66 @@
     alignXAxis(yaxis, xaxis);
   }
 
+  /* 2026-09-14: conic-gradient의 각도 기반 흰 여백은 반지름이 커질수록 벌어지는
+     쐐기 모양이라 "사선으로 어긋나 보이는" 문제가 있었다 — 실제 SVG path arc + 균일
+     stroke-width로 다시 그려서 반지름과 무관하게 두께가 일정한 직선 경계선을 쓴다. */
   function renderPie(root) {
     var wrap = el('div', 'pchart-pie-wrap');
     var total = PIE.reduce(function (sum, d) { return sum + d.value; }, 0);
+
+    /* 2026-09-14: Figma 20516:21721 확인 결과 값 라벨은 옆에 쌓인 범례 목록이 아니라
+       각 조각 바깥에 각도에 맞춰 흩어진 텍스트다 — 점(dot) 없이 조각별 텍스트 색으로만
+       구분하고, 파이 중심에서 조각 중간각도 방향으로 뻗어나가는 위치에 배치한다. */
+    var size = 132, r = size / 2, labelR = r + 20;
+    var stage = el('div', 'pchart-pie-stage');
+    stage.style.width = size + 'px';
+    stage.style.height = size + 'px';
+
+    var svgNS = 'http://www.w3.org/2000/svg';
+    var svg = document.createElementNS(svgNS, 'svg');
+    svg.setAttribute('class', 'pchart-pie');
+    svg.setAttribute('viewBox', '0 0 ' + size + ' ' + size);
+    svg.setAttribute('width', size);
+    svg.setAttribute('height', size);
+
+    var labels = el('div', 'pchart-pie-labels');
+
     var acc = 0;
-    var stops = PIE.map(function (d) {
-      var start = (acc / total) * 360;
-      acc += d.value;
-      var end = (acc / total) * 360;
-      return d.color + ' ' + start + 'deg ' + end + 'deg';
-    }).join(', ');
-
-    var pie = el('div', 'pchart-pie');
-    pie.style.background = 'conic-gradient(' + stops + ')';
-    wrap.appendChild(pie);
-
-    var legend = el('ul', 'pchart-legend');
     PIE.forEach(function (d) {
-      var li = el('li');
-      var dot = el('span', 'pchart-dot');
-      dot.style.background = d.color;
-      var b = el('b');
-      b.textContent = d.label;
-      li.appendChild(dot);
-      li.appendChild(b);
-      li.appendChild(document.createTextNode(' ' + d.value.toLocaleString()));
-      legend.appendChild(li);
+      var a0 = (acc / total) * Math.PI * 2 - Math.PI / 2;
+      acc += d.value;
+      var a1 = (acc / total) * Math.PI * 2 - Math.PI / 2;
+      var x0 = r + r * Math.cos(a0), y0 = r + r * Math.sin(a0);
+      var x1 = r + r * Math.cos(a1), y1 = r + r * Math.sin(a1);
+      var largeArc = (a1 - a0) > Math.PI ? 1 : 0;
+      var path = document.createElementNS(svgNS, 'path');
+      path.setAttribute(
+        'd',
+        'M' + r + ',' + r + ' L' + x0 + ',' + y0 + ' A' + r + ',' + r + ' 0 ' + largeArc + ' 1 ' + x1 + ',' + y1 + ' Z'
+      );
+      path.setAttribute('fill', d.color);
+      path.setAttribute('stroke', '#fff');
+      path.setAttribute('stroke-width', '2');
+      path.setAttribute('stroke-linejoin', 'round');
+      svg.appendChild(path);
+
+      var mid = (a0 + a1) / 2;
+      var onRight = Math.cos(mid) >= 0;
+      var lx = r + labelR * Math.cos(mid);
+      var ly = r + labelR * Math.sin(mid);
+      var label = el('span', 'pchart-pie-label');
+      label.style.color = d.textColor || d.color;
+      label.style.left = lx + 'px';
+      label.style.top = ly + 'px';
+      label.style.textAlign = onRight ? 'left' : 'right';
+      label.style.transform = 'translate(' + (onRight ? '0' : '-100%') + ', -50%)';
+      label.textContent = d.label + ', ' + d.value.toLocaleString();
+      labels.appendChild(label);
     });
-    wrap.appendChild(legend);
+
+    stage.appendChild(svg);
+    stage.appendChild(labels);
+    wrap.appendChild(stage);
     root.appendChild(wrap);
   }
 

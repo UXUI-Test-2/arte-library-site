@@ -400,6 +400,7 @@
   if (!root) return;
 
   var state = { tab: 'admin', adminItem: 'lecturers', surveyItem: 'rate', dataItem: 'doc' };
+  var isFirstRender = true;
 
   function renderShell() {
     root.innerHTML = '';
@@ -413,7 +414,9 @@
         state.tab = t[0];
         renderShell();
       });
-      tabRow.appendChild(b);
+      var mask = el('div', 'reveal-mask');
+      mask.appendChild(b);
+      tabRow.appendChild(mask);
     });
     root.appendChild(tabRow);
 
@@ -429,8 +432,10 @@
     main.appendChild(buildContent());
     root.appendChild(main);
 
+    revealTabs(root.querySelectorAll('.stat-tab'), isFirstRender ? 0.45 : 0);
     revealStack(root.querySelectorAll('.chart-card, .kpi-card, .data-kpi-card'));
     animateCharts(root);
+    isFirstRender = false;
   }
 
   function descFor(tab) {
@@ -551,6 +556,29 @@
     chart.classList.add('chart-card--admin');
     wrap.appendChild(chart);
     return wrap;
+  }
+
+  /* --------------------------------------------------------------------
+     4-a. 탭 리빌 — arte-motion.js의 titleReveal() 서브탭과 완전히 동일한 방식.
+     각 탭은 .reveal-mask(overflow:hidden)에 담겨 있고, 오퍼시티는 건드리지 않고
+     yPercent 100→0 마스크 슬라이드만 쓴다 (duration 0.5 / ease expo.out / stagger 0.15).
+     delay는 titleReveal()의 tabMasks 실제 시작 시점(딜레이 0.1 + 타이틀 마스크 0.6s와
+     '-=0.25' 겹침 = 0.45s)과 맞춘 값을 최초 렌더에만 넘긴다 — 그래야 통계 타이틀이
+     슬라이드되는 도중에 탭이 뒤이어 나오는 다른 서브페이지와 같은 박자가 된다.
+     탭/항목 클릭으로 다시 그릴 때는 delay 없이 즉시 반응해야 하므로 0을 넘긴다.
+     -------------------------------------------------------------------- */
+
+  function revealTabs(nodeList, delay) {
+    var nodes = Array.prototype.slice.call(nodeList);
+    if (!nodes.length) return;
+    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion || typeof gsap === 'undefined') return;
+    gsap.killTweensOf(nodes);
+    gsap.fromTo(
+      nodes,
+      { yPercent: 100 },
+      { yPercent: 0, duration: 0.5, ease: 'expo.out', stagger: 0.15, delay: delay || 0, clearProps: 'transform' }
+    );
   }
 
   /* --------------------------------------------------------------------
