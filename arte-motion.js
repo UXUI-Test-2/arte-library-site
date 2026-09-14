@@ -65,8 +65,10 @@
     var kv = document.querySelector('.kv');
     var kvBg = kv && kv.querySelector('.kv-bg');
     if (!kv || !kvBg) return;
+    /* 히어로 전체 높이만큼 다 내려야 사라지는 느낌이라 너무 늦게 옅어짐 — 실제 페이드
+       완료 지점을 히어로 높이의 45%로 앞당긴다(체감상 절반도 안 스크롤했을 때 사라짐) */
     function update() {
-      var fadeDistance = kv.offsetHeight || 1;
+      var fadeDistance = (kv.offsetHeight || 1) * 0.45;
       var progress = Math.min(1, Math.max(0, window.scrollY / fadeDistance));
       kvBg.style.opacity = 1 - progress;
     }
