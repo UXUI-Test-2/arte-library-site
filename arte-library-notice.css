@@ -9,23 +9,8 @@
 .tab-grid { display: flex; flex-direction: column; gap: 8px; width: 100%; }
 .tab-grid .sub-tabs a { min-width: 0; text-align: center; word-break: keep-all; }
 
-/* ---- 검색조건 드롭다운 (video/reco 와 동일 패턴, 최초 스타일 정의) -------- */
-
-.fil-dropdown { position: relative; }
-.fil-dropdown-list {
-  position: absolute; left: 0; right: 0; top: calc(100% + 4px); z-index: 10;
-  display: none; flex-direction: column;
-  border: 1px solid var(--ink); background: var(--white);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-}
-.fil-dropdown.is-open .fil-dropdown-list { display: flex; }
-.fil-dropdown-item {
-  border: 0; background: none; padding: 12px 16px; text-align: left;
-  font-size: 18px; font-weight: 500; color: var(--ink);
-}
-.fil-dropdown-item:hover { background: var(--gray-bg); }
-.fil-dropdown-item.is-active,
-.fil-dropdown-item[aria-selected='true'] { color: var(--blue-badge); font-weight: 600; }
+/* 검색조건 드롭다운(.fil-dropdown 등) 공통 스타일은 arte-library-docs.css 로 이동
+   (video/reco 등 다른 페이지에서도 동일하게 필요해 공용 파일로 통합) */
 
 /* ---- 정렬/표시개수 바 (필터 좌측 없이 우측 정렬만) ------------------------ */
 
