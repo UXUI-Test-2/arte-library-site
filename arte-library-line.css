@@ -731,6 +731,21 @@ h1, h2, h3, h4, p { margin: 0; }
   font-size: clamp(11px, 0.83vw, 14px); font-weight: 500;
 }
 
+/* 호버 값 툴팁 — 통계 서브페이지(arte-library-stats.css .chart-tooltip)와 동일한 구성을
+   홈 미리보기 차트에도 적용. 차트 하나당 하나, 해당 plot/stage 기준 절대좌표 */
+.pchart-tooltip {
+  position: absolute; z-index: 5; pointer-events: none;
+  transform: translate(-50%, calc(-100% - 12px));
+  display: flex; flex-direction: column; gap: 2px;
+  background: #111; color: #fff; border: 1px solid #111;
+  padding: 6px 10px; font-size: 12px; font-weight: 600; white-space: nowrap;
+  opacity: 0; transition: opacity 0.12s ease;
+}
+.pchart-tooltip.is-visible { opacity: 1; }
+.pchart-tooltip-cat { font-weight: 700; }
+.pchart-tooltip-val { display: flex; align-items: center; gap: 6px; font-weight: 500; }
+.pchart-tooltip-dot { width: 7px; height: 7px; border-radius: 50%; flex: none; background: #fff; }
+
 /* ==========================================================================
    이벤트·행사 + 공지·소식
    ========================================================================== */

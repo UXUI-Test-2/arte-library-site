@@ -65,6 +65,47 @@
     return e;
   }
 
+  /* 2026-09-14: 통계 서브페이지(arte-library-stats.js)의 호버 툴팁을 홈 미리보기에도 반영.
+     차트 하나당 하나씩 두고 막대/도트/조각에 mouseenter·mousemove·mouseleave로 값을 띄운다. */
+  function buildTooltip() {
+    var tip = el('div', 'pchart-tooltip');
+    tip.setAttribute('aria-hidden', 'true');
+    tip.appendChild(txt('span', 'pchart-tooltip-cat', ''));
+    var valLine = el('span', 'pchart-tooltip-val');
+    var dot = el('i', 'pchart-tooltip-dot');
+    valLine.appendChild(dot);
+    valLine.appendChild(txt('span', 'pchart-tooltip-val-text', ''));
+    tip.appendChild(valLine);
+    return tip;
+  }
+
+  function attachTooltip(target, tooltip, wrap, cat, valueText, dotColor) {
+    function show(evt) {
+      tooltip.querySelector('.pchart-tooltip-cat').textContent = cat;
+      tooltip.querySelector('.pchart-tooltip-dot').style.background = dotColor || '#fff';
+      tooltip.querySelector('.pchart-tooltip-val-text').textContent = valueText;
+      tooltip.classList.add('is-visible');
+      position(evt);
+    }
+    function position(evt) {
+      var rect = wrap.getBoundingClientRect();
+      tooltip.style.left = (evt.clientX - rect.left) + 'px';
+      tooltip.style.top = (evt.clientY - rect.top) + 'px';
+    }
+    function hide() {
+      tooltip.classList.remove('is-visible');
+    }
+    target.addEventListener('mouseenter', show);
+    target.addEventListener('mousemove', position);
+    target.addEventListener('mouseleave', hide);
+  }
+
+  function txt(tag, cls, text) {
+    var e = el(tag, cls);
+    e.textContent = text;
+    return e;
+  }
+
   function buildYAxis(steps) {
     var yaxis = el('div', 'pchart-yaxis');
     steps.forEach(function (s) {
@@ -105,16 +146,19 @@
     var body = el('div', 'pchart-body');
     var plot = el('div', 'pchart-plot');
     buildGridlines(plot, ADMIN.steps, ADMIN.max);
+    var tooltip = buildTooltip();
 
     var bars = el('div', 'pchart-bars');
     ADMIN.points.forEach(function (p) {
       var col = el('div', 'pchart-col');
       var bar = el('div', 'pchart-bar');
       bar.style.height = (p.value / ADMIN.max) * 100 + '%';
+      attachTooltip(bar, tooltip, plot, p.year, p.value.toLocaleString(), ADMIN.color);
       col.appendChild(bar);
       bars.appendChild(col);
     });
     plot.appendChild(bars);
+    plot.appendChild(tooltip);
 
     var yaxis = buildYAxis(ADMIN.steps);
     var xaxis = buildXAxis(ADMIN.points.map(function (p) { return p.year; }));
@@ -151,12 +195,13 @@
       var path = document.createElementNS(svgNS, 'path');
       path.setAttribute('d', d.trim());
       svg.appendChild(path);
-      points.forEach(function (pt) {
+      points.forEach(function (pt, i) {
         var circle = document.createElementNS(svgNS, 'circle');
         circle.setAttribute('class', 'pchart-point');
         circle.setAttribute('cx', pt.x);
         circle.setAttribute('cy', pt.y);
         circle.setAttribute('r', 2);
+        attachTooltip(circle, tooltip, plot, ADMIN.points[i].year, pt.value.toLocaleString(), ADMIN.color);
         svg.appendChild(circle);
       });
       plot.appendChild(svg);
@@ -180,14 +225,16 @@
     var body = el('div', 'pchart-body');
     var plot = el('div', 'pchart-plot');
     buildGridlines(plot, SURVEY.steps, SURVEY.max);
+    var tooltip = buildTooltip();
 
     var bars = el('div', 'pchart-bars');
-    SURVEY.series.forEach(function (row) {
+    SURVEY.series.forEach(function (row, ri) {
       var col = el('div', 'pchart-col');
       row.forEach(function (value, i) {
         var seg = el('div', 'pchart-seg');
         seg.style.height = (value / SURVEY.max) * 100 + '%';
         seg.style.background = SURVEY.colors[i];
+        attachTooltip(seg, tooltip, plot, SURVEY.years[ri], value + '%', SURVEY.colors[i]);
         if (value >= 12) {
           var span = el('span');
           span.textContent = value;
@@ -198,6 +245,7 @@
       bars.appendChild(col);
     });
     plot.appendChild(bars);
+    plot.appendChild(tooltip);
 
     var yaxis = buildYAxis(SURVEY.steps);
     var xaxis = buildXAxis(SURVEY.years);
@@ -232,6 +280,7 @@
     svg.setAttribute('height', size);
 
     var labels = el('div', 'pchart-pie-labels');
+    var tooltip = buildTooltip();
 
     var acc = 0;
     PIE.forEach(function (d) {
@@ -250,6 +299,7 @@
       path.setAttribute('stroke', '#fff');
       path.setAttribute('stroke-width', '2');
       path.setAttribute('stroke-linejoin', 'round');
+      attachTooltip(path, tooltip, stage, d.label, d.value.toLocaleString(), d.color);
       svg.appendChild(path);
 
       var mid = (a0 + a1) / 2;
@@ -268,6 +318,7 @@
 
     stage.appendChild(svg);
     stage.appendChild(labels);
+    stage.appendChild(tooltip);
     wrap.appendChild(stage);
     root.appendChild(wrap);
   }
