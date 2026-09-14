@@ -263,13 +263,13 @@
       path.style.strokeDashoffset = len;
 
       registerReveal(function () {
-        var barDuration = 0.6;
-        var stagger = Math.min(0.3, 2.4 / barEls.length);
+        var barDuration = 0.4;
+        var stagger = Math.min(0.15, 1.1 / barEls.length);
         var finishAt = stagger * (barEls.length - 1) + barDuration;
         gsap.to(barEls, { scaleY: 1, duration: barDuration, ease: 'power2.out', stagger: stagger });
         gsap.to(path, { strokeDashoffset: 0, duration: finishAt, ease: 'power1.inOut' });
-        gsap.to(circles, { opacity: 1, scale: 1, duration: 0.35, ease: 'back.out(2)', stagger: stagger, delay: finishAt - 0.35 });
-        gsap.to(labels, { opacity: 1, duration: 0.35, ease: 'power1.out', stagger: stagger, delay: finishAt - 0.3 });
+        gsap.to(circles, { opacity: 1, scale: 1, duration: 0.25, ease: 'back.out(2)', stagger: stagger, delay: finishAt - 0.25 });
+        gsap.to(labels, { opacity: 1, duration: 0.25, ease: 'power1.out', stagger: stagger, delay: finishAt - 0.2 });
       });
     });
   }
@@ -319,7 +319,7 @@
     /* 스택 막대는 세그먼트별이 아니라 컬럼(연도) 단위로 통째로 아래→위로 올라오고,
        연도 사이에서만 좌→우로 순차 등장한다 (통계 서브페이지와 동일 규칙) */
     registerReveal(function () {
-      gsap.to(cols, { scaleY: 1, duration: 0.6, ease: 'power2.out', stagger: Math.min(0.3, 1.2 / cols.length) });
+      gsap.to(cols, { scaleY: 1, duration: 0.4, ease: 'power2.out', stagger: Math.min(0.15, 0.6 / cols.length) });
     });
   }
 
@@ -399,8 +399,8 @@
        영상→추천→지역별 정보) 그대로 라벨이 순차적으로 나타난다. 라벨은 이미 정렬용
        transform(translate)을 쓰고 있어 GSAP가 x/y로 건드리면 위치가 깨지므로 opacity만 애니메이션. */
     registerReveal(function () {
-      gsap.to(svg, { scale: 1, opacity: 1, duration: 0.5, ease: 'back.out(1.7)' });
-      gsap.to(labelEls, { opacity: 1, duration: 0.35, ease: 'power1.out', stagger: 0.12, delay: 0.25 });
+      gsap.to(svg, { scale: 1, opacity: 1, duration: 0.35, ease: 'back.out(1.7)' });
+      gsap.to(labelEls, { opacity: 1, duration: 0.22, ease: 'power1.out', stagger: 0.07, delay: 0.15 });
     });
   }
 
