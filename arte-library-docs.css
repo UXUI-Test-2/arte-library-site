@@ -104,6 +104,15 @@
 
 .lst { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: clamp(32px, 4.17vw, 80px); }
 
+/* 분류 탭 아래(카드 목록) 블록 — 분류 탭과 카드 사이 40px, 그 안(정렬바-카드) 24px */
+.lst-content { display: flex; flex-direction: column; gap: clamp(20px, 2.08vw, 40px); }
+.lst-inner { display: flex; flex-direction: column; gap: clamp(12px, 1.25vw, 24px); }
+
+/* 추천 페이지: 분류 탭 + 페이지당 보기를 한 줄에 배치 */
+.lst-catbar { display: flex; align-items: center; gap: clamp(20px, 2.08vw, 40px); }
+.lst-catbar .lst-cat { flex: 1; min-width: 0; }
+.lst-catbar .lst-sort { flex: none; }
+
 .lst-cat { display: flex; flex-wrap: wrap; gap: clamp(12px, 1.2vw, 23px); }
 .lst-cat button {
   border: 0; background: none; padding: 6px 0;
@@ -200,6 +209,12 @@
   .sub-head { padding-bottom: 16px; border-bottom-width: 2px; gap: 8px; }
   .sub-board { flex-direction: column; gap: 32px; }
   .fil { width: 100%; }
+  .lst-content { gap: 24px; }
+  .lst-inner { gap: 16px; }
+  /* 좁은 화면에서는 분류 탭을 줄바꿈하고, 페이지당 보기를 그 아래 우측에 배치 */
+  .lst-catbar { display: block; }
+  .lst-catbar .lst-cat { flex-wrap: wrap; overflow-x: visible; margin-bottom: 12px; }
+  .lst-catbar .lst-sort { display: block; text-align: right; }
   .lst-cat { gap: 10px; overflow-x: auto; flex-wrap: nowrap; scrollbar-width: none; }
   .lst-cat::-webkit-scrollbar { display: none; }
   .lst-cat button { white-space: nowrap; }

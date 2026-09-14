@@ -145,12 +145,14 @@
         <!-- ---------- 우측: 목록 ---------- -->
         <section class="lst" aria-label="영상 검색 결과">
 
+          <div class="lst-content">
           <div class="lst-cat" role="tablist" aria-label="영상 분류">
             <button role="tab" aria-selected="true">전체</button>
             <button role="tab" aria-selected="false">재생목록</button>
             <button role="tab" aria-selected="false">동영상</button>
           </div>
 
+          <div class="lst-inner">
           <div class="lst-bar">
             <div class="lst-count">
               <span><em>전체</em> <b>4,793건</b></span>
@@ -163,15 +165,115 @@
 
           <div class="lst-grid lst-grid--video">
 
+            <!-- 1행: 단일 영상 / 재생목록 미리보기 / 재생목록 묶음 -->
             <a class="vidcard" href="#">
-              <div class="vidcard-thumb vidcard-thumb--stack">
-                <span class="vidcard-stack-a" aria-hidden="true"></span>
-                <span class="vidcard-stack-b" aria-hidden="true"></span>
-                <img src="assets/video-list-thumb-1.jpg" alt="미래 인적자원 함양을 위한 돌봄체계 — 신의진 교수 강연 썸네일" loading="lazy">
-                <span class="vidcard-badge">동영상 32개</span>
+              <div class="vidcard-thumb">
+                <img src="assets/video-list-thumb-2.jpg" alt="2024 문화예술교육 국제포럼 하이라이트 썸네일" loading="lazy">
+                <span class="vidcard-badge">3:08:30</span>
               </div>
-              <div class="vidcard-body vidcard-body--stack">
+              <div class="vidcard-body">
+                <h3 class="vidcard-t">2024 문화예술교육 국제포럼 하이라이트</h3>
+                <p class="vidcard-d">유네스코와 유네스코 회원국은 2021년 제211 차 집행이사회 결정문(EX 211/Decision 39)을 통해 유네스코 제1차와 제2차 세계문화</p>
+                <dl class="vidcard-meta">
+                  <dt>저작권자</dt><dd>한국문화예술교육진흥원</dd>
+                  <dt>제작연도</dt><dd>2024</dd>
+                </dl>
+              </div>
+            </a>
+
+            <a class="vidcard" href="#">
+              <div class="vidcard-thumb">
+                <img src="assets/video-thumb-b.png" alt="2026 유네스코 문화예술교육 주간 ODA 성과공유 포럼 세션 발표 장면" loading="lazy">
+                <span class="vidcard-badge">3:08:30</span>
+              </div>
+              <div class="vidcard-body">
+                <h3 class="vidcard-t">2026 유네스코 문화예술교육 주간 | 문화예술교육 포럼</h3>
+                <p class="vidcard-d">유네스코와 유네스코 회원국은 2021년 제211차 집행이사회 결정문(EX 211/Decision 39)을 통해 유네스코 제1차와 제2차 세계문화…</p>
+                <span class="vidcard-btn">전체 재생목록 보기 <span class="vidcard-btn-icon"><img class="ic-default" src="assets/icon-arrow-alt-right.svg" alt="" width="20" height="20"><img class="ic-hover" src="assets/icon-arrow-alt-right-white.svg" alt="" width="20" height="20"></span></span>
+              </div>
+            </a>
+
+            <a class="vidcard" href="#">
+              <div class="vidcard-thumb vidcard-thumb--collage">
+                <img class="vc-bg" src="assets/docs-book2.png" alt="" aria-hidden="true">
+                <span class="vc-stack-a" aria-hidden="true"></span>
+                <span class="vc-stack-b" aria-hidden="true"></span>
+                <span class="vc-front"><img src="assets/docs-book2.png" alt="2024 세계문화예술교육 주간 행사 재생목록 썸네일" loading="lazy"></span>
+                <span class="vidcard-badge vidcard-badge--collage">동영상 32개</span>
+              </div>
+              <div class="vidcard-body">
                 <h3 class="vidcard-t">2024 세계문화예술교육 주간 행사</h3>
+                <p class="vidcard-d">유네스코와 유네스코 회원국은 2021년 제211 차 집행이사회 결정문(EX 211/Decision 39)을 통해 유네스코 제1차와 제2차 세계문화</p>
+                <span class="vidcard-btn vidcard-btn--fill">전체 재생목록 보기 <span class="vidcard-btn-icon"><img class="ic-default" src="assets/icon-arrow-alt-right.svg" alt="" width="20" height="20"><img class="ic-hover" src="assets/icon-arrow-alt-right-white.svg" alt="" width="20" height="20"></span></span>
+              </div>
+            </a>
+
+            <!-- 2행: 재생목록 미리보기 / 재생목록 묶음 / 단일 영상 -->
+            <a class="vidcard" href="#">
+              <div class="vidcard-thumb">
+                <img src="assets/video-thumb-b.png" alt="2026 유네스코 문화예술교육 주간 ODA 성과공유 포럼 세션 발표 장면" loading="lazy">
+                <span class="vidcard-badge">3:08:30</span>
+              </div>
+              <div class="vidcard-body">
+                <h3 class="vidcard-t">2026 유네스코 문화예술교육 주간 | 문화예술교육 포럼</h3>
+                <p class="vidcard-d">유네스코와 유네스코 회원국은 2021년 제211차 집행이사회 결정문(EX 211/Decision 39)을 통해 유네스코 제1차와 제2차 세계문화…</p>
+                <span class="vidcard-btn">전체 재생목록 보기 <span class="vidcard-btn-icon"><img class="ic-default" src="assets/icon-arrow-alt-right.svg" alt="" width="20" height="20"><img class="ic-hover" src="assets/icon-arrow-alt-right-white.svg" alt="" width="20" height="20"></span></span>
+              </div>
+            </a>
+
+            <a class="vidcard" href="#">
+              <div class="vidcard-thumb vidcard-thumb--collage">
+                <img class="vc-bg" src="assets/docs-book2.png" alt="" aria-hidden="true">
+                <span class="vc-stack-a" aria-hidden="true"></span>
+                <span class="vc-stack-b" aria-hidden="true"></span>
+                <span class="vc-front"><img src="assets/docs-book2.png" alt="2024 세계문화예술교육 주간 행사 재생목록 썸네일" loading="lazy"></span>
+                <span class="vidcard-badge vidcard-badge--collage">동영상 32개</span>
+              </div>
+              <div class="vidcard-body">
+                <h3 class="vidcard-t">2024 세계문화예술교육 주간 행사</h3>
+                <p class="vidcard-d">유네스코와 유네스코 회원국은 2021년 제211 차 집행이사회 결정문(EX 211/Decision 39)을 통해 유네스코 제1차와 제2차 세계문화</p>
+                <span class="vidcard-btn vidcard-btn--fill">전체 재생목록 보기 <span class="vidcard-btn-icon"><img class="ic-default" src="assets/icon-arrow-alt-right.svg" alt="" width="20" height="20"><img class="ic-hover" src="assets/icon-arrow-alt-right-white.svg" alt="" width="20" height="20"></span></span>
+              </div>
+            </a>
+
+            <a class="vidcard" href="#">
+              <div class="vidcard-thumb">
+                <img src="assets/video-list-thumb-2.jpg" alt="2024 문화예술교육 국제포럼 하이라이트 썸네일" loading="lazy">
+                <span class="vidcard-badge">3:08:30</span>
+              </div>
+              <div class="vidcard-body">
+                <h3 class="vidcard-t">2024 문화예술교육 국제포럼 하이라이트</h3>
+                <p class="vidcard-d">유네스코와 유네스코 회원국은 2021년 제211 차 집행이사회 결정문(EX 211/Decision 39)을 통해 유네스코 제1차와 제2차 세계문화</p>
+                <dl class="vidcard-meta">
+                  <dt>저작권자</dt><dd>한국문화예술교육진흥원</dd>
+                  <dt>제작연도</dt><dd>2024</dd>
+                </dl>
+              </div>
+            </a>
+
+            <!-- 3행: 재생목록 묶음 / 재생목록 미리보기 / 단일 영상 -->
+            <a class="vidcard" href="#">
+              <div class="vidcard-thumb vidcard-thumb--collage">
+                <img class="vc-bg" src="assets/docs-book2.png" alt="" aria-hidden="true">
+                <span class="vc-stack-a" aria-hidden="true"></span>
+                <span class="vc-stack-b" aria-hidden="true"></span>
+                <span class="vc-front"><img src="assets/docs-book2.png" alt="2024 세계문화예술교육 주간 행사 재생목록 썸네일" loading="lazy"></span>
+                <span class="vidcard-badge vidcard-badge--collage">동영상 32개</span>
+              </div>
+              <div class="vidcard-body">
+                <h3 class="vidcard-t">2024 세계문화예술교육 주간 행사</h3>
+                <p class="vidcard-d">유네스코와 유네스코 회원국은 2021년 제211 차 집행이사회 결정문(EX 211/Decision 39)을 통해 유네스코 제1차와 제2차 세계문화</p>
+                <span class="vidcard-btn vidcard-btn--fill">전체 재생목록 보기 <span class="vidcard-btn-icon"><img class="ic-default" src="assets/icon-arrow-alt-right.svg" alt="" width="20" height="20"><img class="ic-hover" src="assets/icon-arrow-alt-right-white.svg" alt="" width="20" height="20"></span></span>
+              </div>
+            </a>
+
+            <a class="vidcard" href="#">
+              <div class="vidcard-thumb">
+                <img src="assets/video-thumb-b.png" alt="2026 유네스코 문화예술교육 주간 ODA 성과공유 포럼 세션 발표 장면" loading="lazy">
+                <span class="vidcard-badge">3:08:30</span>
+              </div>
+              <div class="vidcard-body">
+                <h3 class="vidcard-t">2026 유네스코 문화예술교육 주간 | 문화예술교육 포럼</h3>
                 <p class="vidcard-d">유네스코와 유네스코 회원국은 2021년 제211차 집행이사회 결정문(EX 211/Decision 39)을 통해 유네스코 제1차와 제2차 세계문화…</p>
                 <span class="vidcard-btn">전체 재생목록 보기 <span class="vidcard-btn-icon"><img class="ic-default" src="assets/icon-arrow-alt-right.svg" alt="" width="20" height="20"><img class="ic-hover" src="assets/icon-arrow-alt-right-white.svg" alt="" width="20" height="20"></span></span>
               </div>
@@ -192,106 +294,8 @@
               </div>
             </a>
 
-            <a class="vidcard" href="#">
-              <div class="vidcard-thumb vidcard-thumb--stack">
-                <span class="vidcard-stack-a" aria-hidden="true"></span>
-                <span class="vidcard-stack-b" aria-hidden="true"></span>
-                <img src="assets/video-list-thumb-1.jpg" alt="미래 인적자원 함양을 위한 돌봄체계 — 신의진 교수 강연 썸네일" loading="lazy">
-                <span class="vidcard-badge">동영상 32개</span>
-              </div>
-              <div class="vidcard-body vidcard-body--stack">
-                <h3 class="vidcard-t">2024 세계문화예술교육 주간 행사</h3>
-                <p class="vidcard-d">유네스코와 유네스코 회원국은 2021년 제211차 집행이사회 결정문(EX 211/Decision 39)을 통해 유네스코 제1차와 제2차 세계문화…</p>
-                <span class="vidcard-btn">전체 재생목록 보기 <span class="vidcard-btn-icon"><img class="ic-default" src="assets/icon-arrow-alt-right.svg" alt="" width="20" height="20"><img class="ic-hover" src="assets/icon-arrow-alt-right-white.svg" alt="" width="20" height="20"></span></span>
-              </div>
-            </a>
-
-            <a class="vidcard" href="#">
-              <div class="vidcard-thumb vidcard-thumb--stack">
-                <span class="vidcard-stack-a" aria-hidden="true"></span>
-                <span class="vidcard-stack-b" aria-hidden="true"></span>
-                <img src="assets/video-list-thumb-1.jpg" alt="미래 인적자원 함양을 위한 돌봄체계 — 신의진 교수 강연 썸네일" loading="lazy">
-                <span class="vidcard-badge">동영상 32개</span>
-              </div>
-              <div class="vidcard-body vidcard-body--stack">
-                <h3 class="vidcard-t">2024 세계문화예술교육 주간 행사</h3>
-                <p class="vidcard-d">유네스코와 유네스코 회원국은 2021년 제211차 집행이사회 결정문(EX 211/Decision 39)을 통해 유네스코 제1차와 제2차 세계문화…</p>
-                <span class="vidcard-btn">전체 재생목록 보기 <span class="vidcard-btn-icon"><img class="ic-default" src="assets/icon-arrow-alt-right.svg" alt="" width="20" height="20"><img class="ic-hover" src="assets/icon-arrow-alt-right-white.svg" alt="" width="20" height="20"></span></span>
-              </div>
-            </a>
-
-            <a class="vidcard" href="#">
-              <div class="vidcard-thumb">
-                <img src="assets/video-list-thumb-2.jpg" alt="2024 문화예술교육 국제포럼 하이라이트 썸네일" loading="lazy">
-                <span class="vidcard-badge">3:08:30</span>
-              </div>
-              <div class="vidcard-body">
-                <h3 class="vidcard-t">2024 문화예술교육 국제포럼 하이라이트</h3>
-                <p class="vidcard-d">유네스코와 유네스코 회원국은 2021년 제211 차 집행이사회 결정문(EX 211/Decision 39)을 통해 유네스코 제1차와 제2차 세계문화</p>
-                <dl class="vidcard-meta">
-                  <dt>저작권자</dt><dd>한국문화예술교육진흥원</dd>
-                  <dt>제작연도</dt><dd>2024</dd>
-                </dl>
-              </div>
-            </a>
-
-            <a class="vidcard" href="#">
-              <div class="vidcard-thumb vidcard-thumb--stack">
-                <span class="vidcard-stack-a" aria-hidden="true"></span>
-                <span class="vidcard-stack-b" aria-hidden="true"></span>
-                <img src="assets/video-list-thumb-1.jpg" alt="미래 인적자원 함양을 위한 돌봄체계 — 신의진 교수 강연 썸네일" loading="lazy">
-                <span class="vidcard-badge">동영상 32개</span>
-              </div>
-              <div class="vidcard-body vidcard-body--stack">
-                <h3 class="vidcard-t">2024 세계문화예술교육 주간 행사</h3>
-                <p class="vidcard-d">유네스코와 유네스코 회원국은 2021년 제211차 집행이사회 결정문(EX 211/Decision 39)을 통해 유네스코 제1차와 제2차 세계문화…</p>
-                <span class="vidcard-btn">전체 재생목록 보기 <span class="vidcard-btn-icon"><img class="ic-default" src="assets/icon-arrow-alt-right.svg" alt="" width="20" height="20"><img class="ic-hover" src="assets/icon-arrow-alt-right-white.svg" alt="" width="20" height="20"></span></span>
-              </div>
-            </a>
-
-            <a class="vidcard" href="#">
-              <div class="vidcard-thumb vidcard-thumb--stack">
-                <span class="vidcard-stack-a" aria-hidden="true"></span>
-                <span class="vidcard-stack-b" aria-hidden="true"></span>
-                <img src="assets/video-list-thumb-1.jpg" alt="미래 인적자원 함양을 위한 돌봄체계 — 신의진 교수 강연 썸네일" loading="lazy">
-                <span class="vidcard-badge">동영상 32개</span>
-              </div>
-              <div class="vidcard-body vidcard-body--stack">
-                <h3 class="vidcard-t">2024 세계문화예술교육 주간 행사</h3>
-                <p class="vidcard-d">유네스코와 유네스코 회원국은 2021년 제211차 집행이사회 결정문(EX 211/Decision 39)을 통해 유네스코 제1차와 제2차 세계문화…</p>
-                <span class="vidcard-btn">전체 재생목록 보기 <span class="vidcard-btn-icon"><img class="ic-default" src="assets/icon-arrow-alt-right.svg" alt="" width="20" height="20"><img class="ic-hover" src="assets/icon-arrow-alt-right-white.svg" alt="" width="20" height="20"></span></span>
-              </div>
-            </a>
-
-            <a class="vidcard" href="#">
-              <div class="vidcard-thumb">
-                <img src="assets/video-list-thumb-2.jpg" alt="2024 문화예술교육 국제포럼 하이라이트 썸네일" loading="lazy">
-                <span class="vidcard-badge">3:08:30</span>
-              </div>
-              <div class="vidcard-body">
-                <h3 class="vidcard-t">2024 문화예술교육 국제포럼 하이라이트</h3>
-                <p class="vidcard-d">유네스코와 유네스코 회원국은 2021년 제211 차 집행이사회 결정문(EX 211/Decision 39)을 통해 유네스코 제1차와 제2차 세계문화</p>
-                <dl class="vidcard-meta">
-                  <dt>저작권자</dt><dd>한국문화예술교육진흥원</dd>
-                  <dt>제작연도</dt><dd>2024</dd>
-                </dl>
-              </div>
-            </a>
-
-            <a class="vidcard" href="#">
-              <div class="vidcard-thumb vidcard-thumb--stack">
-                <span class="vidcard-stack-a" aria-hidden="true"></span>
-                <span class="vidcard-stack-b" aria-hidden="true"></span>
-                <img src="assets/video-list-thumb-1.jpg" alt="미래 인적자원 함양을 위한 돌봄체계 — 신의진 교수 강연 썸네일" loading="lazy">
-                <span class="vidcard-badge">동영상 32개</span>
-              </div>
-              <div class="vidcard-body vidcard-body--stack">
-                <h3 class="vidcard-t">2024 세계문화예술교육 주간 행사</h3>
-                <p class="vidcard-d">유네스코와 유네스코 회원국은 2021년 제211차 집행이사회 결정문(EX 211/Decision 39)을 통해 유네스코 제1차와 제2차 세계문화…</p>
-                <span class="vidcard-btn">전체 재생목록 보기 <span class="vidcard-btn-icon"><img class="ic-default" src="assets/icon-arrow-alt-right.svg" alt="" width="20" height="20"><img class="ic-hover" src="assets/icon-arrow-alt-right-white.svg" alt="" width="20" height="20"></span></span>
-              </div>
-            </a>
-
+          </div>
+          </div>
           </div>
 
           <nav class="pager" aria-label="페이지">

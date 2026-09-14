@@ -4,17 +4,14 @@
    arte-library-line.css + arte-library-docs.css 재사용, 여기서는 카드형 + 정렬바만 추가.
    ========================================================================== */
 
-/* 정렬 바 — 개수 표시 없이 페이지당 보기만 우측 정렬 */
-.lst-bar--end { justify-content: flex-end; }
-
-/* 결과 카드 — 4열 그리드 */
-.lst-grid--reco { grid-template-columns: repeat(4, 1fr); }
+/* 결과 카드 — 4열 그리드, 행간 40 / 열간 24 (Figma node 19492:7300 기준) */
+.lst-grid--reco { grid-template-columns: repeat(4, 1fr); gap: clamp(20px, 2.08vw, 40px) 24px; }
 
 .recocard { display: flex; flex-direction: column; border: 1px solid var(--ink); overflow: hidden; background: var(--white); }
 .recocard-thumb { position: relative; aspect-ratio: 278 / 393; overflow: hidden; background: var(--gray-thumb); }
 .recocard-thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 
-.recocard-body { display: flex; flex-direction: column; gap: 6px; padding: 32px; }
+.recocard-body { display: flex; flex-direction: column; gap: 8px; padding: 20px 20px 32px; }
 .recocard-badge {
   display: inline-flex; align-self: flex-start; align-items: center; justify-content: center;
   border: 1.5px solid var(--ink); background: var(--ink); color: #fff;

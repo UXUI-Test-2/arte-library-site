@@ -2,37 +2,43 @@
    arte 라이브러리 — 영상 페이지 전용
    Figma 'sub_영상'(18183:1596) 1:1. 공통(헤더·푸터·토큰·필터/목록 셸)은
    arte-library-line.css + arte-library-docs.css 재사용, 여기서는 카드형만 추가.
+   · 갱신(fileKey weJUFzS3ekDRZrzokWEe3e / node 19492:5156, 2026-09-14): 카드 3종
+     - 단일 영상(.vidcard-body, 메타 표기) / 재생목록 미리보기(.vidcard-btn, 아웃라인 버튼) /
+     재생목록 묶음(.vidcard-thumb--collage + .vidcard-btn--fill, 재생시간 대신 "동영상 N개")
+     로 구성이 바뀌어 각 행마다 3종이 한 번씩만 나오도록 재배치. 재생목록 묶음형 썸네일의
+     기존 "회색 사각형 2장" 목업을 실제 흐린 배경 + 실사 썸네일 콜라주로 교체.
    ========================================================================== */
 
 /* 결과 카드 — 3열 그리드 */
 .lst-grid--video { grid-template-columns: repeat(3, 1fr); }
 
 .vidcard { display: flex; flex-direction: column; border: 1px solid var(--ink); overflow: hidden; background: var(--white); }
-.vidcard-thumb { position: relative; height: 213px; overflow: hidden; }
+.vidcard-thumb { position: relative; height: 213px; overflow: hidden; background: var(--gray-thumb); }
 .vidcard-thumb img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 3; }
 
-/* 재생목록형 카드 — 프레임 자체가 380×225로 더 크고(이미지는 213 그대로, 아래 12px 여백에
-   배지가 걸침), 대신 본문 상단 패딩을 32→20px로 줄여 카드 전체 높이는 동일하게 맞춤
-   (Figma node 18183:1788 기준, px 값 그대로) */
-.vidcard-thumb--stack { height: 225px; }
-.vidcard-thumb--stack img { height: 213px; }
-
-/* 뒤에 쌓인 카드처럼 보이도록 두 겹의 배경 레이어를 살짝 어긋나게 배치 — Figma img01/img02 px 값 그대로.
-   z-index로 순서 명시: img01(맨 뒤) < img02(중간) < 앞면 사진 < 배지 */
-.vidcard-stack-a,
-.vidcard-stack-b { position: absolute; }
-.vidcard-stack-a { z-index: 2; left: 10px; top: 18px; width: 360px; height: 201px; background: #d9d9d9; } /* img02 — 중간 */
-.vidcard-stack-b { z-index: 1; left: 50%; top: 35px; width: 340px; height: 190px; background: #f4f5f6; transform: translateX(-50%); } /* img01 — 맨 뒤 */
+/* 재생목록 묶음형 카드 — 흐린 배경 위에 쌓인 카드 3장(뒤 2장은 어두운 단색, 맨 앞은 실제 썸네일)
+   (Figma node 19492:5311 기준, px 값 그대로) */
+.vidcard-thumb--collage { background: #111; }
+.vidcard-thumb--collage .vc-bg {
+  position: absolute; left: 50%; top: 50%; z-index: 0;
+  width: 100%; height: 100%; object-fit: cover;
+  transform: translate(-50%, -50%) scale(1.35); filter: blur(20px);
+}
+.vidcard-thumb--collage::after { content: ''; position: absolute; inset: 0; z-index: 1; background: rgba(0, 0, 0, 0.5); }
+.vc-stack-a, .vc-stack-b, .vc-front { position: absolute; left: 50%; }
+.vc-stack-a { z-index: 2; top: calc(50% + 19px); width: 212px; height: 139px; background: #2a2929; transform: translate(-50%, -50%); }
+.vc-stack-b { z-index: 3; top: calc(50% + 6.5px); width: 225px; height: 152px; background: #0c0c0c; transform: translate(-50%, -50%); }
+.vc-front { z-index: 4; top: calc(50% - 0.5px); width: 241px; height: 150px; transform: translate(-50%, -50%); overflow: hidden; }
+.vc-front img { position: static; width: 100%; height: 100%; object-fit: cover; }
 
 .vidcard-badge {
-  position: absolute; z-index: 4; right: 0; bottom: 0;
+  position: absolute; z-index: 5; right: 0; bottom: 0;
   background: rgba(0, 0, 0, 0.6); color: #fff;
   padding: 4px 8px; font-size: 16px; font-weight: 500; line-height: 1.5;
 }
-.vidcard-thumb--stack .vidcard-badge { bottom: 12px; }
+.vidcard-badge--collage { right: 69px; bottom: 32px; }
 
 .vidcard-body { display: flex; flex-direction: column; gap: 24px; padding: 32px; flex: 1; }
-.vidcard-body--stack { padding-top: 20px; }
 .vidcard-t { font-size: clamp(19px, 1.46vw, 28px); font-weight: 600; line-height: 1.5; }
 .vidcard:hover .vidcard-t { color: var(--blue); }
 .vidcard-d {
@@ -58,6 +64,12 @@
 .vidcard:hover .vidcard-btn { background: var(--ink); color: #fff; }
 .vidcard:hover .vidcard-btn-icon .ic-default { opacity: 0; }
 .vidcard:hover .vidcard-btn-icon .ic-hover { opacity: 1; }
+
+/* 재생목록 묶음형 카드의 버튼은 기본 상태부터 채워짐 (Figma node 19492:5326) */
+.vidcard-btn--fill { background: var(--ink); color: #fff; }
+.vidcard-btn--fill .vidcard-btn-icon .ic-default { opacity: 0; }
+.vidcard-btn--fill .vidcard-btn-icon .ic-hover { opacity: 1; }
+.vidcard:hover .vidcard-btn--fill { background: var(--blue); }
 
 /* ---- 모바일 ------------------------------------------------------------- */
 
