@@ -8,6 +8,36 @@
 (function () {
   'use strict';
 
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var hasGsap = typeof gsap !== 'undefined';
+
+  /* 2026-09-14: 통계 서브페이지(arte-library-stats.js animateCharts)와 같은 등장 모션 —
+     막대는 아래→위로 차오르고, 값/점은 좌→우로 순서대로 나타난다. 다만 여기서는 스크롤로
+     이 섹션이 화면에 들어올 때 재생해야 하므로, 각 차트는 만들어질 때 최종 상태 대신
+     "접힌" 상태로 그려두고 재생 함수를 등록해둔다 — 실제 재생은 IntersectionObserver가
+     .statprev-grid가 뷰포트에 들어오는 걸 감지한 시점에 한 번만 실행한다. */
+  var pendingReveals = [];
+  function registerReveal(fn) {
+    if (reduceMotion || !hasGsap) return;
+    pendingReveals.push(fn);
+  }
+  function initScrollReveal() {
+    var grid = document.querySelector('.statprev-grid');
+    if (!grid || !pendingReveals.length) return;
+    if (!('IntersectionObserver' in window)) {
+      pendingReveals.forEach(function (fn) { fn(); });
+      return;
+    }
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        pendingReveals.forEach(function (fn) { fn(); });
+        observer.disconnect();
+      });
+    }, { threshold: 0.3 });
+    observer.observe(grid);
+  }
+
   var ADMIN = {
     color: '#173bff',
     max: 16000,
@@ -149,11 +179,14 @@
     var tooltip = buildTooltip();
 
     var bars = el('div', 'pchart-bars');
+    var barEls = [];
     ADMIN.points.forEach(function (p) {
       var col = el('div', 'pchart-col');
       var bar = el('div', 'pchart-bar');
       bar.style.height = (p.value / ADMIN.max) * 100 + '%';
+      if (!reduceMotion && hasGsap) { bar.style.transformOrigin = 'bottom'; bar.style.transform = 'scaleY(0)'; }
       attachTooltip(bar, tooltip, plot, p.year, p.value.toLocaleString(), ADMIN.color);
+      barEls.push(bar);
       col.appendChild(bar);
       bars.appendChild(col);
     });
@@ -195,6 +228,7 @@
       var path = document.createElementNS(svgNS, 'path');
       path.setAttribute('d', d.trim());
       svg.appendChild(path);
+      var circles = [];
       points.forEach(function (pt, i) {
         var circle = document.createElementNS(svgNS, 'circle');
         circle.setAttribute('class', 'pchart-point');
@@ -202,17 +236,40 @@
         circle.setAttribute('cy', pt.y);
         circle.setAttribute('r', 2);
         attachTooltip(circle, tooltip, plot, ADMIN.points[i].year, pt.value.toLocaleString(), ADMIN.color);
+        circles.push(circle);
         svg.appendChild(circle);
       });
       plot.appendChild(svg);
 
       /* Figma 실측은 17개년 값이 전부 표시되어 있다 — 일부만 보이던 것을 전부 표시로 수정 */
+      var labels = [];
       points.forEach(function (pt) {
         var label = el('span', 'pchart-value');
         label.textContent = pt.value.toLocaleString();
         label.style.left = pt.x + 'px';
         label.style.top = pt.y + 'px';
+        labels.push(label);
         plot.appendChild(label);
+      });
+
+      /* 등장 모션 — 막대 아래→위로, 꺾은선 좌→우로 그려지기, 점/값은 뒤이어 순서대로 페이드인.
+         통계 서브페이지(animateCharts)와 동일한 스태거 계산: 막대 전체가 끝나는 시점(finishAt)에
+         맞춰 꺾은선 duration을 맞추고, 점/값은 그 직전에 시작해 거의 동시에 끝나게 한다. */
+      if (reduceMotion || !hasGsap) return;
+      gsap.set(circles, { opacity: 0, scale: 0, transformOrigin: 'center' });
+      gsap.set(labels, { opacity: 0 });
+      var len = path.getTotalLength();
+      path.style.strokeDasharray = len;
+      path.style.strokeDashoffset = len;
+
+      registerReveal(function () {
+        var barDuration = 0.6;
+        var stagger = Math.min(0.3, 2.4 / barEls.length);
+        var finishAt = stagger * (barEls.length - 1) + barDuration;
+        gsap.to(barEls, { scaleY: 1, duration: barDuration, ease: 'power2.out', stagger: stagger });
+        gsap.to(path, { strokeDashoffset: 0, duration: finishAt, ease: 'power1.inOut' });
+        gsap.to(circles, { opacity: 1, scale: 1, duration: 0.35, ease: 'back.out(2)', stagger: stagger, delay: finishAt - 0.35 });
+        gsap.to(labels, { opacity: 1, duration: 0.35, ease: 'power1.out', stagger: stagger, delay: finishAt - 0.3 });
       });
     });
   }
@@ -228,8 +285,10 @@
     var tooltip = buildTooltip();
 
     var bars = el('div', 'pchart-bars');
+    var cols = [];
     SURVEY.series.forEach(function (row, ri) {
       var col = el('div', 'pchart-col');
+      if (!reduceMotion && hasGsap) { col.style.transformOrigin = 'bottom'; col.style.transform = 'scaleY(0)'; }
       row.forEach(function (value, i) {
         var seg = el('div', 'pchart-seg');
         seg.style.height = (value / SURVEY.max) * 100 + '%';
@@ -242,6 +301,7 @@
         }
         col.appendChild(seg);
       });
+      cols.push(col);
       bars.appendChild(col);
     });
     plot.appendChild(bars);
@@ -255,6 +315,12 @@
     chart.appendChild(xaxis);
     root.appendChild(chart);
     alignXAxis(yaxis, xaxis);
+
+    /* 스택 막대는 세그먼트별이 아니라 컬럼(연도) 단위로 통째로 아래→위로 올라오고,
+       연도 사이에서만 좌→우로 순차 등장한다 (통계 서브페이지와 동일 규칙) */
+    registerReveal(function () {
+      gsap.to(cols, { scaleY: 1, duration: 0.6, ease: 'power2.out', stagger: Math.min(0.3, 1.2 / cols.length) });
+    });
   }
 
   /* 2026-09-14: conic-gradient의 각도 기반 흰 여백은 반지름이 커질수록 벌어지는
@@ -281,6 +347,11 @@
 
     var labels = el('div', 'pchart-pie-labels');
     var tooltip = buildTooltip();
+    var labelEls = [];
+
+    if (!reduceMotion && hasGsap) {
+      svg.style.transformOrigin = 'center'; svg.style.transform = 'scale(0.8)'; svg.style.opacity = 0;
+    }
 
     var acc = 0;
     PIE.forEach(function (d) {
@@ -313,6 +384,8 @@
       label.style.textAlign = onRight ? 'left' : 'right';
       label.style.transform = 'translate(' + (onRight ? '0' : '-100%') + ', -50%)';
       label.textContent = d.label + ', ' + d.value.toLocaleString();
+      if (!reduceMotion && hasGsap) label.style.opacity = 0;
+      labelEls.push(label);
       labels.appendChild(label);
     });
 
@@ -321,6 +394,14 @@
     stage.appendChild(tooltip);
     wrap.appendChild(stage);
     root.appendChild(wrap);
+
+    /* 등장 모션 — 파이 전체가 팝업하듯 스케일+페이드로 들어오고, 조각을 그린 순서(문서→도서→
+       영상→추천→지역별 정보) 그대로 라벨이 순차적으로 나타난다. 라벨은 이미 정렬용
+       transform(translate)을 쓰고 있어 GSAP가 x/y로 건드리면 위치가 깨지므로 opacity만 애니메이션. */
+    registerReveal(function () {
+      gsap.to(svg, { scale: 1, opacity: 1, duration: 0.5, ease: 'back.out(1.7)' });
+      gsap.to(labelEls, { opacity: 1, duration: 0.35, ease: 'power1.out', stagger: 0.12, delay: 0.25 });
+    });
   }
 
   document.addEventListener('DOMContentLoaded', function () {
@@ -329,5 +410,8 @@
       var render = renderers[root.getAttribute('data-chart')];
       if (render) render(root);
     });
+    /* admin은 rAF 이후에 reveal을 등록하므로, 옵저버 설치도 한 프레임 미뤄서 등록이 끝난
+       뒤에 잡는다 */
+    requestAnimationFrame(initScrollReveal);
   });
 })();
