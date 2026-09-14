@@ -41,31 +41,35 @@
 
   /* --------------------------------------------------------------------
      2. 서브페이지 타이틀 등장 모션 (영상 · 추천)
-     .title-reveal 스코프: 브레드크럼 + h1이 하→상 페이드로 등장하고,
-     (있다면) 상단 분류 탭(.sub-tabs a)이 왼쪽부터 순차로 이어서 등장한 뒤,
-     본문 영역(.sub-content)이 페이드인한다.
+     참고: uxui-test-1.github.io/arte-main/arte-location.html
+     .title-reveal 스코프: 브레드크럼은 정적으로 두고, h1과 (있다면) 상단 분류
+     탭(.sub-tabs a)만 각각 .reveal-mask(overflow:hidden)에 담아 아래→위로
+     슬라이드해 등장시킨다 — 오퍼시티는 건드리지 않고 마스크로만 영역을 가린다.
+     이어서 본문 영역(.sub-content)이 페이드인한다.
      -------------------------------------------------------------------- */
   function titleReveal() {
     var scopes = document.querySelectorAll('.title-reveal');
     if (!scopes.length) return;
 
     scopes.forEach(function (scope) {
-      var titleTargets = [scope.querySelector('.crumb'), scope.querySelector('.sub-h1')].filter(Boolean);
-      var tabs = scope.querySelectorAll('.sub-tabs a');
+      var titleMask = scope.querySelector('.sub-h1') && scope.querySelector('.sub-h1').closest('.reveal-mask');
+      var tabMasks = scope.querySelectorAll('.sub-tabs .reveal-mask');
       var content = scope.nextElementSibling;
 
       if (reduceMotion) {
-        gsap.set(titleTargets, { opacity: 1, y: 0 });
-        if (tabs.length) gsap.set(tabs, { opacity: 1, y: 0 });
         if (content) gsap.set(content, { opacity: 1 });
         return;
       }
 
       var tl = gsap.timeline({ delay: 0.1 });
-      tl.fromTo(titleTargets, { opacity: 0, y: 32 }, { opacity: 1, y: 0, duration: 0.6, ease: 'expo.out', stagger: 0.08 });
 
-      if (tabs.length) {
-        tl.fromTo(tabs, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.5, ease: 'expo.out', stagger: 0.06 }, '-=0.25');
+      if (titleMask) {
+        tl.fromTo(titleMask.firstElementChild, { yPercent: 100 }, { yPercent: 0, duration: 0.6, ease: 'expo.out' });
+      }
+
+      if (tabMasks.length) {
+        var tabEls = Array.prototype.map.call(tabMasks, function (m) { return m.firstElementChild; });
+        tl.fromTo(tabEls, { yPercent: 100 }, { yPercent: 0, duration: 0.5, ease: 'expo.out', stagger: 0.06 }, '-=0.25');
       }
 
       if (content) {

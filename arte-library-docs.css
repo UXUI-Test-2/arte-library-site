@@ -27,13 +27,20 @@
   font-size: clamp(32px, 4.17vw, 80px); line-height: 1; letter-spacing: -0.04em;
 }
 .sub-tabs { display: flex; gap: 8px; }
+.sub-tabs .reveal-mask { flex: 1; }
 .sub-tabs a {
-  flex: 1; display: flex; align-items: center; justify-content: center;
+  width: 100%; display: flex; align-items: center; justify-content: center;
   padding: 16px 0; border: 1.4px solid var(--ink);
   font-size: clamp(17px, 1.67vw, 32px); font-weight: 600;
 }
 .sub-tabs a[aria-current='page'] { background: var(--ink); color: #fff; }
 .sub-tabs a:hover:not([aria-current='page']) { background: var(--gray-bg); }
+
+/* 타이틀/카테고리 등장 모션 — 마스크(overflow:hidden)로 아래→위 슬라이드만 사용,
+   오퍼시티는 건드리지 않는다 (arte-motion.js 의 titleReveal() 이 스케일)
+   참고: uxui-test-1.github.io/arte-main/arte-location.html */
+.reveal-mask { overflow: hidden; display: block; }
+.reveal-mask > * { display: block; }
 
 .sub-content { display: flex; flex-direction: column; gap: clamp(40px, 4.17vw, 80px); }
 .sub-head {
