@@ -52,7 +52,7 @@
     if (!kv || reduceMotion) return;
     window.setTimeout(function () {
       kv.classList.add('is-compact');
-    }, 2200);
+    }, 1200);
   }
 
   /* --------------------------------------------------------------------
