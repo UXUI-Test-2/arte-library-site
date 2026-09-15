@@ -112,16 +112,21 @@
   function playResultTimeline() {
     var desc = document.querySelector('.ais-desc[data-when="result"]');
     var tabs = Array.prototype.slice.call(document.querySelectorAll('.ais-result .lst-cat [role="tab"]'));
+    var grid = document.querySelector('.ais-ev-grid');
     var moreBtn = document.querySelector('.ais-all');
 
-    /* ais-ev 카드(썸네일+본문 포함)는 모션 없이 즉시 보여준다 — desc/tabs/
-       더보기 버튼만 살짝 등장 모션을 유지. */
+    /* lst-cat 탭 모션이 다 끝난 뒤에야 ais-ev-grid가 나온다 — 카드 내부
+       (thumb/body)는 쪼개지 않고 그리드 전체가 한 번에 fade-in만 한다. */
     var tl = gsap.timeline();
     if (desc) tl.fromTo(desc, { opacity: 0 }, { opacity: 1, duration: 1.067, ease: 'power1.out' }, 0);
     if (tabs.length) tl.fromTo(tabs, { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 0.733, ease: 'expo.out', stagger: 0.15 }, 0.2);
 
-    var afterTabs = 0.2 + tabs.length * 0.15 + 0.4;
-    if (moreBtn) tl.fromTo(moreBtn, { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 0.733, ease: 'expo.out' }, afterTabs);
+    var tabsEnd = tabs.length ? 0.2 + (tabs.length - 1) * 0.15 + 0.733 : 0.2;
+    var gridDuration = 0.6;
+    if (grid) tl.fromTo(grid, { opacity: 0 }, { opacity: 1, duration: gridDuration, ease: 'power1.out' }, tabsEnd);
+
+    var afterGrid = tabsEnd + gridDuration + 0.2;
+    if (moreBtn) tl.fromTo(moreBtn, { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 0.733, ease: 'expo.out' }, afterGrid);
   }
 
   /* 검색어 + 로딩 상태를 보여준 뒤, 일정 시간이 지나면 자동으로 결과를 연다.
