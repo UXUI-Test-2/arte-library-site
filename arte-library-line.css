@@ -199,11 +199,10 @@ h1, h2, h3, h4, p { margin: 0; }
 .kv { padding: clamp(48px, 5.2vw, 100px) 0; background: var(--white); position: relative; overflow: hidden; }
 .kv > .wrap { position: relative; z-index: 1; }
 
-/* 히어로 백그라운드 — 그리드 워터마크만 정적 캡처 이미지로 유지, 블러 블롭은 완전히
-   제거해 순백 배경으로 둔다(모션 버전은 motion-kv/index.html 스냅샷에 보존).
+/* 히어로 백그라운드 — 그리드 워터마크·블러 블롭 모두 제거하고 순백 배경만 둔다
+   (모션 버전은 motion-kv/index.html 스냅샷에 보존).
    스크롤 시 옅어지는 처리는 arte-motion.js의 kvBgFade()가 opacity를 직접 제어한다. */
 .kv-bg { position: absolute; inset: 0; overflow: hidden; z-index: 0; pointer-events: none; }
-.kv-bg-pattern { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 
 /* 히어로 하단이 다음 섹션의 흰 배경과 자연스럽게 이어지도록 — 스크롤 페이드
    (kvBgFade)와는 별개로 항상 켜져 있는 고정 그라디언트 */
