@@ -241,7 +241,12 @@
   .sub-title-b { gap: 20px; }
   .sub-tabs a { padding: 12px 0; }
   .sub-head { padding-bottom: 16px; border-bottom-width: 2px; gap: 8px; }
-  .sub-board { flex-direction: column; gap: 32px; }
+  /* .sub-board 기본값 align-items:flex-start가 데스크톱(가로 배치, 사이드바
+     고정폭)용이었는데, 모바일에서 세로 배치로 바꾸기만 하고 align-items를
+     stretch로 안 바꿔서 .lst(고정 width 없이 flex:1로만 폭을 잡던 요소)가
+     부모 폭 대신 자기 콘텐츠의 자연 폭(그리드 내용 기준)만큼 넓어져 화면
+     밖으로 넘쳤다 — align-items:stretch로 폭을 부모 기준으로 강제. */
+  .sub-board { flex-direction: column; align-items: stretch; gap: 32px; }
   .fil { width: 100%; }
   .lst-content { gap: 24px; }
   .lst-inner { gap: 16px; }
