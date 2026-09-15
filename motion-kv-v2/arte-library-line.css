@@ -1,0 +1,983 @@
+/* ==========================================================================
+   arte 라이브러리 — 공통 디자인 시스템 + 홈
+   Figma 'main_수정중'(MggyO8qQHuiYJRDenEWqlL / 19388:756) 1:1 기준. 2026-09-04 전면 재작성.
+
+   · 1920 기준 디자인. 큰 타이포는 clamp()로 유동 적용 (1920에서 Figma 실측값과 일치)
+   · Figma 실제 컬러/여백을 그대로 사용한다 (팀 토큰 상한을 넘는 값은 Figma 우선)
+   · 서브페이지(docs/region/ai-search)가 쓰는 공통 컴포넌트는 하단 "서브페이지 공통" 블록에 유지
+   ========================================================================== */
+
+/* 디스플레이 서체 — Figma 'Paperlogy 6 SemiBold' (2026-09-11 전 화면 ArteBasic → Paperlogy 통일) */
+@font-face {
+  font-family: 'Paperlogy';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-6SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-display: swap;
+}
+
+:root {
+  /* ---- Primitive/Color (Figma dsg_01_color, 20543:2372 · v1.0 2026-09-14) ---- */
+  --gray-0: #ffffff;
+  --gray-50: #f3f3f3;
+  --gray-200: #d9d9d9;
+  --gray-400: #999999;
+  --gray-600: #555555;
+  --gray-700: #333333;
+  --gray-800: #1e2124;
+  --gray-1000: #000000;
+  --brand-primary: #007ade;   /* Blue/500 — Text/Accent · Brand/Primary */
+  --brand-light: #eff6ff;    /* Blue/50 */
+  --accent-red: #ed1a3c;     /* Red/500 (= Danger) */
+  --accent-pink: #ff2268;    /* Pink/500 */
+  --accent-yellow: #eab308;  /* Yellow/500 */
+  --accent-green: #22c55e;   /* Green/500 */
+  --accent-purple: #8b5cf6;  /* Purple/500 */
+  --navy: #07102f;
+  --navy-text: #b8c4e0;
+
+  /* ---- Semantic/Color — 기존 변수명 유지, 값만 v1.0 기준으로 정리 ----
+     2026-09-14: --blue-badge(#0428da)/--blue-dot(#256ef4)은 Figma dsg_01_color에
+     별도 정의가 없다 — 단일 Brand/Primary(#007ADE)로 통합 (다색 브랜드블루 폐기) */
+  --blue: var(--brand-primary);        /* KV 헤드라인 */
+  --blue-badge: var(--brand-primary);  /* 배지·강조 */
+  --blue-dot: var(--brand-primary);    /* 캐러셀 활성 도트 */
+  --ink: var(--gray-1000);
+  --ink-soft: var(--gray-800);
+  --gray-888: #888888;                 /* Figma dsg_01엔 없는 보조 톤 — 태그/메타용으로 유지 */
+  --gray-999: var(--gray-400);
+  --gray-555: var(--gray-600);
+  --gray-line: #cdd1d5;                /* 기존 헤어라인 — Figma Border/Default(#D9D9D9)와 별개로 유지 */
+  --gray-bg: var(--gray-50);           /* BG/Subtle */
+  --gray-bg2: #efefef;
+  --gray-thumb: #e8e8e8;
+  --surface-mast: #eef2f7;             /* BG/Masthead */
+  --surface-ft: #f4f5f6;
+  --white: var(--gray-0);
+
+  /* ---- Spacing scale (Figma dsg_03_spacing, 20543:2660) ---- */
+  --spacing-1: 4px;   --spacing-2: 8px;   --spacing-3: 12px;  --spacing-4: 16px;
+  --spacing-5: 20px;  --spacing-6: 24px;  --spacing-7: 28px;  --spacing-8: 32px;
+  --spacing-9: 40px;  --spacing-10: 48px; --spacing-11: 64px; --spacing-12: 80px;
+  --spacing-13: 120px;
+  --spacing-none: var(--spacing-1);  --spacing-xs: var(--spacing-2);
+  --spacing-sm: var(--spacing-3);    --spacing-md: var(--spacing-4);
+  --spacing-lg: var(--spacing-6);    --spacing-xl: var(--spacing-8);
+  --spacing-2xl: var(--spacing-9);   --spacing-3xl: var(--spacing-10);
+  --spacing-4xl: var(--spacing-11);  --spacing-5xl: var(--spacing-12);
+  --spacing-6xl: var(--spacing-13);
+
+  /* ---- Radius scale ---- */
+  --radius-none: 0; --radius-2: 2px; --radius-xs: 4px; --radius-7: 7px;
+  --radius-8: 8px; --radius-10: 10px; --radius-sm: 12px; --radius-md: 16px;
+  --radius-lg: 18px; --radius-xl: 20px; --radius-2xl: 24px; --radius-26: 26px;
+  --radius-3xl: 32px; --radius-4xl: 40px; --radius-full: 999px;
+
+  /* ---- Effects (Figma dsg_05_effects_variables, 20543:3182) ---- */
+  --shadow-card: 0 2px 8px 0 rgba(0, 0, 0, .08);
+  --shadow-dropdown: 0 4px 12px 0 rgba(0, 0, 0, .08);
+  --shadow-hover: 0 4px 16px 0 rgba(0, 0, 0, .08);
+  --shadow-modal: 0 4px 24px 0 rgba(0, 0, 0, .12);
+  --shadow-toast: 0 8px 32px 0 rgba(0, 0, 0, .12);
+  --shadow-overlay: 0 12px 40px 0 rgba(0, 0, 0, .16);
+  --shadow-inner-subtle: inset 0 1px 2px 0 rgba(0, 0, 0, .06);
+
+  --side: clamp(20px, 8.33vw, 160px);   /* Figma px-160 */
+  --content: 1600px;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--white);
+  color: var(--ink);
+  font-family: 'Pretendard GOV Variable', 'Pretendard GOV', 'Noto Sans KR', system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  letter-spacing: -0.02em;
+}
+
+img, svg { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; letter-spacing: inherit; color: inherit; cursor: pointer; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
+h1, h2, h3, h4, p { margin: 0; }
+
+:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+
+.skip {
+  position: absolute; left: 0; top: -80px;
+  background: var(--ink); color: #fff; padding: 12px 20px; z-index: 100;
+}
+.skip:focus { top: 0; }
+
+.sr {
+  position: absolute; width: 1px; height: 1px;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}
+
+/* PC/모바일 전용 대체 레이아웃 토글 (예: 지역별 정보 — 같은 콘텐츠를 다른 구조로 보여줘야 할 때).
+   "숨길 때만" display:none을 걸고 보일 때는 아무것도 강제하지 않는다 — 그래야 .rgcard-rail
+   같은 컴포넌트 클래스가 정한 display:flex 등이 그대로 살아있다(예전엔 보이는 쪽에도
+   display:block !important를 걸어서 flex가 깨지는 버그가 있었음). */
+@media (min-width: 769px) {
+  .only-mobile { display: none !important; }
+}
+@media (max-width: 768px) {
+  .only-pc { display: none !important; }
+}
+
+.wrap { width: min(var(--content), calc(100% - var(--side) * 2)); margin-inline: auto; }
+
+.display { font-family: 'Paperlogy', 'Pretendard GOV Variable', 'Pretendard GOV', sans-serif; font-weight: 600; }
+
+/* ==========================================================================
+   마스트헤드 / 헤더 / GNB
+   ========================================================================== */
+
+/* mh-in은 hd-in과 같은 좌측 기준선(--side 패딩)에 맞춰야 한다 — 예전에는 마스트헤드를
+   1200px 폭으로 화면 중앙 정렬해서, GNB(hd-in)의 좌측 패딩 기준 시작점과 어긋나 있었다. */
+.masthead { background: var(--surface-mast); padding: 0 var(--side); }
+.mh-in {
+  width: min(1200px, 100%);
+  display: flex; align-items: center; gap: 8px; height: 32px;
+  font-size: 15px; color: var(--ink-soft);
+}
+.mh-flag { width: 24px; height: 16px; flex: none; }
+
+/* 스크롤 시 헤더가 좁아지지만(참고: uxui-test-1.github.io/arte-main), 로고는 아이콘 마크로
+   바꾸지 않고 아르떼라이브러리 워드마크 그대로 유지한다 — arte-header.js가 is-scrolled 토글 */
+.hd { background: var(--white); position: sticky; top: 0; z-index: 50; }
+.hd-in {
+  width: min(1920px, 100%);
+  margin-inline: auto;
+  padding: 30px var(--side);
+  display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  transition: padding 0.3s ease;
+}
+.hd.is-scrolled .hd-in { padding-top: 16px; padding-bottom: 16px; }
+.hd-logo img { width: 199px; height: 28px; object-fit: contain; }
+
+@media (min-width: 769px) {
+  .gnb, .hd-account { transition: opacity 0.3s ease; }
+  .hd.is-scrolled .gnb,
+  .hd.is-scrolled .hd-account { opacity: 0; pointer-events: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hd-in, .gnb, .hd-account { transition: none; }
+}
+
+.gnb { display: flex; align-items: center; }
+.gnb a {
+  display: flex; align-items: center; justify-content: center;
+  height: 40px; padding: 20px clamp(12px, 2.08vw, 40px);
+  font-size: clamp(15px, 1.25vw, 24px); font-weight: 700; line-height: 1.5;
+  white-space: nowrap;
+}
+.gnb a:hover,
+.gnb a[aria-current='page'] { color: var(--blue-badge); }
+
+.hd-btn { display: flex; align-items: center; gap: 14px; }
+.hd-account {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 16px; border-radius: 999px; background: rgba(0, 0, 0, 0.1);
+  font-size: 14px; font-weight: 500; white-space: nowrap;
+}
+.hd-account a:hover { color: var(--blue-badge); }
+.hd-bar { width: 1px; height: 10px; background: var(--ink); }
+.hd-icon {
+  display: grid; place-items: center; width: 30px; height: 30px;
+  border: 0; background: none; padding: 0; flex: none;
+}
+.hd-icon img { width: 30px; height: 30px; }
+
+/* ==========================================================================
+   메인 KV — 검색
+   ========================================================================== */
+
+.kv { padding: clamp(48px, 5.2vw, 100px) 0; background: var(--white); position: relative; overflow: hidden; }
+.kv > .wrap { position: relative; z-index: 1; }
+
+/* 히어로 백그라운드(버전2) — projects/arte/video/wave-hero/src/WaveHero.tsx를 Remotion으로
+   렌더링한 실제 mp4(../assets/kv-bg-wave.mp4, 1920×1080/30fps/10s 루프)를 그대로 배경 영상으로 사용.
+   그리드 닷/라인 + 좌→우 드리프트 블롭이 이미 영상 안에 전부 합성되어 있어 별도 CSS 애니메이션이
+   필요 없다(버전1=motion-kv는 동일 연출을 CSS 블롭 애니메이션으로 포팅한 버전).
+   스크롤 시 옅어지는 처리는 arte-motion.js의 kvBgFade()가 opacity를 직접 제어한다. */
+.kv-bg { position: absolute; inset: 0; overflow: hidden; z-index: 0; pointer-events: none; }
+.kv-bg-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
+/* 히어로 하단이 다음 섹션의 흰 배경과 자연스럽게 이어지도록 — 스크롤 페이드
+   (kvBgFade)와는 별개로 항상 켜져 있는 고정 그라디언트 */
+.kv-bg-fade-bottom {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 35%;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), var(--white));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kv-bg-video { opacity: 0.08; }
+}
+.kv-title {
+  font-family: 'Paperlogy', 'Pretendard GOV Variable', 'Pretendard GOV', sans-serif;
+  font-size: clamp(24px, 5.21vw, 100px);
+  line-height: 1.15;
+  letter-spacing: -0.05em;
+  color: var(--blue);
+  font-weight: 600;
+  word-break: keep-all;
+  transition: font-size 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.kv-search {
+  margin-top: clamp(40px, 6.25vw, 120px);
+  display: flex; flex-direction: column; gap: 32px;
+  transition: margin-top 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.kvs {
+  display: flex; align-items: center; gap: clamp(16px, 2.5vw, 48px);
+  border-bottom: 6px solid var(--ink);
+  padding: 20px 0 26px;
+  transition: padding 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.kvs input {
+  flex: 1; min-width: 0; border: 0; outline: 0; background: none;
+  font-family: inherit; font-weight: 600;
+  font-size: clamp(18px, 2.29vw, 44px); line-height: 1.2;
+  letter-spacing: -0.02em; color: var(--ink);
+  transition: font-size 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* 축소 인터렉션 — Figma 노드 20516:23920 "축소인터렉션" 1:1
+   타이틀 100→80px, kv-search 여백 120→60px, 검색어 44→36px, 입력창 하단 패딩 26→16px.
+   letter-spacing은 em 단위라 폰트 크기에 자동 비례하므로 값 변경 불필요. */
+.kv.is-compact .kv-title { font-size: clamp(20px, 4.17vw, 80px); }
+.kv.is-compact .kv-search { margin-top: clamp(20px, 3.13vw, 60px); }
+.kv.is-compact .kvs { padding: 20px 0 16px; }
+.kv.is-compact .kvs input { font-size: clamp(15px, 1.88vw, 36px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .kv-title, .kv-search, .kvs, .kvs input { transition: none; }
+}
+.kvs input::placeholder { color: var(--ink); }
+.kvs-go {
+  position: relative; flex: none; border: 0; background: none; padding: 0;
+  width: clamp(48px, 4.17vw, 80px); height: clamp(48px, 4.17vw, 80px);
+}
+.kvs-go-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.kvs-go-ic {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  width: 60%; height: 60%;
+}
+.kvs-go:hover { opacity: 0.82; }
+
+.kv-chips { display: flex; flex-wrap: wrap; gap: 16px; }
+.kv-chips button {
+  border: 0; background: var(--gray-bg);
+  padding: 10px 20px;
+  font-size: clamp(13px, 0.83vw, 16px); font-weight: 500; line-height: 1.6;
+  color: #60636c;
+}
+.kv-chips button:hover { background: #e6e9ef; color: var(--ink); }
+
+/* ==========================================================================
+   섹션 공통 (Figma: 62px 타이틀 + 4px 블랙 언더라인 + plus 아이콘)
+   ========================================================================== */
+
+.sec { padding: 60px 0; }
+.sec--last { padding-bottom: 120px; }
+.sec--split .wrap { display: flex; gap: 40px; align-items: flex-start; }
+
+.sec-head {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 24px; padding-bottom: 20px;
+  border-bottom: 4px solid var(--ink);
+}
+.sec-head--plain { justify-content: flex-start; }
+.sec-title {
+  font-family: 'Paperlogy', 'Pretendard GOV Variable', 'Pretendard GOV', sans-serif; font-weight: 600;
+  font-size: clamp(28px, 3.23vw, 62px); line-height: 1;
+}
+.sec-add { flex: none; display: block; width: 40px; height: 40px; }
+.sec-add img { width: 40px; height: 40px; }
+.sec-add:hover { opacity: 0.6; }
+
+.tag-line { color: var(--gray-888); font-size: clamp(14px, 0.94vw, 18px); line-height: 1.5; }
+
+.badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 4px 12px; font-size: 16px; font-weight: 500; line-height: 1.5; color: #fff;
+}
+.badge--black { background: var(--ink); }
+.badge--blue { background: var(--blue-badge); }
+
+.link-more {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 16px; font-weight: 500; color: var(--ink);
+}
+.link-more img { width: 24px; height: 24px; transform: rotate(-90deg); }
+
+.round-btn {
+  width: 40px; height: 40px; display: grid; place-items: center;
+  border: 1px solid var(--gray-line); border-radius: 999px;
+  background: var(--white); padding: 0;
+}
+.round-btn:hover { border-color: var(--ink); }
+.round-btn img { width: 24px; height: 24px; }
+
+/* ==========================================================================
+   아카이브 — 풀블리드 이미지 카드 + 그라디언트 오버레이
+   ========================================================================== */
+
+.arc-rail { margin-top: 40px; }
+.arc-track {
+  display: flex; gap: 30px; overflow-x: auto; scrollbar-width: none;
+}
+.arc-track::-webkit-scrollbar { display: none; }
+
+.arc {
+  position: relative; flex: 0 0 340px; height: 447px; overflow: hidden;
+  display: block; background: var(--gray-thumb);
+}
+.arc-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.arc::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 58%;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0), #000);
+}
+.arc-body {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 1;
+  padding: 24px; display: flex; flex-direction: column; gap: 8px;
+}
+.arc-badge {
+  align-self: flex-start; display: inline-flex; align-items: center;
+  padding: 4px 12px; font-size: 16px; font-weight: 500; line-height: 1.5; color: #fff;
+}
+.arc-t {
+  font-size: 22px; font-weight: 600; line-height: 1.5; color: #fff;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.arc-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 32px; font-size: 14px; font-weight: 500; color: var(--gray-888); }
+.arc:hover .arc-img { transform: scale(1.03); }
+.arc-img { transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+
+.arc-foot { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-top: 24px; }
+.dots { display: flex; align-items: center; gap: 4px; }
+.dots button {
+  width: 8px; height: 8px; padding: 0; border: 0; border-radius: 8px;
+  background: #6d7882;
+}
+.dots button[aria-current='true'] { width: 20px; background: var(--blue-dot); }
+.arc-nav { display: flex; gap: 8px; }
+
+/* ==========================================================================
+   영상 + 도서
+   ========================================================================== */
+
+.media-grid > .media-col:first-child { flex: 0 0 clamp(320px, 40.6vw, 780px); }
+.media-grid > .media-col:last-child { flex: 1 1 0; min-width: 0; }
+.media-col { display: flex; flex-direction: column; gap: 40px; }
+
+.vid { display: flex; flex-direction: column; gap: 16px; flex: 1; }
+.vid-thumb {
+  position: relative; background: var(--gray-thumb);
+  aspect-ratio: 780 / 440; overflow: hidden;
+}
+.vid-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.vid-play {
+  position: absolute; left: calc(50% - 26px); top: 50%; transform: translate(-50%, -50%);
+  width: 80px; height: 80px; border-radius: 999px; background: rgba(0, 0, 0, 0.6);
+  display: grid; place-items: center; overflow: hidden;
+}
+.vid-play img { width: 80px; height: 80px; }
+.vid:hover .vid-play { background: rgba(0, 0, 0, 0.8); }
+.vid-dur {
+  position: absolute; right: 0; bottom: 0;
+  padding: 4px 8px; background: rgba(0, 0, 0, 0.6);
+  color: #fff; font-size: 16px; font-weight: 500; line-height: 1.5;
+}
+.vid-info { display: flex; flex-direction: column; gap: 16px; }
+.vid-t { font-size: clamp(18px, 1.35vw, 26px); font-weight: 600; line-height: 1.5; }
+.vid:hover .vid-t { color: var(--blue-badge); }
+
+.books { display: flex; flex-direction: column; gap: 24px; }
+.book { display: flex; align-items: stretch; border: 1px solid var(--ink); }
+.book-cover {
+  position: relative; flex: none; width: clamp(140px, 18.75vw, 360px);
+  overflow: hidden; align-self: stretch;
+}
+.book-cover--red { background: #fd3c3c; }
+.book-cover--dark { background: #000; }
+.book-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* Figma: image 10007 위에 rgba(253,60,60,0.8) 오버레이 */
+.book-cover--red::after { content: ''; position: absolute; inset: 0; background: rgba(253, 60, 60, 0.8); }
+.book-bg--blur { filter: blur(25px); transform: scale(1.2); opacity: 0.85; }
+.book-front {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  width: 46%; height: auto; object-fit: contain; z-index: 1;
+}
+.book-front--tall { width: 56%; }
+.book-body {
+  flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; gap: 12px;
+  padding: 40px 32px;
+}
+.book-t {
+  font-size: clamp(17px, 1.25vw, 24px); font-weight: 600; line-height: 1.5;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.book:hover .book-t { color: var(--blue-badge); }
+.book .tag-line { font-size: clamp(13px, 0.83vw, 16px); }
+
+/* ==========================================================================
+   지역별 정보 — PC: 01/02 리스트 + 03 지역 발간물 / 모바일: 퀵카드 3종 가로 스크롤
+   Figma 'main'(20425:126638 PC / 20425:138866 모바일) 2026-09-11 갱신
+   ========================================================================== */
+
+.rg-body { margin-top: 40px; display: flex; gap: 0; align-items: stretch; }
+.rg-list { flex: 0 0 clamp(320px, 33.5vw, 644px); display: flex; flex-direction: column; }
+.rg-row {
+  flex: 1;
+  display: flex; flex-direction: column; gap: 12px; justify-content: center;
+  padding: clamp(20px, 2.08vw, 40px);
+  border: 1px solid var(--ink); border-top: 0;
+  background: var(--white);
+}
+.rg-row:first-child { border-top: 1px solid var(--ink); }
+.rg-row-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.rg-row-label { display: flex; flex-direction: column; gap: 4px; }
+.rg-num { font-size: clamp(14px, 1.04vw, 20px); font-weight: 500; color: var(--gray-888); }
+.rg-t { font-size: clamp(20px, 2.08vw, 40px); font-weight: 600; line-height: 1.5; }
+.rg-d { font-size: clamp(14px, 1.04vw, 20px); font-weight: 500; color: var(--gray-888); }
+.rg-arw { flex: none; width: 40px; height: auto; transform: rotate(-90deg); color: var(--ink); }
+.rg-row:hover { background: var(--ink); }
+.rg-row:hover .rg-t { color: #fff; }
+
+.rg-pub {
+  flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: clamp(24px, 3.13vw, 60px);
+  border: 1px solid var(--ink); padding: clamp(20px, 2.08vw, 40px);
+}
+.rg-pub-head { display: flex; flex-direction: column; gap: 12px; }
+.rg-pub:hover { background: var(--ink); }
+.rg-pub:hover .rg-t,
+.rg-pub:hover .rg-pub-t { color: #fff; }
+
+.rg-row:hover .rg-arw,
+.rg-pub:hover .rg-arw { color: #ff2268; }
+
+.rg-pub-grid { display: flex; gap: 40px; }
+.rg-pub-card { flex: 1 1 0; min-width: 0; display: flex; gap: 12px; align-items: center; }
+.rg-pub-card img { flex: none; width: 144px; height: 189px; object-fit: cover; }
+.rg-pub-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+.rg-pub-badge {
+  align-self: flex-start; background: #007ade; color: #fff;
+  padding: 4px 12px; font-size: 16px; font-weight: 500;
+}
+.rg-pub-t { font-size: clamp(16px, 1.35vw, 26px); font-weight: 600; line-height: 1.5; word-break: keep-all; }
+/* 노트북 폭(1440px 근처)에서 "제주문화예술재단 | 연차보고서 | 2023"이 한 줄에 다 안 들어가
+   글자가 한 음절씩 줄바꿈되던 문제 — nowrap으로 줄바꿈을 막고 폰트도 살짝 더 유동적으로 줄인다 */
+.rg-pub-meta {
+  display: flex; align-items: center; gap: 4px; width: 100%; min-width: 0; overflow: hidden;
+  font-size: clamp(9px, 0.7vw, 16px); line-height: 1; color: var(--gray-999); white-space: nowrap;
+}
+.rg-pub-meta span + span { padding-left: 4px; border-left: 1px solid var(--gray-999); }
+
+/* 모바일 퀵카드 (같은 콘텐츠의 대체 레이아웃 — .only-mobile) */
+.rgcard-rail {
+  margin-top: 40px; display: flex; gap: 24px;
+  overflow-x: auto; scrollbar-width: none;
+}
+.rgcard-rail::-webkit-scrollbar { display: none; }
+.rgcard { flex: 0 0 260px; display: flex; flex-direction: column; gap: 14px; }
+.rgcard-thumb {
+  position: relative; height: 190px; overflow: hidden;
+  display: flex; flex-direction: column; justify-content: flex-end; gap: 6px;
+  padding: 20px;
+}
+.rgcard-thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+.rgcard-thumb::after { content: ''; position: absolute; inset: 0; background: rgba(0, 0, 0, 0.55); z-index: 1; }
+.rgcard-eyebrow, .rgcard-t { position: relative; z-index: 2; }
+.rgcard-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 3px; color: #d9d9d6; }
+.rgcard-t { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; color: #fff; }
+.rgcard-d { font-size: 14px; font-weight: 500; color: var(--gray-888); line-height: 1.5; }
+
+/* ==========================================================================
+   추천 + 북 큐레이션
+   ========================================================================== */
+
+/* 좌측(주제별 큐레이션/최신·인기 자료 2단 스택) + 우측(북 큐레이션, 1단 통높이) 좌우 배치 — Figma 20516:21364 1:1 */
+.reco-row { margin-top: 40px; display: flex; gap: 40px; align-items: stretch; }
+.reco-grid { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 40px; }
+.reco { display: flex; flex-direction: column; border: 1px solid var(--ink); overflow: hidden; }
+.reco-img { height: clamp(120px, 10.6vw, 204px); overflow: hidden; background: var(--white); }
+.reco-img img { width: 100%; height: 100%; object-fit: contain; }
+.reco-img .reco-img--cover { object-fit: cover; }
+/* Figma는 더보기가 하단이 아니라 텍스트 옆(우측)에 나란히 있다 — row로 수정 */
+.reco-body { padding: 28px; display: flex; gap: 40px; align-items: flex-start; background: var(--white); }
+.reco-body > div:first-child { flex: 1 1 0; min-width: 0; }
+.reco-t { font-size: clamp(20px, 1.88vw, 36px); font-weight: 500; line-height: 1.5; }
+.reco-d { margin-top: 2px; font-size: clamp(14px, 0.94vw, 18px); font-weight: 500; color: var(--gray-888); line-height: 1.5; }
+.link-more { flex: none; }
+.link-more svg { width: 24px; height: 24px; transform: rotate(-90deg); }
+/* 북 큐레이션 패널(항상 검정)과 같은 톤으로, 호버 시 텍스트 패널이 검정+흰 글씨로 어두워지고
+   더보기 화살표만 지역별 정보와 동일한 레드(#FF2268)로 바뀐다 */
+.reco:hover .reco-body { background: var(--ink); }
+.reco:hover .reco-t,
+.reco:hover .link-more { color: #fff; }
+.reco:hover .link-more svg { color: #ff2268; }
+
+/* 기본은 흰 배경 + 검정 테두리(지역 발간물과 동일) — 검정 배경은 호버 상태였다 */
+.bookcur {
+  flex: 1 1 0; min-width: 0; align-self: stretch;
+  background: var(--white); color: var(--ink); border: 1px solid var(--ink);
+  display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between;
+  padding: clamp(32px, 4.17vw, 80px) clamp(24px, 2.08vw, 40px);
+  overflow: hidden;
+}
+.bookcur:hover { background: var(--ink); color: #fff; }
+.bookcur-top { display: flex; align-items: flex-start; gap: 24px; width: 100%; }
+.bookcur-left { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+.bookcur-label { font-size: clamp(14px, 0.94vw, 18px); font-weight: 500; color: var(--gray-888); }
+.bookcur-date { font-size: clamp(18px, 1.25vw, 24px); font-weight: 500; }
+.bookcur-tag {
+  display: inline-block; padding: 2px 6px; background: #ff2268;
+  font-family: 'Paperlogy', 'Pretendard GOV Variable', 'Pretendard GOV', sans-serif; font-weight: 600;
+  font-size: clamp(26px, 2.5vw, 48px); line-height: 1; letter-spacing: -0.02em; color: #fff;
+}
+/* icon-arrow-md.svg 원본 stroke가 #FF2268 — 기본은 검정으로 덮어쓰고, 호버 시 필터를 걷어
+   원래의 레드를 그대로 드러낸다 (지역별 정보/추천 카드와 동일한 호버 레드) */
+.bookcur-arw { flex: none; width: 40px; height: 40px; transform: rotate(-90deg); filter: brightness(0); }
+.bookcur:hover .bookcur-arw { filter: none; }
+
+.bookcur-books { display: flex; gap: 28px; width: 100%; }
+.bc { position: relative; flex: 0 0 clamp(140px, 12.97vw, 249px); aspect-ratio: 249 / 341; overflow: hidden; }
+.bc img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.bc-body {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 50%;
+  display: flex; flex-direction: column; justify-content: flex-end; gap: 8px; padding: 24px;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0), #000);
+}
+.bc-body h4 { font-size: clamp(16px, 1.25vw, 24px); font-weight: 700; line-height: 1.5; color: #fff; }
+.bc-body p { font-size: 14px; color: var(--gray-999); line-height: 1.5; }
+.bc:hover img { transform: scale(1.04); }
+.bc img { transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+
+/* ==========================================================================
+   통계 (미리보기) — arte-library-stats-preview.js가 data-chart별로 그린다
+   Figma 'main'(20425:126638 PC / 20425:138866 모바일) 2026-09-11 신규
+   ========================================================================== */
+
+.statprev-grid { margin-top: 40px; display: grid; grid-template-columns: repeat(3, 1fr); }
+.statprev-card { display: flex; flex-direction: column; border: 1px solid var(--ink); }
+.statprev-card:not(:last-child) { border-right: 0; }
+.statprev-head { padding: 28px; display: flex; flex-direction: column; gap: 2px; }
+.statprev-t { font-size: clamp(18px, 1.88vw, 36px); font-weight: 600; line-height: 1.5; color: var(--ink); }
+.statprev-d { font-size: clamp(13px, 0.94vw, 18px); font-weight: 500; color: var(--gray-888); line-height: 1.5; }
+.statprev-body { flex: 1; padding: 28px; display: flex; align-items: center; justify-content: center; }
+
+/* 공용 차트 뼈대 (막대+선/누적막대 공용) */
+.pchart { width: 100%; }
+.pchart-title {
+  margin: 0 0 12px; text-align: left;
+  font-size: clamp(12px, 0.83vw, 15px); font-weight: 600; color: var(--ink);
+}
+.pchart-body { display: flex; gap: 8px; align-items: stretch; }
+.pchart-yaxis {
+  flex: none; display: flex; flex-direction: column; justify-content: space-between;
+  font-size: clamp(8px, 0.6vw, 11px); color: var(--gray-999); text-align: right;
+}
+.pchart-plot { position: relative; flex: 1; min-width: 0; height: 152px; }
+.pchart-grid { position: absolute; left: 0; right: 0; height: 1px; background: #f3f4f6; }
+.pchart-bars { position: absolute; inset: 0; display: flex; align-items: flex-end; overflow: hidden; }
+[data-chart="admin"] .pchart-bars { gap: 10px; }
+[data-chart="survey"] .pchart-bars { gap: 28px; }
+.pchart-col { flex: 1; min-width: 0; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; gap: 1px; }
+.pchart-bar { width: 100%; background: #173bff; border-radius: 1px 1px 0 0; }
+.pchart-seg { width: 100%; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.pchart-seg span { font-size: 7px; color: #fff; line-height: 1; }
+.pchart-line { position: absolute; inset: 0; overflow: visible; pointer-events: none; }
+.pchart-line path { fill: none; stroke: #173bff; stroke-width: 1.5; }
+.pchart-point { fill: #173bff; }
+.pchart-value {
+  position: absolute; transform: translate(-50%, -100%); font-size: 7px; font-weight: 500;
+  color: #173bff; white-space: nowrap;
+}
+.pchart-xaxis { display: flex; margin-top: 4px; }
+[data-chart="admin"] .pchart-xaxis { gap: 10px; }
+[data-chart="survey"] .pchart-xaxis { gap: 28px; }
+.pchart-xaxis span {
+  flex: 1; min-width: 0; text-align: center; font-size: clamp(7px, 0.55vw, 9px);
+  color: var(--gray-999); overflow: hidden; text-overflow: ellipsis; white-space: pre-line; line-height: 1.3;
+}
+
+/* 노트북 폭(대략 1700px 이하)에서는 17개년 라벨/값이 한 줄에 다 안 들어가 "20…"으로
+   잘리는 게 대부분이었다 — 한 칸씩 건너뛰어 표시(마지막 연도는 항상 홀수번째라 그대로 보임) */
+@media (max-width: 1700px) {
+  [data-chart="admin"] .pchart-xaxis span:nth-child(even) { display: none; }
+  [data-chart="admin"] .pchart-plot > .pchart-value:nth-of-type(even) { display: none; }
+}
+
+/* 자료통계 — 원그래프 (SVG path arc + 균일 stroke). 값 라벨은 옆 범례 목록이 아니라
+   Figma 실측(20516:21721)대로 각 조각 바깥에 각도별로 흩어진 텍스트로 표시한다. */
+.pchart-pie-wrap { display: flex; align-items: center; justify-content: center; width: 100%; }
+.pchart-pie-stage { position: relative; }
+.pchart-pie { display: block; }
+.pchart-pie-labels { position: absolute; inset: 0; }
+.pchart-pie-label {
+  position: absolute; white-space: nowrap;
+  font-size: clamp(11px, 0.83vw, 14px); font-weight: 500;
+}
+
+/* 호버 값 툴팁 — 통계 서브페이지(arte-library-stats.css .chart-tooltip)와 동일한 구성을
+   홈 미리보기 차트에도 적용. 차트 하나당 하나, 해당 plot/stage 기준 절대좌표 */
+.pchart-tooltip {
+  position: absolute; z-index: 5; pointer-events: none;
+  transform: translate(-50%, calc(-100% - 12px));
+  display: flex; flex-direction: column; gap: 2px;
+  background: #111; color: #fff; border: 1px solid #111;
+  padding: 6px 10px; font-size: 12px; font-weight: 600; white-space: nowrap;
+  opacity: 0; transition: opacity 0.12s ease;
+}
+.pchart-tooltip.is-visible { opacity: 1; }
+.pchart-tooltip-cat { font-weight: 700; }
+.pchart-tooltip-val { display: flex; align-items: center; gap: 6px; font-weight: 500; }
+.pchart-tooltip-dot { width: 7px; height: 7px; border-radius: 50%; flex: none; background: #fff; }
+
+/* ==========================================================================
+   이벤트·행사 + 공지·소식
+   ========================================================================== */
+
+.news-grid > .news-col--event { flex: 0 0 clamp(320px, 36.5vw, 700px); }
+.news-grid > .news-col:last-child { flex: 1 1 0; min-width: 0; }
+.news-col { display: flex; flex-direction: column; gap: 40px; align-self: stretch; }
+
+.ev { display: block; }
+/* Figma 노드 20561:6427("알림판")을 이미지로 그대로 캡처해서 쓴다 — 그리드 패턴·컬러번 블렌드·
+   날짜 숫자까지 전부 이미지 한 장에 포함되어 있어 레이어별 CSS 재현보다 실측 캡처가 정확하다 */
+.ev-visual { aspect-ratio: 700 / 240; overflow: hidden; }
+.ev-visual-img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.ev-body { display: flex; flex-direction: column; gap: 10px; padding: 24px 24px 24px 40px; border: 1px solid var(--ink); border-top: 0; }
+.ev-badges { display: flex; gap: 10px; }
+.ev-t { font-size: clamp(18px, 1.35vw, 26px); font-weight: 600; line-height: 1.5; }
+.ev:hover .ev-t { color: var(--blue-badge); }
+.ev-date-txt { font-size: 16px; font-weight: 500; color: var(--gray-999); }
+
+.notices { display: flex; flex-direction: column; justify-content: space-between; gap: 20px; flex: 1; }
+.notices a { display: flex; align-items: center; gap: 24px; }
+.n-badge {
+  flex: none; width: 55px; display: inline-flex; align-items: center; justify-content: center;
+  padding: 6px 12px; background: var(--gray-bg2); color: var(--gray-555);
+  font-size: 18px; font-weight: 600; line-height: 1.5;
+}
+.n-badge--notice { background: var(--ink); color: #fff; }
+.n-t {
+  flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font-size: clamp(15px, 1.25vw, 24px); font-weight: 400; line-height: 1.5;
+}
+.notices a:hover .n-t { color: var(--blue-badge); }
+.n-d { flex: none; font-size: 16px; font-weight: 500; color: var(--gray-999); text-align: right; }
+
+/* ==========================================================================
+   관련기관 배너
+   ========================================================================== */
+
+.partners {
+  border-top: 1px solid var(--gray-line);
+  padding: 40px var(--side);
+  display: flex; align-items: center; gap: clamp(12px, 2.6vw, 50px);
+}
+.pt-nav { flex: none; width: 30px; height: 30px; border: 0; background: none; padding: 0; }
+.pt-nav img { width: 30px; height: 30px; }
+.pt-nav:last-child img { transform: rotate(180deg); }
+.pt-nav:hover { opacity: 0.5; }
+.pt-list {
+  flex: 1; min-width: 0; display: flex; align-items: center; justify-content: space-around;
+  gap: clamp(20px, 3.1vw, 60px); overflow-x: auto; scrollbar-width: none;
+}
+.pt-list::-webkit-scrollbar { display: none; }
+.pt-list a { flex: none; display: block; opacity: 0.9; }
+.pt-list a:hover { opacity: 1; }
+.pt-list img { height: clamp(28px, 2.7vw, 52px); width: auto; }
+
+/* ==========================================================================
+   푸터
+   ========================================================================== */
+
+.ft-related {
+  border-top: 1px solid var(--gray-line); border-bottom: 1px solid var(--gray-line);
+  padding-left: var(--side); background: var(--white);
+  height: 56px; display: flex; align-items: center;
+}
+.ft-related-box {
+  display: flex; align-items: center; gap: 8px; justify-content: space-between;
+  width: 300px; height: 100%; padding: 0 24px;
+  border-left: 1px solid var(--gray-line); border-right: 1px solid var(--gray-line);
+  font-size: 17px; color: var(--ink-soft);
+}
+.ft-related-box img { width: 24px; height: 24px; }
+
+.ft-surface { background: var(--surface-ft); padding: 40px var(--side) 24px; }
+.ft-in { max-width: var(--content); margin-inline: auto; display: flex; flex-direction: column; gap: 40px; }
+.ft-logo { width: 199px; height: 28px; object-fit: contain; }
+
+.ft-grid { display: flex; align-items: flex-start; justify-content: space-between; gap: 40px; flex-wrap: wrap; }
+.ft-info { display: flex; flex-direction: column; gap: 8px; font-size: 17px; color: var(--ink-soft); line-height: 1.6; }
+.ft-info b { font-weight: 700; margin-right: 4px; }
+.ft-info p + p { display: flex; flex-wrap: wrap; gap: 4px 20px; }
+.ft-info a:hover { text-decoration: underline; }
+
+.ft-util { display: flex; flex-direction: column; gap: 8px; }
+.ft-util a { display: inline-flex; align-items: center; gap: 4px; font-size: 17px; color: var(--ink-soft); }
+.ft-util a:hover { text-decoration: underline; }
+.ft-util img { width: 20px; height: 20px; }
+
+.ft-copy {
+  border-top: 1px solid var(--gray-line); padding-top: 16px;
+  display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;
+}
+.ft-policy { display: flex; gap: 40px; font-size: 15px; color: var(--ink-soft); }
+.ft-policy a:hover { text-decoration: underline; }
+.ft-policy-accent { color: #0078d7; font-weight: 600; }
+.ft-copytxt { font-size: 15px; color: #464c53; }
+
+.ft-identifier { background: var(--ink-soft); height: 40px; display: flex; align-items: center; padding: 0 var(--side); }
+.ft-id-in { display: flex; align-items: center; gap: 16px; color: #cdd1d5; font-size: 13px; }
+/* 로고 이미지는 각자 고유 브랜드 컬러(문화체육관광부 남색+빨강, 아르떼 빨강)를 그대로
+   유지해야 한다 — 예전엔 brightness(0) invert(1)로 전부 흰색으로 뭉개고 있었음 */
+.ft-id-in img { opacity: 0.95; }
+
+/* ==========================================================================
+   서브페이지 공통 컴포넌트 (docs / region / ai-search 에서 사용)
+   ========================================================================== */
+
+.chip {
+  display: inline-flex; align-items: center;
+  height: 30px; padding: 0 12px;
+  border: 1px solid var(--gray-line); border-radius: 999px;
+  font-size: 13px; font-weight: 500; line-height: 1.6;
+  color: #1f2937; background: var(--white);
+}
+.chip--on { border-color: var(--blue-badge); color: var(--blue-badge); }
+
+.tags { font-size: 13px; color: var(--gray-888); line-height: 1.6; }
+
+.more {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding-bottom: 8px; border: 0; border-bottom: 1px solid var(--ink);
+  font-size: 15px; font-weight: 600; background: none; color: var(--ink);
+}
+.more::after { content: '+'; font-size: 18px; font-weight: 500; }
+.more:hover { color: var(--blue-badge); border-bottom-color: var(--blue-badge); }
+
+.nav-btn {
+  width: 44px; height: 44px; display: grid; place-items: center;
+  border: 1px solid var(--gray-line); border-radius: 999px;
+  background: var(--white); color: var(--ink); font-size: 16px;
+}
+.nav-btn:hover { border-color: var(--blue-badge); color: var(--blue-badge); }
+.nav-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+.linebox { border: 1px solid var(--gray-line); border-top: 2px solid var(--blue-badge); background: var(--white); }
+.grid { display: grid; }
+.grid > .cell { border-left: 1px solid var(--gray-line); min-width: 0; }
+.grid > .cell:first-child { border-left: 0; }
+.grid-2 { grid-template-columns: 1fr 1fr; }
+.grid-3 { grid-template-columns: repeat(3, 1fr); }
+.cell-pad { padding: 32px; }
+
+.tabs { display: flex; flex-wrap: wrap; gap: 8px; padding-bottom: 20px; }
+.tabs button {
+  height: 38px; padding: 0 16px;
+  border: 1px solid var(--gray-line); border-radius: 999px;
+  background: var(--white); font-size: 14px; font-weight: 500; color: #1f2937;
+}
+.tabs button:hover { border-color: var(--blue-badge); color: var(--blue-badge); }
+.tabs button[aria-selected='true'] { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+.search {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 10px 10px 32px; background: var(--white);
+  border: 1px solid var(--ink); border-radius: 999px;
+}
+.search input {
+  flex: 1; min-width: 0; border: 0; outline: 0; background: none;
+  font-family: inherit; font-size: 22px; font-weight: 500; line-height: 1.4;
+  letter-spacing: -0.02em; color: var(--ink);
+}
+.search input::placeholder { color: var(--gray-line); }
+.search .go {
+  width: 56px; height: 56px; flex: none; border: 0;
+  display: grid; place-items: center; border-radius: 999px;
+  background: var(--ink); color: #fff;
+}
+.search .go:hover { background: var(--blue-badge); }
+
+.prompts { display: flex; gap: 12px; flex-wrap: wrap; }
+.prompts .chip { height: 40px; padding: 0 18px; font-size: 14px; }
+.prompts .chip:hover { border-color: var(--blue-badge); color: var(--blue-badge); }
+
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 12px;
+  font-size: 13px; font-weight: 700; letter-spacing: 0.12em; color: var(--blue-badge);
+}
+.eyebrow::before, .eyebrow::after { content: ''; width: 32px; height: 1px; background: var(--blue-badge); }
+
+.play {
+  width: 64px; height: 64px; display: grid; place-items: center;
+  border: 1px solid var(--ink); border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9); color: var(--ink); font-size: 20px;
+}
+.ph { font-size: 12px; color: var(--gray-888); }
+.arw { color: var(--blue-badge); font-size: 15px; }
+
+/* ==========================================================================
+   디자인 시스템 v1.0 컴포넌트 — Button / Badge / Tab / Input
+   Figma '[디자인 시스템 가이드]_v1.0 (26.09.14)' dsg_04_components(20543:2795) 1:1.
+   기존 .chip/.more/.nav-btn/.tabs 등은 그대로 두고, 신규 페이지에서 쓸 수 있도록
+   이 원자 컴포넌트들을 별도 이름으로 추가한다 (기존 마크업 교체 아님).
+   ========================================================================== */
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 49px; padding: 0 var(--spacing-6);
+  border: 0; border-radius: var(--radius-none);
+  font-family: inherit; font-size: 16px; font-weight: 600;
+  background: var(--ink); color: var(--white);
+}
+.btn:hover { background: #1a1a1a; }
+.btn:disabled { background: var(--gray-200); color: var(--gray-600); cursor: not-allowed; }
+
+.btn--md { height: 41px; }
+.btn--sm { height: 34px; font-size: 14px; }
+
+.btn--outline { background: var(--white); color: var(--ink); border: 1px solid var(--gray-200); }
+.btn--outline:hover { background: var(--gray-50); }
+.btn--outline:disabled { background: var(--white); color: var(--gray-400); border-color: var(--gray-200); }
+
+.btn--accent { background: var(--brand-primary); color: var(--white); }
+.btn--accent:hover { background: #056bc7; }
+
+.btn--ghost { background: none; color: var(--ink); }
+.btn--ghost:hover { background: var(--gray-50); }
+
+.badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: var(--spacing-1) var(--spacing-3);
+  font-size: 13px; font-weight: 500; color: var(--white);
+  background: var(--ink); border-radius: var(--radius-none);
+}
+.badge--outlined { background: var(--white); color: var(--ink); border: 1px solid var(--ink); }
+.badge--active { background: var(--brand-primary); }
+.badge--active.badge--outlined { background: var(--white); color: var(--brand-primary); border-color: var(--brand-primary); }
+.badge--completed { background: var(--gray-400); }
+.badge--completed.badge--outlined { background: var(--white); color: var(--gray-400); border-color: var(--gray-400); }
+.badge--upcoming { background: #fa7317; }
+.badge--new { background: var(--accent-red); }
+.badge--category { background: var(--gray-50); color: var(--ink); }
+
+.tab-item {
+  display: inline-flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: var(--spacing-3) var(--spacing-5);
+  border: 0; border-bottom: 2px solid transparent;
+  background: none; font-family: inherit; font-size: 22px; font-weight: 500; color: var(--gray-600);
+}
+.tab-item.is-active { border-bottom-color: var(--ink); color: var(--ink); font-weight: 800; }
+
+.field {
+  display: flex; align-items: center; height: 56px; padding: 0 var(--spacing-4);
+  background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius-none);
+  font-family: inherit; font-size: 16px; color: var(--ink);
+}
+.field:focus-within { border-color: var(--brand-primary); }
+.field:has(:disabled) { background: var(--gray-50); }
+.field--md { height: 48px; }
+
+/* ==========================================================================
+   모바일 (768px 이하)
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  body { overflow-x: hidden; }
+  .mh-in { font-size: 12px; }
+  .hd-in { flex-wrap: wrap; gap: 12px; padding: 16px var(--side); position: relative; }
+  .hd-logo img { width: 150px; height: auto; }
+  .hd-btn { flex-wrap: wrap; justify-content: flex-end; gap: 10px; }
+
+  /* 모바일: 로고 + 검색/전체메뉴 아이콘만 상시 노출. GNB·계정 메뉴는 햄버거로 여닫는다
+     (Figma 모바일 목업 node 20312:21146 기준 — 2026-09-10 모바일 동기화). */
+  .gnb, .hd-account { display: none; }
+  .hd.is-menu-open .gnb,
+  .hd.is-menu-open .hd-account { display: flex; }
+
+  .gnb {
+    order: 5; width: 100%; margin-top: 4px;
+    flex-direction: column; align-items: stretch;
+    overflow-x: visible; border-top: 1px solid var(--gray-line);
+  }
+  .gnb a {
+    height: auto; justify-content: flex-start;
+    padding: 14px 4px; font-size: 15px;
+    border-bottom: 1px solid var(--gray-line);
+  }
+
+  .hd-account {
+    order: 6; width: 100%; margin-top: 4px;
+    flex-direction: column; align-items: stretch; gap: 0;
+    background: none; border-radius: 0; padding: 0;
+    font-size: 13px;
+  }
+  .hd-account a { padding: 10px 4px; }
+  .hd-bar { display: none; }
+
+  .kv { padding: 32px 0 40px; }
+  .kvs { border-bottom-width: 3px; padding: 12px 0 14px; }
+  .kv-search { gap: 20px; }
+  .kv-chips { gap: 8px; }
+
+  .sec { padding: 40px 0; }
+  .sec--last { padding-bottom: 60px; }
+  .sec-head { border-bottom-width: 2px; padding-bottom: 12px; }
+  .sec--split .wrap { flex-direction: column; gap: 40px; }
+  .media-grid > .media-col:first-child,
+  .news-grid > .news-col--event { flex: 1 1 auto; width: 100%; }
+
+  .arc { flex: 0 0 260px; height: 360px; }
+  .arc-t { font-size: 17px; }
+  .arc-tags { margin-top: 16px; font-size: 12px; }
+
+  .books { gap: 16px; }
+  .book { flex-direction: column; }
+  .book-cover { width: 100%; aspect-ratio: 16 / 10; }
+  .book-body { padding: 20px; }
+
+  .reco-row { flex-direction: column; gap: 20px; }
+  .reco-grid { gap: 20px; }
+  .reco-body { padding: 20px; gap: 20px; }
+
+  .bookcur { gap: 24px; padding: 24px; }
+  .bookcur-books { width: 100%; overflow-x: auto; scrollbar-width: none; }
+  .bookcur-books::-webkit-scrollbar { display: none; }
+  /* 좁은 카드(140px)에서는 고정 50% 오버레이에 2줄 제목+저자가 다 안 들어가 이미지 위로
+     넘치던 문제 → auto 높이 + 여백/폰트 축소로 카드 폭에 맞춘다 */
+  .bc-body { height: auto; min-height: 50%; padding: 14px; gap: 4px; }
+  .bc-body h4 { font-size: 14px; line-height: 1.35; }
+  .bc-body p { font-size: 12px; }
+
+  .statprev-grid { grid-template-columns: 1fr; }
+  .statprev-card:not(:last-child) { border-right: 1px solid var(--ink); border-bottom: 0; }
+  .statprev-head { padding: 20px; }
+  .statprev-body { padding: 20px; }
+  .pchart-plot { height: 130px; }
+
+  .ev-body { padding: 20px; }
+  .notices a { gap: 12px; }
+  .n-badge { width: 46px; padding: 4px 8px; font-size: 13px; }
+  .n-d { font-size: 12px; }
+
+  .partners { gap: 12px; padding: 24px var(--side); }
+  .pt-list { gap: 32px; justify-content: flex-start; }
+
+  .ft-related { padding-left: 0; }
+  .ft-related-box { width: 100%; border-left: 0; }
+  .ft-grid { flex-direction: column; gap: 20px; }
+  .ft-info, .ft-util a, .ft-related-box { font-size: 14px; }
+  .ft-policy { gap: 16px; font-size: 13px; }
+  .ft-id-in { font-size: 11px; gap: 10px; }
+}
