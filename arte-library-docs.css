@@ -27,7 +27,12 @@
   font-size: clamp(32px, 4.17vw, 80px); line-height: 1; letter-spacing: -0.04em;
 }
 .sub-tabs { display: flex; gap: 8px; }
-.sub-tabs .reveal-mask { flex: 1; }
+/* .reveal-mask > * { display:block }(아래) 규칙이 .sub-tabs a의 display:flex를
+   덮어써서, 탭 <a>가 자기 콘텐츠(1줄 vs 2줄) 높이로만 렌더링되어 옆 탭과
+   높이가 안 맞던 버그 — .sub-tabs 안의 reveal-mask/그 자식만 더 높은
+   특정성으로 다시 flex+stretch 시켜 가장 큰 탭 높이에 항상 맞춰지게 한다. */
+.sub-tabs .reveal-mask { flex: 1; display: flex; }
+.sub-tabs .reveal-mask > a { display: flex; align-items: center; justify-content: center; height: 100%; }
 .sub-tabs a {
   width: 100%; display: flex; align-items: center; justify-content: center;
   padding: 16px 0; border: 1.4px solid var(--ink);

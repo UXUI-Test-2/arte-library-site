@@ -47,4 +47,10 @@
   .ntc-t { font-size: 15px; }
   .ntc-d { font-size: 13px; }
   .fil-dropdown-item { font-size: 15px; padding: 10px 14px; }
+
+  /* 배지+제목(말줄임)+날짜가 한 줄에 다 들어가면 폭이 좁을 때 날짜가
+     밀려서 잘릴 수 있다 — flex-basis:100%로 날짜만 항상 다음 줄로
+     내려서 폭과 무관하게 항상 온전히 보이게 한다. */
+  .ntc-row { flex-wrap: wrap; row-gap: 4px; }
+  .ntc-d { flex: 1 0 100%; text-align: left; }
 }
