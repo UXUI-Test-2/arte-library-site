@@ -44,23 +44,18 @@
 .stat-tab.is-active { background: var(--ink); color: #fff; border-color: var(--ink); }
 .stat-tab:hover:not(.is-active) { background: var(--gray-bg); }
 
-/* "조사통계" 대제목 + 우측 설명 + 하단 4px 보더 — docs/region 등 다른 서브페이지의
-   .sub-head/.sub-h2와 같은 구조(Figma 20516:24854 재확인 시 이 타이틀 행이 누락돼 있었음).
-   페이지 스코프 스타일시트라 이름은 .stat-head/.stat-h2로 로컬 정의(다른 페이지와 동일 패턴). */
-.stat-head {
-  display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap;
-  margin-top: clamp(24px, 2.5vw, 48px); padding-bottom: 28px; border-bottom: 4px solid var(--ink);
+.stat-desc {
+  margin: clamp(24px, 2.5vw, 48px) 0 clamp(16px, 1.77vw, 34px);
+  font-size: clamp(13px, 0.83vw, 16px); font-weight: 500; color: var(--gray-555);
 }
-.stat-h2 {
-  font-family: 'Paperlogy', 'Pretendard GOV Variable', 'Pretendard GOV', sans-serif; font-weight: 600;
-  font-size: clamp(26px, 3.07vw, 59px); line-height: 1; letter-spacing: -0.04em;
-}
-.stat-head p { font-size: clamp(14px, 1.04vw, 20px); font-weight: 500; color: var(--gray-555); text-align: right; }
+.stat-divider { height: 4px; background: var(--ink); margin-bottom: clamp(28px, 4.17vw, 80px); }
 
 /* ---- 본문 레이아웃 ---- */
 
-.stat-main { display: flex; align-items: flex-start; gap: clamp(32px, 6.25vw, 120px); margin-top: clamp(28px, 4.17vw, 80px); }
+.stat-main { display: flex; align-items: flex-start; gap: clamp(32px, 6.25vw, 120px); }
+.stat-main--full { display: block; }
 .stat-content-col { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 16px; }
+.stat-content-col--full { width: 100%; }
 /* 참여율(전체/성별/생애주기별/분야별) 4개 차트만 2x2 그리드로 배치 */
 .stat-content-col--grid { display: grid; grid-template-columns: 1fr 1fr; }
 
@@ -101,12 +96,47 @@
 .stat-period-row .stat-field { flex: 1; min-width: 0; gap: 4px; padding: 10px 8px; font-size: 14px; }
 .stat-period-row .stat-field .chevron-icon svg { width: 16px; height: 16px; }
 .stat-period-divider { flex: none; width: 6px; height: 1px; background: var(--gray-888); }
+.stat-field--full { width: 100%; }
 
 .stat-search-btn {
   width: 100%; border: 0; background: #111111; color: #fff;
   padding: 16px 0; font-size: 18px; font-weight: 600;
 }
 .stat-search-btn:hover { background: #000000; }
+
+/* ---- KPI 카드 (행정통계) ----
+   2026-09-09 재확정: PC는 아이콘 없이 흑백(비활성 #f9f9f9 / 활성 흰 바탕 + 검정 2px 보더),
+   값은 항상 검정. 모바일은 기존 카테고리색 채움(활성)·톤다운(비활성) 유지 — 미디어쿼리에서 분기. */
+
+.kpi-row { display: flex; gap: 24px; }
+.kpi-card {
+  --kpi-color: #007ade;
+  flex: 1; min-width: 0; display: flex; align-items: center; justify-content: center;
+  padding: 20px 24px; background: #f9f9f9; color: inherit; text-align: left; text-decoration: none;
+}
+.kpi-card.is-active { background: var(--white); border: 2px solid var(--ink); }
+.kpi-stack { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.kpi-label-row { display: flex; align-items: baseline; gap: 8px; }
+.kpi-label { display: block; font-size: 16px; font-weight: 500; color: #111; white-space: nowrap; }
+.kpi-unit { display: block; font-size: 14px; font-weight: 400; color: var(--gray-888); white-space: nowrap; }
+.kpi-value { display: block; font-size: 32px; font-weight: 700; color: #000; white-space: nowrap; }
+
+/* ---- KPI 카드 (자료통계) ---- */
+
+.data-kpi-row { display: flex; gap: 24px; margin-bottom: 16px; }
+.data-kpi-card {
+  --data-kpi-color: #007ade;
+  flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+  height: 120px; padding: clamp(16px, 1.67vw, 32px) 8px;
+  background: #f9f9f9; color: #111; text-decoration: none;
+}
+.data-kpi-card.is-active { background: var(--white); border: 2px solid var(--ink); }
+.data-kpi-body { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 0; }
+.data-kpi-label { display: block; font-size: clamp(13px, 0.94vw, 18px); font-weight: 600; color: #111; white-space: nowrap; }
+.data-kpi-value { display: block; font-size: clamp(18px, 1.77vw, 34px); font-weight: 700; color: #111; white-space: nowrap; }
+
+.data-charts-row { display: flex; flex-direction: column; gap: 16px; }
+.data-chart-divider { height: 2px; background: var(--ink); }
 
 /* ---- 차트 카드 ---- */
 
@@ -115,6 +145,7 @@
   border: 1px solid var(--ink); background: var(--white);
   padding: 24px; display: flex; flex-direction: column; gap: 16px;
 }
+.chart-card--admin { --chart-h: 340px; }
 .chart-card--plain { border: none; padding: 24px 0; }
 
 .chart-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
@@ -188,6 +219,10 @@
 .xaxis-cells--narrow .xaxis-label { flex: none; width: 80px; white-space: nowrap; }
 .xaxis-label { flex: 1; min-width: 0; text-align: center; font-size: 11px; font-weight: 500; color: var(--gray-888); white-space: pre-line; }
 
+/* 행정통계 19개년 차트 — 넓은 폭이라 가로 스크롤 허용 */
+.admin-chart-scroll { overflow-x: auto; }
+.admin-chart-scroll .chart-card { min-width: 900px; }
+
 /* ---- 모바일 (768px 이하) ---- */
 
 @media (max-width: 768px) {
@@ -197,10 +232,9 @@
   .sub-h1 { margin-bottom: 20px; }
 
   .stat-tab { padding: 12px 0; }
-  .stat-head { margin-top: 20px; padding-bottom: 16px; }
-  .stat-head p { flex: 1 1 100%; width: 100%; text-align: left; }
+  .stat-desc { font-size: 13px; margin: 20px 0 16px; }
+  .stat-divider { height: 3px; margin-bottom: 20px; }
 
-  .stat-main { margin-top: 20px; }
   .stat-main, .stat-content-col { gap: 20px; }
   .stat-content-col--grid { grid-template-columns: 1fr; }
   .stat-main { flex-direction: column; }
@@ -211,7 +245,35 @@
   .stat-field { font-size: 14px; padding: 12px 14px; }
   .stat-search-btn { font-size: 14px; padding: 14px 0; }
 
+  /* 모바일은 PC와 달리 카테고리색 채움(활성)·톤다운 값색(비활성)을 그대로 유지 — 2x2 그리드로
+     이어붙인 하나의 보더 블록(공유 헤어라인), PC의 독립 박스+검정보더 스타일과는 별개 */
+  .kpi-row { flex-wrap: wrap; gap: 0; border: 1px solid var(--ink); }
+  .kpi-card {
+    flex: 1 1 50%; width: 50%; padding: 20px 12px; align-items: flex-start; gap: 6px;
+    background: var(--white); border-left: 0; border-top: 1px solid var(--ink);
+  }
+  .kpi-card.is-active { background: var(--kpi-color); border: none; color: #fff; }
+  .kpi-card:not(.is-active) .kpi-value { color: var(--kpi-color); }
+  .kpi-card:nth-child(odd) { border-left: 0; }
+  .kpi-card:nth-child(2n) { border-left: 1px solid var(--ink); }
+  .kpi-card:nth-child(-n+2) { border-top: 0; }
+  .kpi-label { font-size: 11px; }
+  .kpi-unit { font-size: 10px; }
+  .kpi-value { font-size: 16px; }
+
+  .data-kpi-row { flex-wrap: wrap; gap: 0; border: 1px solid var(--ink); }
+  .data-kpi-card {
+    flex: 1 1 50%; width: 50%; flex-direction: row; justify-content: flex-start;
+    background: var(--white); border-top: 1px solid var(--ink);
+  }
+  .data-kpi-card.is-active { background: var(--data-kpi-color); border-color: transparent; color: #fff; }
+  .data-kpi-card:not(.is-active) .data-kpi-value { color: var(--data-kpi-color); }
+  .data-kpi-card:nth-child(-n+2) { border-top: 0; }
+  .data-kpi-card:nth-child(2n) { border-left: 1px solid var(--ink); }
+  .data-charts-row { flex-direction: column; }
+
   .chart-card { --chart-h: 170px; padding: 12px; gap: 10px; }
+  .chart-card--admin { --chart-h: 160px; }
   .chart-title { font-size: 14px; }
   .chart-subtitle { font-size: 14px; }
   .chart-unit { font-size: 10px; }
@@ -229,4 +291,6 @@
   .chart-dot { width: 6px; height: 6px; margin: -3px 0 0 -3px; border-width: 1.5px; }
   .chart-point-value { font-size: 9px; transform: translate(-50%, calc(-100% - 6px)); }
   .chart-tooltip { font-size: 10px; padding: 4px 8px; }
+
+  .admin-chart-scroll .chart-card { min-width: 640px; }
 }

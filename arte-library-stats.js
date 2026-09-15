@@ -1,53 +1,23 @@
 /* ==========================================================================
-   arte 라이브러리 — 통계 페이지 전용
-   Figma 통계 확정본(fileKey MggyO8qQHuiYJRDenEWqlL, Section 1/2, 2026-09-08 확정) 기반 재구현.
-   행정통계(4항목) · 조사통계(6항목) · 자료통계 3개 탭, 항목 클릭 시 콘텐츠 전환 + GSAP 스택 리빌.
+   arte 라이브러리 — 통계 페이지 전용 (조사통계 단독 페이지)
+   Figma 조사통계 재동기화(fileKey MggyO8qQHuiYJRDenEWqlL, node 20516:24854, 2026-09-15)
+   기반 재구현. 2026-09-15부터 라이브 페이지는 조사통계만 유지하고, 행정통계·자료통계는
+   변경 전 전체 버전과 함께 stats-history/에만 보존한다(모션 키비주얼 때와 동일한 방식).
    ========================================================================== */
 
 (function () {
   'use strict';
 
   /* 2026-09-09 재확정: 연도별 스택 막대(관심도/만족도/참여동기/미참여이유/향후참여/참여율)의
-     5색은 레인보우가 아니라 행정통계와 같은 블루 계열 그라데이션 — Figma 실측(관심도 차트) */
+     5색은 레인보우가 아니라 블루 계열 그라데이션 — Figma 실측(관심도 차트) */
   var PALETTE = ['#173bff', '#007ade', '#39d1ff', '#80f4c2', '#76aaff'];
   var BLUE_ONLY = ['#007ade'];
   var YEAR_LEGEND = ['2021년', '2022년', '2023년', '2024년', '2025년'];
-  /* 2026-09-09 "통계_상단바꾼버전"(19906:62325) 재확정 색상 — 기존 레인보우 카테고리색 폐기,
-     블루 계열 4색으로 통일(Figma 실측: 강사수 #007ade·수혜자수 #173bff·예산 #39d1ff·지원기관수 #80f4c2) */
-  var CAT_COLOR = { 강사수: '#007ade', 수혜자수: '#173bff', 예산: '#39d1ff', 지원기관수: '#80f4c2' };
 
   /* --------------------------------------------------------------------
-     1. 데이터 — Figma에서 실측 추출한 값(강사수/수혜자수/예산/지원기관수, 자료통계 KPI·차트)과
-        PDF 예시값 기반 데이터(조사통계 5개 항목)를 함께 둔다.
-        실측이 아닌 항목은 각 데이터 객체에 approximate:true 로 표시한다.
+     1. 데이터 — 조사통계 6개 항목. "참여율"만 Figma 실측(20516:24854), 나머지 5개는
+        PDF 예시값 기반 근사치(approximate:true 표시 없음 — 원래도 근사치였던 항목).
      -------------------------------------------------------------------- */
-
-  var ADMIN_YEARS = ['2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024', '2025', '2026\n1분기'];
-
-  var ADMIN = {
-    items: [
-      {
-        id: 'lecturers', label: '강사 수', kpiUnit: '(명)', kpiValue: '169,635', color: CAT_COLOR.강사수, unit: '(단위: 명)', scaleMax: 16000,
-        showLine: true, showValues: true, pointUnit: '명',
-        values: [3086, 4091, 5087, 5412, 6116, 7494, 9883, 9032, 9527, 9422, 10194, 12164, 11666, 10681, 11093, 14049, 12577, 11994, 6071]
-      },
-      {
-        id: 'beneficiaries', label: '수혜자 수', kpiUnit: '(명)', kpiValue: '44,017,237', color: CAT_COLOR.수혜자수, unit: '(단위: 명)', scaleMax: 3500000,
-        showLine: true, showValues: true, pointUnit: '명',
-        values: [1202514, 1574022, 1798883, 1916201, 1984637, 2317039, 2698324, 2805866, 3079609, 2620112, 2698324, 2727654, 2561453, 2874302, 2678771, 3108939, 2424581, 1867318, 1065642]
-      },
-      {
-        id: 'budget', label: '예산', kpiUnit: '(백만원)', kpiValue: '2,178,013', color: CAT_COLOR.예산, unit: '(단위: 백만원)', scaleMax: 160000,
-        showLine: true, showValues: true, pointUnit: '백만원',
-        values: [37542, 67486, 75978, 77765, 88939, 117989, 135866, 132737, 147933, 146592, 150168, 147039, 136760, 132291, 125140, 121564, 91173, 98324, 146592]
-      },
-      {
-        id: 'orgs', label: '지원기관 수', kpiUnit: '(개)', kpiValue: '190,986', color: CAT_COLOR.지원기관수, unit: '(단위: 개)', scaleMax: 14000,
-        showLine: true, showValues: true, pointUnit: '개',
-        values: [4419, 5592, 6687, 6765, 7939, 9659, 10676, 11223, 12788, 12201, 11849, 12749, 12592, 13179, 11419, 11966, 10128, 10089, 8994]
-      }
-    ]
-  };
 
   var SURVEY = {
     items: [
@@ -56,14 +26,16 @@
            달라져 있어 실측 픽셀(막대 top/height, 그리드라인 간격)에서 비례값을 다시 산출했다. */
         id: 'rate', label: '문화예술교육 참여율', approximate: true,
         charts: [
-          { title: '문화예술교육 참여율', subtitle: '전체', unit: '(단위:%)', cats: ['2021', '2022', '2023', '2024', '2025'], series: [[12.2], [11.3], [13.3], [13.5], [13.5]], colors: BLUE_ONLY, scaleMax: 100, steps: 5, showLine: true, showValues: true, pointUnit: '%' },
+          /* "전체" 차트만 단위가 "(단위: 명, %)"로 다른 3개(성별/생애주기별/분야별
+             "(단위: %)")와 다르다 — Figma 재확인(20516:24921) 시 확정된 차이, 임의 통일 금지 */
+          { title: '문화예술교육 참여율', subtitle: '전체', unit: '(단위: 명, %)', cats: ['2021', '2022', '2023', '2024', '2025'], series: [[12.2], [11.3], [13.3], [13.5], [13.5]], colors: BLUE_ONLY, scaleMax: 100, steps: 5, showLine: true, showValues: true, pointUnit: '%' },
           /* 성별/생애주기별/분야별은 X축이 연도, 각 연도 막대는 하위 카테고리(성별/생애주기/분야)를
              누적 스택 — cats=연도, legend=카테고리로 둬야 Figma와 같은 구조가 된다. */
-          { title: '문화예술교육 참여율', subtitle: '성별', unit: '(단위:%)', cats: ['2021', '2022', '2023', '2024', '2025'], series: [[9.8, 14.7], [8.3, 14.5], [10.2, 16.7], [10.4, 16.9], [10.4, 16.9]], legend: ['남성', '여성'], colors: ['#173bff', '#80f4c2'], scaleMax: 30, steps: 6 },
+          { title: '문화예술교육 참여율', subtitle: '성별', unit: '(단위: %)', cats: ['2021', '2022', '2023', '2024', '2025'], series: [[9.8, 14.7], [8.3, 14.5], [10.2, 16.7], [10.4, 16.9], [10.4, 16.9]], legend: ['남성', '여성'], colors: ['#173bff', '#80f4c2'], scaleMax: 30, steps: 6 },
           /* 생애주기 구간이 5개(아동~노년)에서 7개(유아~노년)로 세분화됨 — Figma 범례 실측 순서 */
-          { title: '문화예술교육 참여율', subtitle: '생애주기별', unit: '(단위:%)', cats: ['2021', '2022', '2023', '2024', '2025'], series: [[49.5, 63.6, 24.1, 7.3, 5.4, 7.3, 7.0], [55.8, 47.8, 20.1, 7.0, 5.3, 7.5, 8.8], [52.4, 55.7, 24.8, 9.4, 7.2, 8.4, 10.7], [50.9, 56.8, 23.4, 8.6, 6.5, 9.1, 14.1], [50.9, 56.8, 23.4, 8.6, 6.5, 9.1, 14.1]], legend: ['유아', '아동', '청소년', '청년', '중년', '장년', '노년'], colors: ['#173bff', '#007ade', '#39d1ff', '#80f4c2', '#76aaff', '#b4f5a7', '#ffef75'], scaleMax: 250, steps: 5 },
+          { title: '문화예술교육 참여율', subtitle: '생애주기별', unit: '(단위: %)', cats: ['2021', '2022', '2023', '2024', '2025'], series: [[49.5, 63.6, 24.1, 7.3, 5.4, 7.3, 7.0], [55.8, 47.8, 20.1, 7.0, 5.3, 7.5, 8.8], [52.4, 55.7, 24.8, 9.4, 7.2, 8.4, 10.7], [50.9, 56.8, 23.4, 8.6, 6.5, 9.1, 14.1], [50.9, 56.8, 23.4, 8.6, 6.5, 9.1, 14.1]], legend: ['유아', '아동', '청소년', '청년', '중년', '장년', '노년'], colors: ['#173bff', '#007ade', '#39d1ff', '#80f4c2', '#76aaff', '#b4f5a7', '#ffef75'], scaleMax: 250, steps: 5 },
           /* 분야별 10색·순서는 Figma 범례 실측(미술/음악/무용/문학/전통문화/연극/만화/영화/사진/국악 순) */
-          { title: '문화예술교육 참여율', subtitle: '분야별', unit: '(단위:%)', cats: ['2021', '2022', '2023', '2024', '2025'], series: [[57.8, 37.0, 6.5, 3.8, 3.2, 1.5, 2.0, 3.5, 1.5, 3.0], [59.8, 40.0, 13.4, 5.5, 2.8, 5.8, 2.9, 1.7, 1.6, 3.7], [54.1, 43.9, 11.3, 6.8, 6.7, 4.2, 4.1, 3.7, 2.6, 1.8], [56.3, 41.9, 10.1, 6.3, 3.5, 2.2, 3.8, 2.8, 0.7, 1.5], [56.3, 41.9, 10.1, 6.3, 3.5, 2.2, 3.8, 2.8, 0.7, 1.5]], legend: ['미술', '음악', '무용', '문학', '전통문화', '연극', '만화', '영화', '사진', '국악'], colors: ['#173bff', '#007ade', '#39d1ff', '#80f4c2', '#76aaff', '#b4f5a7', '#ffef75', '#173bff', '#007ade', '#39d1ff'], scaleMax: 150, steps: 3 }
+          { title: '문화예술교육 참여율', subtitle: '분야별', unit: '(단위: %)', cats: ['2021', '2022', '2023', '2024', '2025'], series: [[57.8, 37.0, 6.5, 3.8, 3.2, 1.5, 2.0, 3.5, 1.5, 3.0], [59.8, 40.0, 13.4, 5.5, 2.8, 5.8, 2.9, 1.7, 1.6, 3.7], [54.1, 43.9, 11.3, 6.8, 6.7, 4.2, 4.1, 3.7, 2.6, 1.8], [56.3, 41.9, 10.1, 6.3, 3.5, 2.2, 3.8, 2.8, 0.7, 1.5], [56.3, 41.9, 10.1, 6.3, 3.5, 2.2, 3.8, 2.8, 0.7, 1.5]], legend: ['미술', '음악', '무용', '문학', '전통문화', '연극', '만화', '영화', '사진', '국악'], colors: ['#173bff', '#007ade', '#39d1ff', '#80f4c2', '#76aaff', '#b4f5a7', '#ffef75', '#173bff', '#007ade', '#39d1ff'], scaleMax: 150, steps: 3 }
         ]
       },
       {
@@ -107,30 +79,6 @@
       }
     ]
   };
-
-  /* 2026-09-10: 자료통계 KPI 카드도 행정통계처럼 클릭해서 항목을 전환한다. Figma 기본 화면은
-     "문서"가 활성 상태이고 문서 전체 차트가 보인다(19906:62982) — 추천/지역별정보는 클릭 시
-     보이는 별도 화면(19906:64773)에 둘이 같이 묶여 있다. 도서/영상은 Figma에 전용 차트 화면이
-     없어 자기 KPI 총합을 단일 막대로 보여주는 걸로 대체(approximate:true로 표시). */
-  var DATA = {
-    kpi: [
-      { id: 'doc', label: '문서', value: '4,793', numValue: 4793, color: '#007ade' },
-      { id: 'book', label: '도서', value: '12,374', numValue: 12374, color: '#eab308' },
-      { id: 'video', label: '영상', value: '2,063', numValue: 2063, color: '#16a34a' },
-      { id: 'recommend', label: '추천', value: '6,444', numValue: 6444, color: '#712eec' },
-      { id: 'region', label: '지역별 정보', value: '6,314', numValue: 6314, color: '#76aaff' }
-    ],
-    charts: {
-      doc: [
-        { title: '문서', subtitle: '전체', unit: '(단위: 건)', color: '#007ade', cats: ['문화예술교육현장', '연구보고서', '연수결과자료집', '축제학술행사기록', '문화예술교육사', '연차보고서', '국제교류', '기타'], values: [2107, 1199, 2107, 1199, 2107, 1199, 2107, 1199], scaleMax: 5000, steps: 5 }
-      ],
-      recommend: [
-        { title: '추천 전체', unit: '(단위: 건)', color: '#712eec', cats: ['주제별큐레이션', '프로그램아카이브', '최신인기자료', '북큐레이션', '추천도서'], values: [137, 137, 137, 137, 137], scaleMax: 200 },
-        { title: '지역별 정보 전체', unit: '(단위: 건)', color: '#76aaff', cats: ['프로그램', '운영단체', '지역별자료'], values: [3095, 1441, 1778], scaleMax: 4000 }
-      ]
-    }
-  };
-  DATA.charts.region = DATA.charts.recommend;
 
   /* --------------------------------------------------------------------
      2. DOM 빌더
@@ -349,105 +297,50 @@
     target.addEventListener('mouseleave', hide);
   }
 
-  /* 2026-09-09 재확정: PC는 아이콘 없이 흑백(비활성 #f9f9f9 / 활성 흰바탕+검정 2px 보더)만 쓰고,
-     모바일은 기존처럼 카테고리색 채움(활성)·톤다운 값색(비활성)을 유지 — --kpi-color는 두 경우 다
-     써야 하므로 항상 세팅해두고 실제 배경/글자색 분기는 CSS 미디어쿼리에서 처리한다. */
-  function buildKpiCard(item, activeId) {
-    var isActive = item.id === activeId;
-    var card = el('a', 'kpi-card' + (isActive ? ' is-active' : ''));
-    card.href = '#' + item.id;
-    card.style.setProperty('--kpi-color', item.color);
-    card.addEventListener('click', function (e) {
-      e.preventDefault();
-      if (state.adminItem === item.id) return;
-      state.adminItem = item.id;
-      renderShell();
-    });
-
-    var stack = el('span', 'kpi-stack');
-    var labelRow = el('span', 'kpi-label-row');
-    labelRow.appendChild(txt('span', 'kpi-label', item.label));
-    labelRow.appendChild(txt('span', 'kpi-unit', item.unit));
-    stack.appendChild(labelRow);
-    stack.appendChild(txt('strong', 'kpi-value', item.value));
-    card.appendChild(stack);
-    return card;
-  }
-
-  function buildDataKpiCard(d, activeId) {
-    var isActive = d.id === activeId;
-    var card = el('a', 'data-kpi-card' + (isActive ? ' is-active' : ''));
-    card.href = '#' + d.id;
-    card.style.setProperty('--data-kpi-color', d.color);
-    card.addEventListener('click', function (e) {
-      e.preventDefault();
-      if (state.dataItem === d.id) return;
-      state.dataItem = d.id;
-      renderShell();
-    });
-    var body = el('div', 'data-kpi-body');
-    body.appendChild(txt('span', 'data-kpi-label', d.label));
-    body.appendChild(txt('strong', 'data-kpi-value', d.value));
-    card.appendChild(body);
-    return card;
-  }
-
   /* --------------------------------------------------------------------
-     3. 탭/항목 전환 렌더링
+     3. 항목 전환 렌더링 (조사통계 단독 — 탭 전환 없음)
      -------------------------------------------------------------------- */
 
   var root = document.getElementById('stats-root');
   if (!root) return;
 
-  var state = { tab: 'admin', adminItem: 'lecturers', surveyItem: 'rate', dataItem: 'doc' };
+  var state = { surveyItem: 'rate' };
   var isFirstRender = true;
 
   function renderShell() {
     root.innerHTML = '';
 
+    /* 탭 전환 없이 "조사통계" 단일 레이블만 — 다른 서브페이지와 같은 탭 리빌 모션을
+       그대로 쓰기 위해 기존 .stat-tabs/.stat-tab 마크업 구조는 유지한다. */
     var tabRow = el('div', 'stat-tabs');
-    [['admin', '행정통계'], ['survey', '조사통계'], ['data', '자료통계']].forEach(function (t) {
-      var b = txt('button', 'stat-tab' + (state.tab === t[0] ? ' is-active' : ''), t[1]);
-      b.type = 'button';
-      b.addEventListener('click', function () {
-        if (state.tab === t[0]) return;
-        state.tab = t[0];
-        renderShell();
-      });
-      var mask = el('div', 'reveal-mask');
-      mask.appendChild(b);
-      tabRow.appendChild(mask);
-    });
+    var mask = el('div', 'reveal-mask');
+    mask.appendChild(txt('span', 'stat-tab is-active', '조사통계'));
+    tabRow.appendChild(mask);
     root.appendChild(tabRow);
 
-    var descEl = txt('p', 'stat-desc', descFor(state.tab));
-    root.appendChild(descEl);
-    root.appendChild(el('div', 'stat-divider'));
+    /* Figma 재확인(20516:24854) 결과 이 자리엔 탭 아래 별도로 "조사통계" 59px 대제목 +
+       우측 설명 + 하단 4px 보더 행이 있었다 — 기존 구현은 이걸 빼고 작은 회색 설명문 한
+       줄(.stat-desc)로만 대체하고 있었던 게 "타이틀 부분" 누락/수정 포인트였다. */
+    var headEl = el('div', 'stat-head');
+    headEl.appendChild(txt('h2', 'stat-h2', '조사통계'));
+    headEl.appendChild(txt('p', '', '우리나라 국민의 문화예술교육에 대한 수요, 인식, 참여 현황을 조사한 통계 정보를 제공합니다.'));
+    root.appendChild(headEl);
 
-    var main = el('div', 'stat-main' + (state.tab === 'data' ? ' stat-main--full' : ''));
-
-    if (state.tab !== 'data') {
-      main.appendChild(buildNav());
-    }
+    var main = el('div', 'stat-main');
+    main.appendChild(buildNav());
     main.appendChild(buildContent());
     root.appendChild(main);
 
     revealTabs(root.querySelectorAll('.stat-tab'), isFirstRender ? 0.45 : 0);
-    revealStack(root.querySelectorAll('.chart-card, .kpi-card, .data-kpi-card'));
+    revealStack(root.querySelectorAll('.chart-card'));
     animateCharts(root);
     isFirstRender = false;
   }
 
-  function descFor(tab) {
-    if (tab === 'admin') return '연도별 문화예술교육 강사수, 수혜자수, 예산, 지원기관 수 통계 정보를 제공합니다.';
-    if (tab === 'survey') return '우리나라 국민의 문화예술교육에 대한 수요, 인식, 참여 현황을 조사한 통계 정보를 제공합니다.';
-    return '한국문화예술교육진흥원의 사업단위별 통계 정보를 제공합니다.';
-  }
-
   function buildNav() {
     var nav = el('aside', 'stat-nav');
-    var items = state.tab === 'admin' ? ADMIN.items : SURVEY.items;
-    var activeId = state.tab === 'admin' ? state.adminItem : state.surveyItem;
+    var items = SURVEY.items;
+    var activeId = state.surveyItem;
     var activeItem = items.filter(function (it) { return it.id === activeId; })[0] || items[0];
 
     nav.appendChild(txt('p', 'stat-nav-label', '항목'));
@@ -468,7 +361,7 @@
       var b = txt('button', 'stat-nav-item' + (it.id === activeId ? ' is-active' : ''), it.label);
       b.type = 'button';
       b.addEventListener('click', function () {
-        if (state.tab === 'admin') state.adminItem = it.id; else state.surveyItem = it.id;
+        state.surveyItem = it.id;
         nav.classList.remove('is-open');
         renderShell();
       });
@@ -489,14 +382,6 @@
     });
     nav.appendChild(periodRow);
 
-    if (state.tab === 'admin') {
-      var qtr = el('button', 'stat-field stat-field--full');
-      qtr.type = 'button';
-      qtr.appendChild(txt('span', '', '1분기'));
-      qtr.appendChild(chevronSvg());
-      nav.appendChild(qtr);
-    }
-
     var btn = txt('button', 'stat-search-btn', '조회하기');
     btn.type = 'button';
     nav.appendChild(btn);
@@ -511,51 +396,10 @@
   }
 
   function buildContent() {
-    if (state.tab === 'admin') {
-      var col = el('div', 'stat-content-col');
-      var kpiRow = el('div', 'kpi-row');
-      ADMIN.items.forEach(function (it) {
-        kpiRow.appendChild(buildKpiCard({ id: it.id, label: it.label, unit: it.kpiUnit, value: it.kpiValue, color: it.color }, state.adminItem));
-      });
-      col.appendChild(kpiRow);
-      var active = ADMIN.items.filter(function (it) { return it.id === state.adminItem; })[0];
-      col.appendChild(buildAdminChart(active));
-      return col;
-    }
-    if (state.tab === 'survey') {
-      var col2 = el('div', 'stat-content-col' + (state.surveyItem === 'rate' ? ' stat-content-col--grid' : ''));
-      var active2 = SURVEY.items.filter(function (it) { return it.id === state.surveyItem; })[0];
-      active2.charts.forEach(function (c) { col2.appendChild(buildBarChart(c)); });
-      return col2;
-    }
-    // data tab
-    var wrap = el('div', 'stat-content-col stat-content-col--full');
-    var kpiRow2 = el('div', 'data-kpi-row');
-    DATA.kpi.forEach(function (d) { kpiRow2.appendChild(buildDataKpiCard(d, state.dataItem)); });
-    wrap.appendChild(kpiRow2);
-    var chartsRow = el('div', 'data-charts-row');
-    var activeKpi = DATA.kpi.filter(function (d) { return d.id === state.dataItem; })[0];
-    var charts = DATA.charts[state.dataItem] || [
-      { title: activeKpi.label, subtitle: '전체', unit: '(단위: 건)', color: activeKpi.color, cats: [activeKpi.label], values: [activeKpi.numValue], scaleMax: Math.ceil(activeKpi.numValue * 1.3 / 1000) * 1000 }
-    ];
-    charts.forEach(function (c, ci) {
-      if (ci > 0) chartsRow.appendChild(el('div', 'data-chart-divider'));
-      chartsRow.appendChild(buildBarChart({ title: c.title, subtitle: c.subtitle, unit: c.unit, cats: c.cats, values: c.values, color: c.color, scaleMax: c.scaleMax, steps: c.steps, showValues: true, noBorder: true }));
-    });
-    wrap.appendChild(chartsRow);
-    return wrap;
-  }
-
-  function buildAdminChart(item) {
-    var wrap = el('div', 'admin-chart-scroll');
-    var chart = buildBarChart({
-      title: item.label, unit: item.unit, cats: ADMIN_YEARS,
-      values: item.values, color: item.color, scaleMax: item.scaleMax,
-      showLine: item.showLine, showValues: item.showValues, pointUnit: item.pointUnit
-    });
-    chart.classList.add('chart-card--admin');
-    wrap.appendChild(chart);
-    return wrap;
+    var col = el('div', 'stat-content-col' + (state.surveyItem === 'rate' ? ' stat-content-col--grid' : ''));
+    var active = SURVEY.items.filter(function (it) { return it.id === state.surveyItem; })[0];
+    active.charts.forEach(function (c) { col.appendChild(buildBarChart(c)); });
+    return col;
   }
 
   /* --------------------------------------------------------------------
