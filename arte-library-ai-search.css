@@ -74,7 +74,7 @@ main[data-state='result'] .ais-result[data-when='result'] { display: flex; }
 .skel-img {
   position: relative; overflow: hidden;
   flex: none; width: 108px; height: 152px;
-  background: linear-gradient(286deg, #ebebeb -24.92%, #c8c8c8 49.21%, #ebebeb 123.33%);
+  background: linear-gradient(90deg, #ebebeb -24.92%, #c8c8c8 49.21%, #ebebeb 123.33%);
 }
 .skel-lines {
   flex: 1; min-width: 0; height: 152px; padding: 20px;
@@ -82,7 +82,7 @@ main[data-state='result'] .ais-result[data-when='result'] { display: flex; }
 }
 .skel-lines i {
   position: relative; overflow: hidden;
-  display: block; height: 30px; background: linear-gradient(286deg, #ebebeb -24.92%, #c8c8c8 49.21%, #ebebeb 123.33%);
+  display: block; height: 30px; background: linear-gradient(90deg, #ebebeb -24.92%, #c8c8c8 49.21%, #ebebeb 123.33%);
 }
 .skel-lines i:nth-child(1) { width: 100%; }
 .skel-lines i:nth-child(2) { width: 68%; }
