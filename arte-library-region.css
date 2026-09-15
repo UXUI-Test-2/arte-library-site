@@ -7,33 +7,32 @@
 /* 지역 지도 — 도(道) 경계 음영은 조각(100여개) 벡터를 그대로 살리기엔 비효율적이라
    여전히 통이미지로 대체(Figma 노드 20516:20722, 핀 제외 상태로 캡처)하지만, 5개
    지역 핀(map/city-pins-group)만은 실제 DOM 버튼으로 얹어 호버 시 레드로 바뀌게 한다
-   — 2026-09-15 Figma 재확인(20516:20720) 기준 좌표를 %로 환산해 배치. */
+   — 2026-09-15 Figma 재확인(20516:20720) 기준 좌표를 %로 환산해 배치.
+   핀 모양 자체는 아래가 뾰족한 삼각형이 아니라 둥근 물방울(teardrop) 실루엣 +
+   소프트 그림자 — Figma 실측 path(20516:20839 "location_on", viewBox 0 0 38 45)를
+   그대로 inline svg로 옮기고 fill=currentColor로 색만 스와핑, 그림자는
+   filter:drop-shadow로 재현(box-shadow는 SVG 실루엣엔 안 먹혀서 사용 불가). */
 .rg-map-wrap { position: relative; margin-bottom: 32px; }
 .rg-map { display: block; width: 100%; height: auto; }
 .rg-map-pins { position: absolute; inset: 0; }
 .rg-map-pin {
   position: absolute; transform: translate(-50%, -100%);
-  border: 0; background: none; padding: 0; cursor: pointer;
+  border: 0; background: none; padding: 0; cursor: pointer; color: #007ade;
 }
-.rg-map-pin-circle {
-  position: relative; display: flex; align-items: center; justify-content: center;
-  width: 28px; height: 28px;
-  border-radius: 50%; background: #007ade; color: #fff;
+.rg-map-pin-svg {
+  display: block; width: 28px; height: auto;
+  filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.3));
+}
+.rg-map-pin-label {
+  position: absolute; left: 50%; top: 42%; transform: translate(-50%, -50%);
   font-family: 'Pretendard GOV Variable', 'Pretendard GOV', sans-serif;
-  font-size: 11px; font-weight: 600; letter-spacing: -0.22px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  font-size: 11px; font-weight: 600; letter-spacing: -0.22px; color: #fff; white-space: nowrap;
 }
-.rg-map-pin-circle::after {
-  content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
-  width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent;
-  border-top: 7px solid #007ade;
-}
-.rg-map-pin:hover .rg-map-pin-circle, .rg-map-pin:focus-visible .rg-map-pin-circle { background: #ff2268; }
-.rg-map-pin:hover .rg-map-pin-circle::after, .rg-map-pin:focus-visible .rg-map-pin-circle::after { border-top-color: #ff2268; }
+.rg-map-pin:hover, .rg-map-pin:focus-visible { color: #ff2268; }
 
 @media (max-width: 768px) {
-  .rg-map-pin-circle { width: 22px; height: 22px; font-size: 9px; }
-  .rg-map-pin-circle::after { border-left-width: 5px; border-right-width: 5px; border-top-width: 6px; }
+  .rg-map-pin-svg { width: 22px; }
+  .rg-map-pin-label { font-size: 9px; }
 }
 
 .fil-date { font-size: 16px; }
