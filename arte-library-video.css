@@ -60,8 +60,9 @@
   font-size: 18px; font-weight: 600;
 }
 .vidcard-btn-icon { position: relative; width: 20px; height: 20px; flex: none; }
-.vidcard-btn-icon img { position: absolute; inset: 0; width: 20px; height: 20px; transition: opacity 0.15s; }
-.vidcard-btn-icon .ic-hover { opacity: 0; }
+.vidcard-btn-icon img, .vidcard-btn-icon svg { position: absolute; inset: 0; width: 20px; height: 20px; transition: opacity 0.15s; }
+/* 호버 화살표는 흰색 대신 레드(#ff2268)로 — 인라인 svg + currentColor로 정확한 색 지정 */
+.vidcard-btn-icon .ic-hover { opacity: 0; color: #ff2268; }
 .vidcard:hover .vidcard-btn { background: var(--ink); color: #fff; }
 .vidcard:hover .vidcard-btn-icon .ic-default { opacity: 0; }
 .vidcard:hover .vidcard-btn-icon .ic-hover { opacity: 1; }

@@ -259,9 +259,9 @@ h1, h2, h3, h4, p { margin: 0; }
 .kvs-go-bg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .kvs-go-ic {
   position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
-  width: 60%; height: 60%;
+  width: 60%; height: 60%; color: #fff;
 }
-.kvs-go:hover { opacity: 0.82; }
+.kvs-go:hover .kvs-go-ic { color: #ff2268; }
 
 .kv-chips { display: flex; flex-wrap: wrap; gap: 16px; }
 .kv-chips button {

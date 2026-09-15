@@ -44,7 +44,7 @@
 
 .sub-content { display: flex; flex-direction: column; gap: clamp(40px, 4.17vw, 80px); }
 .sub-head {
-  display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;
+  display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap;
   padding-bottom: 28px; border-bottom: 4px solid var(--ink);
 }
 .sub-h2 {
