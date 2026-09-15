@@ -241,13 +241,8 @@ h1, h2, h3, h4, p { margin: 0; }
 @keyframes kvBlob3Drift { 0% { translate: -60% 0; } 100% { translate: 172.94% 0; } }
 @keyframes kvBlob3Breathe { 0%, 100% { opacity: 0.013; } 50% { opacity: 0.162; } }
 
-/* 히어로 상/하단이 헤더·다음 섹션의 흰 배경과 자연스럽게 이어지도록 — 스크롤 페이드
-   (kvBgFade)와는 별개로 항상 켜져 있는 고정 그라디언트. 상단은 헤더와의 경계를 살짝만
-   부드럽게 하는 정도라 하단보다 옅고 낮게 잡는다 */
-.kv-bg-fade-top {
-  position: absolute; left: 0; right: 0; top: 0; height: 18%;
-  background: linear-gradient(to top, rgba(255, 255, 255, 0), var(--white));
-}
+/* 히어로 하단이 다음 섹션의 흰 배경과 자연스럽게 이어지도록 — 스크롤 페이드
+   (kvBgFade)와는 별개로 항상 켜져 있는 고정 그라디언트 */
 .kv-bg-fade-bottom {
   position: absolute; left: 0; right: 0; bottom: 0; height: 35%;
   background: linear-gradient(to bottom, rgba(255, 255, 255, 0), var(--white));
