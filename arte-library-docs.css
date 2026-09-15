@@ -120,9 +120,14 @@
 .fil-acc img { width: 20px; height: 20px; transform: rotate(90deg); }
 .fil-acc:hover { color: var(--blue); }
 
-.fil-range { display: flex; align-items: center; gap: 8px; }
-.fil-range .fil-select { flex: 1; padding: 12px; font-size: 16px; }
-.fil-tilde { color: var(--gray-888); }
+/* 좌측 필터 폭이 220~292px로 좁아서 "2021년/2025년" + 화살표가 버튼 폭을 넘어
+   글자가 아래로 밀려 줄바꿈되던 문제 — 패딩/아이콘/간격을 줄여 한 줄에 들어가게 함 */
+.fil-range { display: flex; align-items: center; gap: 4px; }
+.fil-range .fil-select {
+  flex: 1; min-width: 0; gap: 4px; padding: 10px 8px; font-size: 14px; white-space: nowrap;
+}
+.fil-range .fil-select img { width: 16px; height: 16px; }
+.fil-tilde { flex: none; color: var(--gray-888); }
 
 /* ---- 우측 목록 ---------------------------------------------------------- */
 

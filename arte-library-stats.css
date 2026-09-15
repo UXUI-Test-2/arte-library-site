@@ -90,8 +90,11 @@
 .stat-nav-item.is-active { background: var(--ink); color: #f9fafb; }
 .stat-nav-item:hover:not(.is-active) { background: var(--gray-bg); }
 
-.stat-period-row { display: flex; align-items: center; gap: 8px; }
-.stat-period-row .stat-field { flex: 1; min-width: 0; }
+/* 좌측 네비 폭이 220~292px로 좁아서 "2021년/2025년" + 화살표가 필드 폭을 넘어
+   "…"으로 잘리던 문제 — 지역별정보 발행연도와 동일하게 패딩/아이콘/간격을 줄인다 */
+.stat-period-row { display: flex; align-items: center; gap: 4px; }
+.stat-period-row .stat-field { flex: 1; min-width: 0; gap: 4px; padding: 10px 8px; font-size: 14px; }
+.stat-period-row .stat-field .chevron-icon svg { width: 16px; height: 16px; }
 .stat-period-divider { flex: none; width: 6px; height: 1px; background: var(--gray-888); }
 .stat-field--full { width: 100%; }
 
