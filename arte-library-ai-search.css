@@ -202,15 +202,6 @@ main[data-state='result'] .ais-result[data-when='result'] { display: flex; }
 .ais-search-line { clip-path: inset(0 100% 0 0); transition: clip-path 1.143s linear; transition-delay: var(--d, .2s); }
 .ais-search-line.in { clip-path: inset(0 0 0 0); }
 
-/* 카드 보더 — 좌상단에서 시계 반대 방향으로 한 변씩 그려짐(참고 사이트의 .olb/.ol과 동일) */
-.ais-ev.is-drawing { border-color: transparent; }
-.ev-edge { position: absolute; background: var(--ink); pointer-events: none; }
-.ev-edge.e1 { left: 0; top: 0; width: 1px; height: 100%; clip-path: inset(0 0 100% 0); transition: clip-path .11s linear; transition-delay: var(--d, 0s); }
-.ev-edge.e2 { left: 0; bottom: 0; width: 100%; height: 1px; clip-path: inset(0 100% 0 0); transition: clip-path .523s linear; transition-delay: calc(var(--d, 0s) + .11s); }
-.ev-edge.e3 { right: 0; top: 0; width: 1px; height: 100%; clip-path: inset(100% 0 0 0); transition: clip-path .11s linear; transition-delay: calc(var(--d, 0s) + .633s); }
-.ev-edge.e4 { left: 0; top: 0; width: 100%; height: 1px; clip-path: inset(0 0 0 100%); transition: clip-path .523s linear; transition-delay: calc(var(--d, 0s) + .743s); }
-.ev-edge.in { clip-path: inset(0 0 0 0) !important; }
-
 /* 키워드 결과 분류 탭 — "전체"만 제자리 페이드, 나머지는 "전체" 자리에 겹쳐 있다가
    다같이 제자리로 슬라이드(참고 사이트의 #kw .slide와 동일 아이디어) */
 .kw-tabs.is-unfurling button { opacity: 0; }

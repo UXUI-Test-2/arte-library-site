@@ -99,18 +99,6 @@
       prep(badge, 'rv-rise', d + 0.7);
       prep(body, 'rv-rise', d + 0.87);
       toReveal.push(thumb, title, badge, body);
-
-      if (!reduceMotion) {
-        card.classList.add('is-drawing');
-        var edges = ['e1', 'e2', 'e3', 'e4'].map(function (e) {
-          var i2 = document.createElement('i');
-          i2.className = 'ev-edge ' + e;
-          i2.style.setProperty('--d', d + 0.27 + 's');
-          card.appendChild(i2);
-          return i2;
-        });
-        toReveal = toReveal.concat(edges);
-      }
     });
 
     var afterCards = cardStart + cards.length * cardGap + 0.3;
