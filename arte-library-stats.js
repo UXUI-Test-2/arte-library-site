@@ -310,19 +310,14 @@
   function renderShell() {
     root.innerHTML = '';
 
-    /* 3탭 구조(행정/조사/자료통계)는 Figma와 동일하게 그대로 유지 — 라이브 페이지엔
-       조사통계 데이터만 남아 있으므로, 조사통계만 활성 탭(span)이고 나머지 둘은
-       변경 전 전체 버전이 보존된 stats-history/로 이동하는 링크(a)로 렌더한다. */
+    /* 3탭 구조(행정/조사/자료통계)는 Figma와 동일하게 그대로 유지 — 단, 라이브 페이지엔
+       조사통계 데이터만 남아 있으므로 나머지 둘은 클릭되지 않는 정적 레이블(span)로 둔다.
+       stats-history/로 이동하는 링크였던 적이 있었으나(2026-09-15), "일단 조사통계만"
+       사용자 지시로 되돌림 — 링크가 필요해지면 이 두 항목에 href를 다시 붙이면 된다. */
     var tabRow = el('div', 'stat-tabs');
-    [
-      { label: '행정통계', href: 'stats-history/index.html' },
-      { label: '조사통계', active: true },
-      { label: '자료통계', href: 'stats-history/index.html' }
-    ].forEach(function (t) {
-      var b = t.active
-        ? txt('span', 'stat-tab is-active', t.label)
-        : txt('a', 'stat-tab', t.label);
-      if (!t.active) b.href = t.href;
+    ['행정통계', '조사통계', '자료통계'].forEach(function (label) {
+      var isActive = label === '조사통계';
+      var b = txt('span', 'stat-tab' + (isActive ? ' is-active' : ''), label);
       var mask = el('div', 'reveal-mask');
       mask.appendChild(b);
       tabRow.appendChild(mask);
