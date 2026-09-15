@@ -88,29 +88,40 @@
 
   function playResultReveal() {
     var fromHeight = panel ? panel.offsetHeight : 0;
-    main.setAttribute('data-state', 'result');
-    growPanel(fromHeight, 0.933);
+    var loading = document.querySelector('.ais-loading');
 
-    if (reduceMotion || !hasGsap) return;
+    /* 로딩 도트(콩콩콩)가 결과 전환과 동시에 뚝 끊기며 사라지지 않도록, 바운스
+       루프를 멈추고 살짝 페이드아웃한 뒤에야 data-state를 result로 넘긴다 —
+       [data-when] display:none 토글은 순간 전환이라 그 전에 눈에 보이는
+       사라짐을 미리 재생해두는 것. */
+    if (!reduceMotion && hasGsap && loading) {
+      gsap.killTweensOf(loading.querySelectorAll('.dot'));
+      gsap.to(loading, { opacity: 0, duration: 0.35, ease: 'power1.out', onComplete: finishReveal });
+    } else {
+      finishReveal();
+    }
 
+    function finishReveal() {
+      main.setAttribute('data-state', 'result');
+      growPanel(fromHeight, 0.933);
+      if (reduceMotion || !hasGsap) return;
+      playResultTimeline();
+    }
+  }
+
+  function playResultTimeline() {
     var desc = document.querySelector('.ais-desc[data-when="result"]');
     var tabs = Array.prototype.slice.call(document.querySelectorAll('.ais-result .lst-cat [role="tab"]'));
-    var cards = Array.prototype.slice.call(document.querySelectorAll('.ais-ev'));
     var moreBtn = document.querySelector('.ais-all');
 
+    /* ais-ev 카드(썸네일+본문 포함)는 모션 없이 즉시 보여준다 — desc/tabs/
+       더보기 버튼만 살짝 등장 모션을 유지. */
     var tl = gsap.timeline();
     if (desc) tl.fromTo(desc, { opacity: 0 }, { opacity: 1, duration: 1.067, ease: 'power1.out' }, 0);
     if (tabs.length) tl.fromTo(tabs, { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 0.733, ease: 'expo.out', stagger: 0.15 }, 0.2);
 
-    /* 카드 하나(테두리+썸네일+제목+배지+본문)를 쪼개서 순차적으로 보여주지 않고,
-       카드 자체를 통째로 한 번에 fade+rise 시킨다 — 카드 사이만 살짝 스태거. */
-    var cardStart = 0.2 + tabs.length * 0.15 + 0.2;
-    var cardGap = 0.15;
-
-    if (cards.length) tl.fromTo(cards, { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 0.733, ease: 'expo.out', stagger: cardGap }, cardStart);
-
-    var afterCards = cardStart + cards.length * cardGap + 0.3;
-    if (moreBtn) tl.fromTo(moreBtn, { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 0.733, ease: 'expo.out' }, afterCards);
+    var afterTabs = 0.2 + tabs.length * 0.15 + 0.4;
+    if (moreBtn) tl.fromTo(moreBtn, { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 0.733, ease: 'expo.out' }, afterTabs);
   }
 
   /* 검색어 + 로딩 상태를 보여준 뒤, 일정 시간이 지나면 자동으로 결과를 연다.
