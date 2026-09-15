@@ -46,15 +46,16 @@
   gap: 2px; padding: 16px 8px; border: 1px solid var(--ink);
 }
 .rg-stat + .rg-stat { border-left: 0; }
-/* 셀렉트(기존 확정값)는 블루 배경+흰 글씨, 호버는 블랙 배경+흰 글씨로 구분 —
-   호버까지 레드로 하면 너무 튀어서 화이트로 되돌림(핀 호버 레드는 그대로 유지) */
+/* 셀렉트(기존 확정값)는 블루 배경+흰 글씨. 호버는 블랙 배경+흰 라벨 유지하되
+   숫자만 레드로 강조(핀 호버 레드와 동일한 --accent-pink 톤으로 통일). */
 .rg-stat--on { background: #007ade; border-color: #007ade; color: #fff; }
 .rg-stat:hover { background: var(--ink); border-color: var(--ink); color: #fff; }
 .rg-stat-l { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
 .rg-stat-l b { font-size: clamp(15px, 1.09vw, 21px); font-weight: 600; }
 .rg-stat-l span { font-size: clamp(14px, 1.04vw, 20px); font-weight: 400; }
 .rg-stat-n { font-size: clamp(24px, 2.14vw, 41px); font-weight: 700; line-height: 1.5; color: var(--ink); }
-.rg-stat--on .rg-stat-n, .rg-stat:hover .rg-stat-n { color: #fff; }
+.rg-stat--on .rg-stat-n { color: #fff; }
+.rg-stat:hover .rg-stat-n { color: #ff2268; }
 
 /* 안내 + 더보기 */
 .rg-listwrap { display: flex; flex-direction: column; gap: 24px; }
