@@ -109,7 +109,16 @@
 
           <div class="fil-group">
             <p class="fil-label">지역</p>
-            <img class="rg-map" src="assets/region-map.png" alt="지역 선택 지도 — 서울, 대전, 전남, 부산, 제주 표시">
+            <div class="rg-map-wrap">
+              <img class="rg-map" src="assets/region-map.png" alt="지역 선택 지도 — 서울, 대전, 전남, 부산, 제주 표시">
+              <div class="rg-map-pins" aria-label="지역 선택">
+                <button class="rg-map-pin" type="button" style="left:32.88%;top:19.04%" data-city="서울"><span class="rg-map-pin-circle">서울</span></button>
+                <button class="rg-map-pin" type="button" style="left:39.73%;top:46.51%" data-city="대전"><span class="rg-map-pin-circle">대전</span></button>
+                <button class="rg-map-pin" type="button" style="left:26.03%;top:75.18%" data-city="전남"><span class="rg-map-pin-circle">전남</span></button>
+                <button class="rg-map-pin" type="button" style="left:27.05%;top:96.63%" data-city="제주"><span class="rg-map-pin-circle">제주</span></button>
+                <button class="rg-map-pin" type="button" style="left:77.05%;top:65.54%" data-city="부산"><span class="rg-map-pin-circle">부산</span></button>
+              </div>
+            </div>
             <p class="fil-note">
               <img src="assets/icon-info.svg" alt="" width="20" height="20">
               다양한 조건을 설정하여 원하는 자료를 검색할 수 있습니다. (중복 선택 가능)

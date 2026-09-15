@@ -4,8 +4,37 @@
    서브페이지 공통 셸(.sub / .fil / .lst / .pager)은 arte-library-docs.css 재사용.
    ========================================================================== */
 
-/* 지역 지도 — 원본 벡터 조합을 통이미지로 대체 (Figma 노드 19388:1753) */
-.rg-map { width: 100%; height: auto; margin-bottom: 32px; }
+/* 지역 지도 — 도(道) 경계 음영은 조각(100여개) 벡터를 그대로 살리기엔 비효율적이라
+   여전히 통이미지로 대체(Figma 노드 20516:20722, 핀 제외 상태로 캡처)하지만, 5개
+   지역 핀(map/city-pins-group)만은 실제 DOM 버튼으로 얹어 호버 시 레드로 바뀌게 한다
+   — 2026-09-15 Figma 재확인(20516:20720) 기준 좌표를 %로 환산해 배치. */
+.rg-map-wrap { position: relative; margin-bottom: 32px; }
+.rg-map { display: block; width: 100%; height: auto; }
+.rg-map-pins { position: absolute; inset: 0; }
+.rg-map-pin {
+  position: absolute; transform: translate(-50%, -100%);
+  border: 0; background: none; padding: 0; cursor: pointer;
+}
+.rg-map-pin-circle {
+  position: relative; display: flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px;
+  border-radius: 50%; background: #007ade; color: #fff;
+  font-family: 'Pretendard GOV Variable', 'Pretendard GOV', sans-serif;
+  font-size: 11px; font-weight: 600; letter-spacing: -0.22px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+.rg-map-pin-circle::after {
+  content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+  width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent;
+  border-top: 7px solid #007ade;
+}
+.rg-map-pin:hover .rg-map-pin-circle, .rg-map-pin:focus-visible .rg-map-pin-circle { background: #ff2268; }
+.rg-map-pin:hover .rg-map-pin-circle::after, .rg-map-pin:focus-visible .rg-map-pin-circle::after { border-top-color: #ff2268; }
+
+@media (max-width: 768px) {
+  .rg-map-pin-circle { width: 22px; height: 22px; font-size: 9px; }
+  .rg-map-pin-circle::after { border-left-width: 5px; border-right-width: 5px; border-top-width: 6px; }
+}
 
 .fil-date { font-size: 16px; }
 .fil-date img { transform: none; }
@@ -22,7 +51,7 @@
 .rg-stat-l { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
 .rg-stat-l b { font-size: clamp(15px, 1.09vw, 21px); font-weight: 600; }
 .rg-stat-l span { font-size: clamp(14px, 1.04vw, 20px); font-weight: 400; }
-.rg-stat-n { font-size: clamp(24px, 2.14vw, 41px); font-weight: 700; line-height: 1.5; color: #007ade; }
+.rg-stat-n { font-size: clamp(24px, 2.14vw, 41px); font-weight: 700; line-height: 1.5; color: var(--ink); }
 .rg-stat--on .rg-stat-n, .rg-stat:hover .rg-stat-n { color: #ff2268; }
 
 /* 안내 + 더보기 */
