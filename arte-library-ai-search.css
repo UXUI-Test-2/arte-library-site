@@ -208,7 +208,9 @@ main[data-state='result'] .ais-result[data-when='result'] { display: flex; }
 
 @media (max-width: 768px) {
   .ais-in { padding: 24px 0 48px; gap: 40px; }
-  .ais-search { padding: 12px 8px 16px; }
+  .ais-search { padding: 12px 8px 16px; gap: 8px; }
+  .ais-search input { font-size: clamp(15px, 4.2vw, 22px); }
+  .ais-search button img { width: clamp(28px, 8vw, 40px); }
   .ais-search-line { height: 3px; }
   .ais-panel { padding: 20px; border-width: 2px; gap: 24px; }
   .ais-panel-head { gap: 12px; }

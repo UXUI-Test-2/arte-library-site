@@ -920,9 +920,13 @@ h1, h2, h3, h4, p { margin: 0; }
     border-bottom: 1px solid var(--gray-line);
   }
 
+  /* hd-account는 hd-btn(로고와 같은 줄에 오는 아이콘 묶음)의 자식이 아니라
+     hd-in의 직접 자식이어야 order가 의미를 갖는다 — 과거에 hd-btn 안에
+     중첩되어 있어서 width:100%가 hd-btn의 좁은 폭(아이콘 줄 폭) 기준으로
+     풀리는 바람에 우측 정렬이 아니라 어중간하게 잘려 보이던 버그가 있었음. */
   .hd-account {
-    order: 6; width: 100%; margin-top: 4px;
-    flex-direction: row; align-items: center; gap: 8px;
+    order: 4; width: 100%; margin-top: 4px;
+    flex-direction: row; align-items: center; justify-content: flex-end; gap: 8px;
     background: none; border-radius: 0; padding: 10px 4px;
     font-size: 13px;
   }
