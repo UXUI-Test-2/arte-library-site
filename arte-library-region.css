@@ -92,6 +92,10 @@
   .rg-grid { grid-template-columns: 1fr; }
   .rg-stats { flex-direction: column; }
   .rg-stat + .rg-stat { border-left: 1px solid var(--ink); border-top: 0; }
-  .rg-map { max-width: 240px; margin-inline: auto; }
+  /* max-width로 지도만 줄이면 핀은 .rg-map-wrap(줄어들지 않은 전체 폭) 기준
+     %로 계산되어 지도(가운데 정렬로 좁아진)와 어긋난다 — 지도가 wrap 폭을
+     그대로 채우게 두면(base .rg-map { width:100% }) 핀 %가 항상 지도와
+     일치한다. 모바일에서는 wrap 자체 폭만 살짝 좁혀 지도가 자연히 작아지게. */
+  .rg-map-wrap { max-width: 240px; margin-inline: auto; }
   .prog-body { padding: 16px; gap: 10px; }
 }
