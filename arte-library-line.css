@@ -92,7 +92,7 @@ body {
   margin: 0;
   background: var(--white);
   color: var(--ink);
-  font-family: 'Pretendard', 'Pretendard Variable', 'Noto Sans KR', system-ui, sans-serif;
+  font-family: 'Pretendard GOV Variable', 'Pretendard GOV', 'Noto Sans KR', system-ui, sans-serif;
   font-size: 16px;
   line-height: 1.5;
   letter-spacing: -0.02em;
@@ -130,7 +130,7 @@ h1, h2, h3, h4, p { margin: 0; }
 
 .wrap { width: min(var(--content), calc(100% - var(--side) * 2)); margin-inline: auto; }
 
-.display { font-family: 'Paperlogy', 'Pretendard', sans-serif; font-weight: 600; }
+.display { font-family: 'Paperlogy', 'Pretendard GOV Variable', 'Pretendard GOV', sans-serif; font-weight: 600; }
 
 /* ==========================================================================
    마스트헤드 / 헤더 / GNB
@@ -257,7 +257,7 @@ h1, h2, h3, h4, p { margin: 0; }
   .kv-bg-blob { animation: none; opacity: 0.08; }
 }
 .kv-title {
-  font-family: 'Paperlogy', 'Pretendard', sans-serif;
+  font-family: 'Paperlogy', 'Pretendard GOV Variable', 'Pretendard GOV', sans-serif;
   font-size: clamp(24px, 5.21vw, 100px);
   line-height: 1.15;
   letter-spacing: -0.05em;
@@ -333,7 +333,7 @@ h1, h2, h3, h4, p { margin: 0; }
 }
 .sec-head--plain { justify-content: flex-start; }
 .sec-title {
-  font-family: 'Paperlogy', 'Pretendard', sans-serif; font-weight: 600;
+  font-family: 'Paperlogy', 'Pretendard GOV Variable', 'Pretendard GOV', sans-serif; font-weight: 600;
   font-size: clamp(28px, 3.23vw, 62px); line-height: 1;
 }
 .sec-add { flex: none; display: block; width: 40px; height: 40px; }
@@ -577,7 +577,7 @@ h1, h2, h3, h4, p { margin: 0; }
 .bookcur-date { font-size: clamp(18px, 1.25vw, 24px); font-weight: 500; }
 .bookcur-tag {
   display: inline-block; padding: 2px 6px; background: #ff2268;
-  font-family: 'Paperlogy', 'Pretendard', sans-serif; font-weight: 600;
+  font-family: 'Paperlogy', 'Pretendard GOV Variable', 'Pretendard GOV', sans-serif; font-weight: 600;
   font-size: clamp(26px, 2.5vw, 48px); line-height: 1; letter-spacing: -0.02em; color: #fff;
 }
 /* icon-arrow-md.svg 원본 stroke가 #FF2268 — 기본은 검정으로 덮어쓰고, 호버 시 필터를 걷어

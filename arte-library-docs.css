@@ -23,7 +23,7 @@
 
 .sub-title-b { display: flex; flex-direction: column; gap: 40px; }
 .sub-h1 {
-  font-family: 'Paperlogy', 'Pretendard', sans-serif; font-weight: 600;
+  font-family: 'Paperlogy', 'Pretendard GOV Variable', 'Pretendard GOV', sans-serif; font-weight: 600;
   font-size: clamp(32px, 4.17vw, 80px); line-height: 1; letter-spacing: -0.04em;
 }
 .sub-tabs { display: flex; gap: 8px; }
@@ -48,7 +48,7 @@
   padding-bottom: 28px; border-bottom: 4px solid var(--ink);
 }
 .sub-h2 {
-  font-family: 'Paperlogy', 'Pretendard', sans-serif; font-weight: 600;
+  font-family: 'Paperlogy', 'Pretendard GOV Variable', 'Pretendard GOV', sans-serif; font-weight: 600;
   font-size: clamp(26px, 3.07vw, 59px); line-height: 1; letter-spacing: -0.04em;
 }
 .sub-head p { font-size: clamp(14px, 1.04vw, 20px); font-weight: 500; color: var(--gray-555); }

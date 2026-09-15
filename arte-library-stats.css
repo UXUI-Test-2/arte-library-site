@@ -26,7 +26,7 @@
 .crumb a:hover { color: var(--ink); text-decoration: underline; }
 
 .sub-h1 {
-  font-family: 'Paperlogy', 'Pretendard', sans-serif; font-weight: 600;
+  font-family: 'Paperlogy', 'Pretendard GOV Variable', 'Pretendard GOV', sans-serif; font-weight: 600;
   font-size: clamp(32px, 4.17vw, 80px); line-height: 1; letter-spacing: -0.02em;
   margin: 0 0 clamp(20px, 2.08vw, 40px);
 }
