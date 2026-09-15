@@ -10,6 +10,10 @@
 .recocard { display: flex; flex-direction: column; border: 1px solid var(--ink); overflow: hidden; background: var(--white); }
 .recocard-thumb { position: relative; aspect-ratio: 278 / 393; overflow: hidden; background: var(--gray-thumb); }
 .recocard-thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* 해외전문가 초청 워크숍·꿈다락 토요문화학교 기획사업 썸네일은 Figma 실측 크롭 기준이
+   중앙(50% 50%)이 아니라 좌상단(0 0) — 다른 카드와 달리 이 두 이미지만 좌측 정렬 */
+.recocard-thumb img[src*="reco-thumb-poster"],
+.recocard-thumb img[src*="reco-thumb-dreamsat"] { object-position: 0 0; }
 
 .recocard-body { display: flex; flex-direction: column; gap: 8px; padding: 20px 20px 32px; }
 .recocard-badge {
