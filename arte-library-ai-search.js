@@ -26,7 +26,7 @@
      -------------------------------------------------------------------- */
   function prep(el, cls, delay) {
     if (!el || reduceMotion) return;
-    el.classList.add(cls);
+    if (cls) el.classList.add(cls);
     if (delay != null) el.style.setProperty('--d', delay + 's');
   }
   function reveal(els) {
