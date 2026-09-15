@@ -200,35 +200,56 @@ h1, h2, h3, h4, p { margin: 0; }
 .kv > .wrap { position: relative; z-index: 1; }
 
 /* 히어로 백그라운드 — 그리드 워터마크는 정적 캡처 이미지 그대로 유지.
-   블러 블롭 3겹은 정적 배경 요소로 고정 배치(드리프트/브리딩 모션은 제거됨 —
-   모션 버전은 motion-kv/index.html 스냅샷에 보존). 좌→우 드리프트 애니메이션이 없어진
-   자리는 각 블롭을 화면 중앙에 고정해 배치한다(색상은 아르떼 블루 3단계 유지).
+   좌→우로 흐르는 블루 톤은 Figma 대신 projects/arte/video/wave-hero/src/WaveHero.tsx
+   (Remotion, stitch.withgoogle.com 참고)의 GradientBlobs를 그대로 포팅 — 화면 하단 바깥에
+   중심을 둔 넓은 타원 블러 3겹이 각자 다른 속도로 좌→우 드리프트하며 오퍼시티가 숨쉬듯
+   변한다(색상은 아르떼 블루 3단계 유지). 원본은 1920px 캔버스 기준이라 vw로 그대로 환산.
+   수직 float(작은 흔들림)는 생략 — translate 하나로 드리프트를 맡기고 있어 float까지
+   같은 속성에 얹으면 keyframe이 꼬여서, 드리프트보다 훨씬 작은 효과라 뺐다.
    스크롤 시 옅어지는 처리는 arte-motion.js의 kvBgFade()가 opacity를 직접 제어한다. */
 .kv-bg { position: absolute; inset: 0; overflow: hidden; z-index: 0; pointer-events: none; }
 .kv-bg-pattern { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 
 .kv-bg-blob {
-  position: absolute; left: 50%; translate: -50% 0; border-radius: 50%;
-  mix-blend-mode: multiply; opacity: 0.08;
+  position: absolute; left: 0; border-radius: 50%; mix-blend-mode: multiply;
+  animation-iteration-count: infinite, infinite; animation-timing-function: linear, ease-in-out;
 }
 .kv-bg-blob--1 {
   width: 125vw; height: 78.125vw; background: rgb(0, 122, 222);
   filter: blur(9.375vw); bottom: -46.875vw;
+  animation-name: kvBlob1Drift, kvBlob1Breathe;
+  animation-duration: 60s, 3.25s;
 }
 .kv-bg-blob--2 {
   width: 104.167vw; height: 67.708vw; background: rgb(60, 160, 240);
   filter: blur(8.333vw); bottom: -45.833vw;
+  animation-name: kvBlob2Drift, kvBlob2Breathe;
+  animation-duration: 72s, 3.25s;
+  animation-delay: -27.36s, -1.625s;
 }
 .kv-bg-blob--3 {
   width: 88.542vw; height: 57.292vw; background: rgb(10, 95, 195);
   filter: blur(10.417vw); bottom: -33.854vw;
+  animation-name: kvBlob3Drift, kvBlob3Breathe;
+  animation-duration: 41.25s, 3.25s;
+  animation-delay: -28.875s, -3.25s;
 }
+@keyframes kvBlob1Drift { 0% { translate: -60% 0; } 100% { translate: 140% 0; } }
+@keyframes kvBlob1Breathe { 0%, 100% { opacity: 0.017; } 50% { opacity: 0.204; } }
+@keyframes kvBlob2Drift { 0% { translate: -60% 0; } 100% { translate: 156% 0; } }
+@keyframes kvBlob2Breathe { 0%, 100% { opacity: 0.013; } 50% { opacity: 0.17; } }
+@keyframes kvBlob3Drift { 0% { translate: -60% 0; } 100% { translate: 172.94% 0; } }
+@keyframes kvBlob3Breathe { 0%, 100% { opacity: 0.013; } 50% { opacity: 0.162; } }
 
 /* 히어로 하단이 다음 섹션의 흰 배경과 자연스럽게 이어지도록 — 스크롤 페이드
    (kvBgFade)와는 별개로 항상 켜져 있는 고정 그라디언트 */
 .kv-bg-fade-bottom {
   position: absolute; left: 0; right: 0; bottom: 0; height: 35%;
   background: linear-gradient(to bottom, rgba(255, 255, 255, 0), var(--white));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kv-bg-blob { animation: none; opacity: 0.08; }
 }
 .kv-title {
   font-family: 'Paperlogy', 'Pretendard GOV Variable', 'Pretendard GOV', sans-serif;

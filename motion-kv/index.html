@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>arte 라이브러리</title>
+<!--
+  arte 라이브러리 홈 — Figma 'main_수정중'(fileKey MggyO8qQHuiYJRDenEWqlL / node 19388:756) 1:1 구현
+  · 2026-09-04 전면 재작성. 이전 기획서 기반 시안(통계·DB, AI 아키비스트, 마퀴 등)은 이 화면에 없으므로 제거
+  · 이미지: Figma 실제 에셋을 assets/ 에 내려받아 사용 (사용자 승인)
+  · 타이포: 1920 기준 Figma 값을 clamp()로 유동 적용 (100px/62px 등은 팀 타입스케일 상한을 넘지만 Figma 우선)
+-->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-gov-dynamic-subset.min.css">
+<link rel="stylesheet" href="arte-library-line.css">
+</head>
+<body>
+
+<a class="skip" href="#main">본문 바로가기</a>
+
+<!-- ========== 마스트헤드 (정부 공식 누리집 안내) ========== -->
+<div class="masthead">
+  <div class="mh-in">
+    <img class="mh-flag" src="../assets/icon-flag.svg" alt="" width="24" height="16">
+    <p>이 누리집은 대한민국 공식 전자정부 누리집입니다.</p>
+  </div>
+</div>
+
+<!-- ========== 헤더 / GNB ========== -->
+<header class="hd">
+  <div class="hd-in">
+    <a class="hd-logo" href="../arte-library-line.html">
+      <img src="../assets/logo-arte-library.png" alt="arte 라이브러리" width="199" height="28">
+    </a>
+
+    <nav class="gnb" aria-label="주 메뉴">
+      <a href="../arte-library-docs.html">아카이브·도서</a>
+      <a href="../arte-library-video.html">영상</a>
+      <a href="../arte-library-reco.html">추천</a>
+      <a href="../arte-library-region.html">지역별 정보</a>
+      <a href="../arte-library-stats.html">통계</a>
+      <a href="../arte-library-notice.html">누리집 안내</a>
+    </nav>
+
+    <div class="hd-btn">
+      <div class="hd-account">
+        <a href="#">로그인</a>
+        <span class="hd-bar" aria-hidden="true"></span>
+        <a href="#">회원가입</a>
+        <span class="hd-bar" aria-hidden="true"></span>
+        <a href="#">화면설정</a>
+      </div>
+      <a class="hd-icon" href="../arte-library-ai-search.html" aria-label="통합검색">
+        <img src="../assets/icon-search-header.svg" alt="" width="30" height="30">
+      </a>
+      <button class="hd-icon" type="button" aria-label="전체메뉴">
+        <img src="../assets/icon-menu.svg" alt="" width="30" height="30">
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ========== 메인 KV — 검색 ========== -->
+  <section class="kv">
+    <div class="kv-bg" aria-hidden="true">
+      <img class="kv-bg-pattern" src="../assets/kv-bg-pattern.png" alt="" loading="lazy">
+      <div class="kv-bg-blob kv-bg-blob--1"></div>
+      <div class="kv-bg-blob kv-bg-blob--2"></div>
+      <div class="kv-bg-blob kv-bg-blob--3"></div>
+      <div class="kv-bg-fade-bottom"></div>
+    </div>
+    <div class="wrap">
+      <h1 class="kv-title">하나씩 쌓여 완성되는<br>우리의 문화예술교육 아카이브</h1>
+
+      <div class="kv-search">
+        <form class="kvs" role="search" action="arte-library-ai-search.html" method="get">
+          <label class="sr" for="q">통합검색</label>
+          <input id="q" name="q" type="search" placeholder="대화하듯 편하게 검색해 보세요.">
+          <button class="kvs-go" type="submit" aria-label="검색">
+            <img class="kvs-go-bg" src="../assets/icon-search-btn.svg" alt="" width="80" height="80">
+            <img class="kvs-go-ic" src="../assets/icon-search.svg" alt="" width="48" height="48">
+          </button>
+        </form>
+
+        <div class="kv-chips">
+          <button type="button">#요즘 가장 인기있는 문화예술교육을 알려줘</button>
+          <button type="button">#최근 3년간 문화예술교육 트렌드를 요약해줘</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 아카이브 ========== -->
+  <section class="sec" id="docs">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 class="sec-title">아카이브</h2>
+        <a class="sec-add" href="../arte-library-docs.html" aria-label="아카이브 더보기">
+          <img src="../assets/icon-add.svg" alt="" width="40" height="40">
+        </a>
+      </div>
+
+      <div class="arc-rail" data-rail>
+        <div class="arc-track" data-track>
+
+          <a class="arc" href="../arte-library-docs.html">
+            <img class="arc-img" src="../assets/archive-01.png" alt="2023 제주문화예술교육사업 운영 결과보고서 표지" loading="lazy">
+            <div class="arc-body">
+              <span class="arc-badge" style="background:#0428da">연차보고서</span>
+              <h3 class="arc-t">2023 제주문화예술교육사업 운영 결과보고서</h3>
+              <p class="arc-tags"><span>#기관홍보</span><span>#브로슈어</span><span>#홍보물</span></p>
+            </div>
+          </a>
+
+          <a class="arc" href="../arte-library-docs.html">
+            <img class="arc-img" src="../assets/archive-02.png" alt="2026 유네스코 문화예술교육 주간 문화예술교육 포럼 프로그램 북 표지" loading="lazy">
+            <div class="arc-body">
+              <span class="arc-badge" style="background:#ffd006">행사자료</span>
+              <h3 class="arc-t">2026 유네스코 문화예술교육 주간문화예술교육 포럼‘전환을 위한 질문’ 프로그램 북</h3>
+              <p class="arc-tags"><span>#기관홍보</span><span>#브로슈어</span><span>#홍보물</span></p>
+            </div>
+          </a>
+
+          <a class="arc" href="../arte-library-docs.html">
+            <img class="arc-img" src="../assets/archive-03.png" alt="2025 아르떼 아카데미 프로그램북 표지" loading="lazy">
+            <div class="arc-body">
+              <span class="arc-badge" style="background:#01a44b">연수자료</span>
+              <h3 class="arc-t">2025 아르떼 아카데미 프로그램북</h3>
+              <p class="arc-tags"><span>#기관홍보</span><span>#브로슈어</span><span>#홍보물</span></p>
+            </div>
+          </a>
+
+          <a class="arc" href="../arte-library-docs.html">
+            <img class="arc-img" src="../assets/archive-04.png" alt="2026 문화예술교육진흥원 홍보 브로슈어 표지" loading="lazy">
+            <div class="arc-body">
+              <span class="arc-badge" style="background:#000000">기타</span>
+              <h3 class="arc-t">2026 문화예술교육진흥원 홍보 브로슈어</h3>
+              <p class="arc-tags"><span>#기관홍보</span><span>#브로슈어</span><span>#홍보물</span></p>
+            </div>
+          </a>
+
+          <a class="arc" href="../arte-library-docs.html">
+            <img class="arc-img" src="../assets/archive-05.png" alt="2025 꿈의 극단 춘천 에세이집 표지" loading="lazy">
+            <div class="arc-body">
+              <span class="arc-badge" style="background:#ff2268">문화예술교육현장</span>
+              <h3 class="arc-t">2025 꿈의 극단 ‘춘천’ 에세이집; 함께 쌓아올린 작은기적 이야기 ‘무대너머’</h3>
+              <p class="arc-tags"><span>#기관홍보</span><span>#브로슈어</span><span>#홍보물</span></p>
+            </div>
+          </a>
+
+        </div>
+
+        <div class="arc-foot">
+          <div class="dots" data-dots role="tablist" aria-label="아카이브 페이지"></div>
+          <div class="arc-nav">
+            <button class="round-btn" type="button" data-prev aria-label="이전 자료">
+              <img src="../assets/icon-arrow-left.svg" alt="" width="24" height="24">
+            </button>
+            <button class="round-btn" type="button" data-next aria-label="다음 자료">
+              <img src="../assets/icon-arrow-right.svg" alt="" width="24" height="24">
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 영상 + 도서 ========== -->
+  <section class="sec sec--split" id="media">
+    <div class="wrap media-grid">
+
+      <div class="media-col">
+        <div class="sec-head">
+          <h2 class="sec-title">영상</h2>
+          <a class="sec-add" href="#" aria-label="영상 더보기"><img src="../assets/icon-add.svg" alt="" width="40" height="40"></a>
+        </div>
+        <a class="vid" href="#">
+          <div class="vid-thumb">
+            <img class="vid-img" src="../assets/video-thumb-a.png" alt="" loading="lazy">
+            <img class="vid-img vid-img--over" src="../assets/video-thumb-b.png" alt="2026 유네스코 문화예술교육 주간 포럼 영상 썸네일" loading="lazy">
+            <span class="vid-play" aria-hidden="true"><img src="../assets/icon-play.svg" alt="" width="80" height="80"></span>
+            <span class="vid-dur">3:08:30</span>
+          </div>
+          <div class="vid-info">
+            <h3 class="vid-t">2026 유네스코 문화예술교육 주간 | 문화예술교육 포럼</h3>
+            <p class="tag-line">#유네스코 #문화예술교육 #포럼</p>
+          </div>
+        </a>
+      </div>
+
+      <div class="media-col">
+        <div class="sec-head">
+          <h2 class="sec-title">도서</h2>
+          <a class="sec-add" href="#" aria-label="도서 더보기"><img src="../assets/icon-add.svg" alt="" width="40" height="40"></a>
+        </div>
+        <div class="books">
+
+          <a class="book" href="#">
+            <div class="book-cover book-cover--red">
+              <img class="book-bg" src="../assets/book1-bg.png" alt="" loading="lazy">
+              <img class="book-front" src="../assets/book1-cover.png" alt="탐나는 현대미술 표지" loading="lazy">
+            </div>
+            <div class="book-body">
+              <p class="tag-line">#현대미술 #컬렉터 #거장 #호크니 #경매 #론뮤익<br>#매튜웡 #루이즈부르주아 #조너스우드</p>
+              <h3 class="book-t">탐나는 현대미술: 21세기가 사랑한 예술가들</h3>
+            </div>
+          </a>
+
+          <a class="book" href="#">
+            <div class="book-cover book-cover--dark">
+              <img class="book-bg book-bg--blur" src="../assets/book2-cover.png" alt="" loading="lazy">
+              <img class="book-front book-front--tall" src="../assets/book2-cover.png" alt="이피세 표지" loading="lazy">
+            </div>
+            <div class="book-body">
+              <p class="tag-line">#현대미술 #이피 #도로시아태닝 #불화 #시각화</p>
+              <h3 class="book-t">이피세</h3>
+            </div>
+          </a>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========== 지역별 정보 ==========
+       Figma 'main'(20425:126638 PC / 20425:138866 모바일) 2026-09-11 갱신 기준.
+       PC: 좌측 01/02 리스트 + 우측 03 지역 발간물(문서 카드 2개). 모바일: 3개 퀵카드 가로 스크롤. -->
+  <section class="sec" id="region">
+    <div class="wrap">
+      <div class="sec-head sec-head--plain">
+        <h2 class="sec-title">지역별 정보</h2>
+      </div>
+
+      <!-- PC: 리스트 + 지역 발간물 -->
+      <div class="rg-body only-pc">
+        <div class="rg-list">
+          <a class="rg-row" href="../arte-library-region.html">
+            <div class="rg-row-top">
+              <div class="rg-row-label">
+                <span class="rg-num">01</span>
+                <h3 class="rg-t">프로그램</h3>
+              </div>
+              <svg class="rg-arw" width="40" height="40" viewBox="0 0 72 72" fill="none" aria-hidden="true">
+                <path d="M36 12L36 60M18 42L36 60L54 42" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <p class="rg-d">지역별 문화예술교육 프로그램 정보를 검색하고 조회할 수 있습니다.</p>
+          </a>
+          <a class="rg-row" href="../arte-library-region.html">
+            <div class="rg-row-top">
+              <div class="rg-row-label">
+                <span class="rg-num">02</span>
+                <h3 class="rg-t">운영단체</h3>
+              </div>
+              <svg class="rg-arw" width="40" height="40" viewBox="0 0 72 72" fill="none" aria-hidden="true">
+                <path d="M36 12L36 60M18 42L36 60L54 42" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <p class="rg-d">전국의 문화예술교육을 실행하는 단체·시설·기관 정보를 제공합니다.</p>
+          </a>
+        </div>
+
+        <div class="rg-pub">
+          <a class="rg-pub-head" href="../arte-library-region.html">
+            <div class="rg-row-top">
+              <div class="rg-row-label">
+                <span class="rg-num">03</span>
+                <h3 class="rg-t">지역 발간물</h3>
+              </div>
+              <svg class="rg-arw" width="40" height="40" viewBox="0 0 72 72" fill="none" aria-hidden="true">
+                <path d="M36 12L36 60M18 42L36 60L54 42" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <p class="rg-d">전국의 문화예술교육 운영단체가 발간한 지역별 자료를 확인하실 수 있습니다.</p>
+          </a>
+
+          <div class="rg-pub-grid">
+            <a class="rg-pub-card" href="../arte-library-region.html">
+              <img src="../assets/region-pub-01.png" alt="2023 제주문화예술교육사업 운영 결과보고서 표지" loading="lazy">
+              <div class="rg-pub-body">
+                <span class="rg-pub-badge">제주</span>
+                <h4 class="rg-pub-t">2023 제주문화예술교육 사업 운영 결과보고서</h4>
+                <p class="rg-pub-meta"><span>제주문화예술재단</span><span>연차보고서</span><span>2023</span></p>
+              </div>
+            </a>
+            <a class="rg-pub-card" href="../arte-library-region.html">
+              <img src="../assets/region-pub-02.png" alt="2023 제주문화예술교육사업 운영 결과보고서 표지" loading="lazy">
+              <div class="rg-pub-body">
+                <span class="rg-pub-badge">제주</span>
+                <h4 class="rg-pub-t">2023 제주문화예술교육 사업 운영 결과보고서</h4>
+                <p class="rg-pub-meta"><span>제주문화예술재단</span><span>연차보고서</span><span>2023</span></p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 모바일: 퀵카드 3종 가로 스크롤 -->
+      <div class="rgcard-rail only-mobile">
+        <a class="rgcard" href="../arte-library-region.html">
+          <div class="rgcard-thumb">
+            <img src="../assets/region-card-program.png" alt="" loading="lazy">
+            <span class="rgcard-eyebrow">DATA</span>
+            <span class="rgcard-t">프로그램</span>
+          </div>
+          <p class="rgcard-d">지역별 문화예술교육 프로그램 정보를 검색하고 조회할 수 있습니다.</p>
+          <span class="link-more">더보기 <img src="../assets/icon-arrow-sm.svg" alt="" width="16" height="16"></span>
+        </a>
+        <a class="rgcard" href="../arte-library-region.html">
+          <div class="rgcard-thumb">
+            <img src="../assets/region-card-org.png" alt="" loading="lazy">
+            <span class="rgcard-eyebrow">AI LAB</span>
+            <span class="rgcard-t">운영단체</span>
+          </div>
+          <p class="rgcard-d">전국의 문화예술교육을 실행하는 단체·시설·기관 정보를 제공합니다.</p>
+          <span class="link-more">더보기 <img src="../assets/icon-arrow-sm.svg" alt="" width="16" height="16"></span>
+        </a>
+        <a class="rgcard" href="../arte-library-region.html">
+          <div class="rgcard-thumb">
+            <img src="../assets/region-card-data.png" alt="" loading="lazy">
+            <span class="rgcard-eyebrow">API</span>
+            <span class="rgcard-t">지역별 자료</span>
+          </div>
+          <p class="rgcard-d">전국의 문화예술교육 운영단체가 발간한 지역별 자료를 확인하실 수 있습니다.</p>
+          <span class="link-more">더보기 <img src="../assets/icon-arrow-sm.svg" alt="" width="16" height="16"></span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 추천 + 북 큐레이션 ========== -->
+  <section class="sec" id="reco">
+    <div class="wrap">
+      <div class="sec-head sec-head--plain">
+        <h2 class="sec-title">추천</h2>
+      </div>
+
+      <div class="reco-row">
+        <div class="reco-grid">
+          <a class="reco" href="#">
+            <div class="reco-img"><img class="reco-img--cover" src="../assets/reco-curation.svg" alt="" loading="lazy"></div>
+            <div class="reco-body">
+              <div>
+                <h3 class="reco-t">주제별 큐레이션</h3>
+                <p class="reco-d">아르떼라이브러리의 다양한 주제별 추천자료를 서비스합니다.</p>
+              </div>
+              <span class="link-more">더보기
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M12 4L12 20M6 14L12 20L18 14" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </div>
+          </a>
+
+          <a class="reco" href="#">
+            <div class="reco-img"><img class="reco-img--cover" src="../assets/reco-latest.png" alt="" loading="lazy"></div>
+            <div class="reco-body">
+              <div>
+                <h3 class="reco-t">최신·인기 자료</h3>
+                <p class="reco-d">아르떼라이브러리의 최신 자료와 인기 자료를 소개합니다.</p>
+              </div>
+              <span class="link-more">더보기
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M12 4L12 20M6 14L12 20L18 14" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </div>
+          </a>
+        </div>
+
+        <div class="bookcur">
+          <div class="bookcur-top">
+            <div class="bookcur-left">
+              <p class="bookcur-label">북 큐레이션</p>
+              <p class="bookcur-date">2026. 07.</p>
+              <p class="bookcur-tag">#미래/AI</p>
+            </div>
+            <img class="bookcur-arw" src="../assets/icon-arrow-md.svg" alt="" width="40" height="40">
+          </div>
+
+          <div class="bookcur-books">
+            <a class="bc" href="#">
+              <img src="../assets/bookcur-01.png" alt="예술과 인공지능 표지" loading="lazy">
+              <div class="bc-body"><h4>예술과 인공지능</h4><p>이재박, 2021</p></div>
+            </a>
+            <a class="bc" href="#">
+              <img src="../assets/bookcur-02.png" alt="AI 시대의 사진 표지" loading="lazy">
+              <div class="bc-body"><h4>AI 시대의 사진</h4><p>김경훈, 2026</p></div>
+            </a>
+            <a class="bc" href="#">
+              <img src="../assets/bookcur-03.png" alt="AI, 예술의 미래를 묻다 표지" loading="lazy">
+              <div class="bc-body"><h4>AI, 예술의 미래를 묻다</h4><p>장병탁, 2024</p></div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 통계 (미리보기) ==========
+       Figma 'main'(20425:126638 PC / 20425:138866 모바일) 2026-09-11 신규 섹션.
+       차트는 arte-library-stats.js와 별개로 arte-library-stats-preview.js가 데이터 기반으로 그린다. -->
+  <section class="sec" id="stats-preview">
+    <div class="wrap">
+      <div class="sec-head sec-head--plain">
+        <h2 class="sec-title">통계</h2>
+      </div>
+
+      <div class="statprev-grid">
+        <a class="statprev-card" href="../arte-library-stats.html">
+          <div class="statprev-head">
+            <h3 class="statprev-t">행정통계</h3>
+            <p class="statprev-d">연도별 문화예술교육 강사수, 수혜자수, 예산, 지원기관 수 통계 정보를 제공합니다.</p>
+          </div>
+          <div class="statprev-body" data-chart="admin"></div>
+        </a>
+        <a class="statprev-card" href="../arte-library-stats.html">
+          <div class="statprev-head">
+            <h3 class="statprev-t">조사 통계</h3>
+            <p class="statprev-d">우리나라 국민의 문화예술교육에 대한 수요, 인식, 참여 현황 등의 조사 통계 정보를 제공합니다.</p>
+          </div>
+          <div class="statprev-body" data-chart="survey"></div>
+        </a>
+        <a class="statprev-card" href="../arte-library-stats.html">
+          <div class="statprev-head">
+            <h3 class="statprev-t">자료통계</h3>
+            <p class="statprev-d">한국문화예술교육진흥원의 소장자료 통계 정보를 제공합니다.</p>
+          </div>
+          <div class="statprev-body" data-chart="data"></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 이벤트·행사 + 공지·소식 ========== -->
+  <section class="sec sec--split sec--last">
+    <div class="wrap news-grid">
+
+      <div class="news-col news-col--event">
+        <div class="sec-head">
+          <h2 class="sec-title">이벤트·행사</h2>
+          <a class="sec-add" href="#" aria-label="이벤트 더보기"><img src="../assets/icon-add.svg" alt="" width="40" height="40"></a>
+        </div>
+
+        <a class="ev" href="#">
+          <div class="ev-visual">
+            <img class="ev-visual-img" src="../assets/event-visual-capture.png" alt="7월 초성 퀴즈 이벤트, arte event, 2026.07.14 ~ 23" loading="lazy">
+          </div>
+          <div class="ev-body">
+            <div class="ev-badges">
+              <span class="badge badge--black">진행중</span>
+              <span class="badge badge--blue">이벤트</span>
+            </div>
+            <h3 class="ev-t">arte라이브러리 7월 퀴즈 이벤트</h3>
+            <p class="ev-date-txt">2026-07-14~2026-07-23</p>
+          </div>
+        </a>
+      </div>
+
+      <div class="news-col">
+        <div class="sec-head">
+          <h2 class="sec-title">공지·소식</h2>
+          <a class="sec-add" href="#" aria-label="공지 더보기"><img src="../assets/icon-add.svg" alt="" width="40" height="40"></a>
+        </div>
+
+        <ul class="notices">
+          <li><a href="#"><span class="n-badge n-badge--notice">공지</span><span class="n-t">2026 유네스코 문화예술교육 주간 행사 안내 (2026 .5. 19. ~ 5. 31)</span><span class="n-d">2026-05-14</span></a></li>
+          <li><a href="#"><span class="n-badge n-badge--notice">공지</span><span class="n-t">문화예술교육 자원지도 통계 데이터(단체) 및 프로그램 DB 등록 안내</span><span class="n-d">2026-05-08</span></a></li>
+          <li><a href="#"><span class="n-badge">소식</span><span class="n-t">시스템 점검 안내(7.15 12:00~13:00)</span><span class="n-d">2026-07-13</span></a></li>
+          <li><a href="#"><span class="n-badge">소식</span><span class="n-t">[서비스 영향 안내] 아르떼라이브러리 일부 콘텐츠 표시 오류 예정 (6/29)</span><span class="n-d">2026-06-22</span></a></li>
+          <!-- 원문 표기(ㄱㄱㄷㅇㅌ) 그대로 유지 -->
+          <li><a href="#"><span class="n-badge">소식</span><span class="n-t">2026년 한국문화예술교육진흥원 ㄱㄱㄷㅇㅌ 활용 아이디어 공모전 초성 퀴즈 이벤트</span><span class="n-d">2026-06-15</span></a></li>
+          <li><a href="#"><span class="n-badge">소식</span><span class="n-t">2026년 한국문화예술교육진흥원 공공데이터 활용 아이디어 공모전 개최 안내</span><span class="n-d">2026-06-10</span></a></li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========== 관련기관 배너 ========== -->
+  <section class="partners">
+    <h2 class="sr">관련기관 배너</h2>
+    <button class="pt-nav" type="button" aria-label="이전 배너">
+      <img src="../assets/icon-prev.svg" alt="" width="30" height="30">
+    </button>
+    <div class="pt-list">
+      <a href="#"><img src="../assets/partner-1.svg" alt="국회도서관" width="199" height="52"></a>
+      <a href="#"><img src="../assets/partner-2.svg" alt="한국문화예술교육진흥원" width="343" height="47"></a>
+      <a href="#"><img src="../assets/partner-3.svg" alt="아르떼365" width="210" height="40"></a>
+      <a href="#"><img src="../assets/partner-4.png" alt="예술누림" width="178" height="47"></a>
+    </div>
+    <button class="pt-nav" type="button" aria-label="다음 배너">
+      <img src="../assets/icon-next.svg" alt="" width="30" height="30">
+    </button>
+  </section>
+
+</main>
+
+<!-- ========== 푸터 ========== -->
+<footer class="ft">
+
+  <div class="ft-related">
+    <div class="ft-related-box">
+      <span>관련 사이트 바로 가기</span>
+      <img src="../assets/icon-btn-more.svg" alt="" width="24" height="24">
+    </div>
+    <div class="ft-related-box">
+      <span>단체 회원</span>
+      <img src="../assets/icon-btn-more.svg" alt="" width="24" height="24">
+    </div>
+  </div>
+
+  <div class="ft-surface">
+    <div class="ft-in">
+      <img class="ft-logo" src="../assets/logo-arte-library.png" alt="arte 라이브러리" width="199" height="28">
+
+      <div class="ft-grid">
+        <div class="ft-info">
+          <p>(우 03926) 서울특별시 마포구 상암산로 76 YTN 뉴스퀘어 11~12층 한국문화예술교육진흥원</p>
+          <p>
+            <b>대표전화</b> <a href="tel:0262095900">02)6209-5900</a>
+            <b>팩스</b> 02)6209-1392
+            <b>Email</b> <a href="mailto:contact@arte.or.kr">contact@arte.or.kr</a>
+            <b>담당부서</b> 법무정보화팀
+          </p>
+        </div>
+        <nav class="ft-util" aria-label="바로가기">
+          <a href="#">외부자료등록 <img src="../assets/icon-arrow-right-sm.svg" alt="" width="20" height="20"></a>
+          <a href="#">이벤트 <img src="../assets/icon-arrow-right-sm.svg" alt="" width="20" height="20"></a>
+        </nav>
+      </div>
+
+      <div class="ft-copy">
+        <nav class="ft-policy" aria-label="정책">
+          <a href="#">저작권 안내</a>
+          <a href="#" class="ft-policy-accent">개인정보 처리방침</a>
+          <a href="#">홈페이지 저작권 정책</a>
+        </nav>
+        <p class="ft-copytxt">© 2026 Ministry of the Interior and Safety. All rights reserved.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="ft-identifier">
+    <div class="ft-id-in">
+      <img src="../assets/identifier-logo.svg" alt="문화체육관광부" height="20">
+      <img src="../assets/identifier-moc-txt.svg" alt="" height="13">
+      <img src="../assets/identifier-arte-logo.svg" alt="" height="20">
+      <img src="../assets/identifier-arte-txt.svg" alt="한국문화예술교육진흥원" height="13">
+      <span>이 누리집은 문화체육관광부 산하기관 누리집입니다.</span>
+    </div>
+  </div>
+
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="../arte-library-line.js"></script>
+<script src="../arte-library-stats-preview.js"></script>
+<script src="../arte-header.js"></script>
+<script src="../arte-motion.js"></script>
+</body>
+</html>
