@@ -310,12 +310,23 @@
   function renderShell() {
     root.innerHTML = '';
 
-    /* 탭 전환 없이 "조사통계" 단일 레이블만 — 다른 서브페이지와 같은 탭 리빌 모션을
-       그대로 쓰기 위해 기존 .stat-tabs/.stat-tab 마크업 구조는 유지한다. */
+    /* 3탭 구조(행정/조사/자료통계)는 Figma와 동일하게 그대로 유지 — 라이브 페이지엔
+       조사통계 데이터만 남아 있으므로, 조사통계만 활성 탭(span)이고 나머지 둘은
+       변경 전 전체 버전이 보존된 stats-history/로 이동하는 링크(a)로 렌더한다. */
     var tabRow = el('div', 'stat-tabs');
-    var mask = el('div', 'reveal-mask');
-    mask.appendChild(txt('span', 'stat-tab is-active', '조사통계'));
-    tabRow.appendChild(mask);
+    [
+      { label: '행정통계', href: 'stats-history/index.html' },
+      { label: '조사통계', active: true },
+      { label: '자료통계', href: 'stats-history/index.html' }
+    ].forEach(function (t) {
+      var b = t.active
+        ? txt('span', 'stat-tab is-active', t.label)
+        : txt('a', 'stat-tab', t.label);
+      if (!t.active) b.href = t.href;
+      var mask = el('div', 'reveal-mask');
+      mask.appendChild(b);
+      tabRow.appendChild(mask);
+    });
     root.appendChild(tabRow);
 
     /* Figma 재확인(20516:24854) 결과 이 자리엔 탭 아래 별도로 "조사통계" 59px 대제목 +

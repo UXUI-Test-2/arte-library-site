@@ -37,9 +37,10 @@
 .stat-tabs .reveal-mask { flex: 1; overflow: hidden; display: block; }
 .stat-tabs .reveal-mask > * { display: block; }
 .stat-tab {
-  width: 100%; padding: 16px 0;
+  width: 100%; padding: 16px 0; text-align: center;
   border: 1.4px solid var(--ink); background: var(--white);
   font-size: clamp(17px, 1.67vw, 32px); font-weight: 600;
+  color: inherit; text-decoration: none;
 }
 .stat-tab.is-active { background: var(--ink); color: #fff; border-color: var(--ink); }
 .stat-tab:hover:not(.is-active) { background: var(--gray-bg); }
