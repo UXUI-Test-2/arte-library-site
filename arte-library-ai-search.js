@@ -1,15 +1,15 @@
 /* ==========================================================================
-   arte 라이브러리 — AI 검색 인터랙션 + 모션
+   arte 라이브러리 — AI 검색 인터랙션 + 모션 (GSAP)
    main[data-state="initial|result"] 토글은 그대로 두되(실제 검색/AI 로직 없음),
-   상태 전환과 최초 진입에 uxui-test-1.github.io/arte-main/arte-search.html 의
-   모션을 참고해 이식한다. 그 사이트는 정적 스크린샷 두 장을 마스크 윈도우로
-   잘라 움직이는 방식(실제 콘텐츠가 없어서)이었지만, 이 페이지는 진짜 콘텐츠라
-   요소 자체에 직접 트랜지션을 건다 — 어휘(rise/zoom/fade/draw)와 타이밍/이징은
-   그대로 가져오고, 구현 방식만 이 페이지에 맞게 바꿨다.
+   페이지 진입 시 "검색어 + 로딩(점 4개 콩콩콩 + 스켈레톤 쉬머)"을 보여주고 일정
+   시간 뒤 자동으로 결과를 열어 보여주는 데모 흐름이다. 검색창에 새로 입력해
+   제출해도 같은 흐름(로딩→결과)이 다시 재생된다.
 
-   전부 "CSS transition + .in 클래스 토글" 구조(참고 사이트와 동일): 각 요소가
-   자기 --d(지연)를 인라인으로 갖고, 여기서는 다음 프레임에 .in을 한꺼번에
-   붙이기만 한다 — 스태거는 --d가 담당한다.
+   전부 GSAP(gsap.fromTo/timeline, ScrollTrigger)로 직접 opacity/transform/
+   clip-path/backgroundPosition을 건다 — CSS transition + 클래스 토글 방식은
+   쓰지 않는다(스크롤로 이미 진입 조건을 만족한 요소에 싱크가 안 맞고 트랜지션이
+   씹히는 문제가 있었음). prefers-reduced-motion이면 트윈 자체를 만들지 않고
+   마크업의 최종 상태를 그대로 둔다.
    ========================================================================== */
 (function () {
   'use strict';
@@ -20,39 +20,51 @@
   var panel = document.querySelector('.ais-panel');
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var hasGsap = typeof gsap !== 'undefined';
+  var hasScrollTrigger = hasGsap && typeof ScrollTrigger !== 'undefined';
+  if (hasScrollTrigger) gsap.registerPlugin(ScrollTrigger);
 
-  /* --------------------------------------------------------------------
-     0. 유틸 — reduceMotion이면 아무 것도 안 건드리고 최종 상태 그대로 둔다.
-     -------------------------------------------------------------------- */
-  function prep(el, cls, delay) {
-    if (!el || reduceMotion) return;
-    if (cls) el.classList.add(cls);
-    if (delay != null) el.style.setProperty('--d', delay + 's');
-  }
-  function reveal(els) {
-    if (reduceMotion || !els.length) return;
-    requestAnimationFrame(function () {
-      requestAnimationFrame(function () {
-        els.forEach(function (el) { el.classList.add('in'); });
-      });
-    });
-  }
+  var LOADING_MS = 2200; /* AI가 답변을 만드는 것처럼 보이는 대기 시간 */
+  var KEYWORD_MS = 1000; /* 키워드 검색 결과는 AI 생성 없이 바로 조회되는 값이라 더 짧게 */
+  var demoTimer = null;
 
   /* --------------------------------------------------------------------
      1. 검색창 진입 — 인풋 rise, 검색 버튼 zoom, 언더라인 좌→우로 draw
      -------------------------------------------------------------------- */
   function playSearchIntro() {
+    if (reduceMotion || !hasGsap) return;
     var btn = document.querySelector('.ais-search button');
     var line = document.querySelector('.ais-search-line');
-    prep(input, 'rv-rise', 0);
-    prep(btn, 'rv-zoom', 0.1);
-    prep(line, '', 0.2); /* .ais-search-line은 기본 클래스에 이미 draw 트랜지션이 있음 */
-    reveal([input, btn, line].filter(Boolean));
+    if (input) gsap.fromTo(input, { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 0.733, ease: 'expo.out' });
+    if (btn) gsap.fromTo(btn, { scale: 1.15, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.2, ease: 'expo.out', delay: 0.1 });
+    if (line) gsap.fromTo(line, { clipPath: 'inset(0% 100% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.143, ease: 'none', delay: 0.2 });
   }
 
   /* --------------------------------------------------------------------
-     2. AI 패널 — 높이는 GSAP로 0→auto(진입)/스켈레톤높이→auto(결과 전환)로
-        키우고(참고 사이트의 패널 grow), 안쪽 콘텐츠는 rv-* 스태거로 등장한다.
+     2. 로딩 인디케이터 — 점 4개가 순서대로 튀어오르는 콩콩콩 루프 +
+        스켈레톤 위 딤드 그라데이션이 좌→우로 흐르는 쉬머 루프.
+     -------------------------------------------------------------------- */
+  function playLoadingDots() {
+    if (reduceMotion || !hasGsap) return;
+    var dots = document.querySelectorAll('.ais-loading-dots .dot');
+    dots.forEach(function (dot, i) {
+      gsap.fromTo(dot, { y: 0, opacity: 0.3 }, {
+        y: -5, opacity: 1, duration: 0.4, ease: 'sine.inOut',
+        repeat: -1, yoyo: true, delay: i * 0.15
+      });
+    });
+  }
+
+  function playSkeletonShimmer() {
+    if (reduceMotion || !hasGsap) return;
+    var shines = document.querySelectorAll('.skel-shine');
+    shines.forEach(function (el) {
+      gsap.fromTo(el, { backgroundPosition: '150% 0' }, { backgroundPosition: '-50% 0', duration: 1.6, ease: 'sine.inOut', repeat: -1 });
+    });
+  }
+
+  /* --------------------------------------------------------------------
+     3. AI 패널 높이 — 스켈레톤/결과 콘텐츠 높이에 맞춰 0→auto, 또는
+        스켈레톤 높이→결과 높이로 부드럽게 키운다.
      -------------------------------------------------------------------- */
   function growPanel(fromHeight, duration, onDone) {
     if (reduceMotion || !hasGsap || !panel) { if (onDone) onDone(); return; }
@@ -65,27 +77,33 @@
   }
 
   function playSkeletonIntro() {
-    var lines = Array.prototype.slice.call(document.querySelectorAll('.ais-skeleton .skel'));
-    lines.forEach(function (el, i) { prep(el, 'rv-rise', 0.4 + i * 0.27); });
+    var rows = Array.prototype.slice.call(document.querySelectorAll('.ais-skeleton .skel'));
+    if (!reduceMotion && hasGsap && rows.length) {
+      gsap.fromTo(rows, { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 0.733, ease: 'expo.out', stagger: 0.27, delay: 0.4 });
+    }
     growPanel(0, 0.867);
-    reveal(lines);
+    playLoadingDots();
+    playSkeletonShimmer();
   }
 
   function playResultReveal() {
     var fromHeight = panel ? panel.offsetHeight : 0;
     main.setAttribute('data-state', 'result');
+    growPanel(fromHeight, 0.933);
+
+    if (reduceMotion || !hasGsap) return;
 
     var desc = document.querySelector('.ais-desc[data-when="result"]');
     var tabs = Array.prototype.slice.call(document.querySelectorAll('.ais-result .lst-cat [role="tab"]'));
     var cards = Array.prototype.slice.call(document.querySelectorAll('.ais-ev'));
     var moreBtn = document.querySelector('.ais-all');
 
-    prep(desc, 'rv-fade', 0);
-    tabs.forEach(function (t, i) { prep(t, 'rv-rise', 0.2 + i * 0.15); });
+    var tl = gsap.timeline();
+    if (desc) tl.fromTo(desc, { opacity: 0 }, { opacity: 1, duration: 1.067, ease: 'power1.out' }, 0);
+    if (tabs.length) tl.fromTo(tabs, { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 0.733, ease: 'expo.out', stagger: 0.15 }, 0.2);
 
     var cardStart = 0.2 + tabs.length * 0.15 + 0.2;
     var cardGap = 0.47;
-    var toReveal = [desc].concat(tabs);
 
     cards.forEach(function (card, i) {
       var d = cardStart + i * cardGap;
@@ -94,86 +112,93 @@
       var badge = card.querySelector('.ais-ev-badge');
       var body = card.querySelector('.ais-ev-x p, .ais-ev-x--plain');
 
-      prep(thumb, 'rv-zoom', d);
-      prep(title, 'rv-rise', d + 0.53);
-      prep(badge, 'rv-rise', d + 0.7);
-      prep(body, 'rv-rise', d + 0.87);
-      toReveal.push(thumb, title, badge, body);
+      if (thumb) tl.fromTo(thumb, { scale: 1.15, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.2, ease: 'expo.out' }, d);
+      if (title) tl.fromTo(title, { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 0.733, ease: 'expo.out' }, d + 0.53);
+      if (badge) tl.fromTo(badge, { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 0.733, ease: 'expo.out' }, d + 0.7);
+      if (body) tl.fromTo(body, { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 0.733, ease: 'expo.out' }, d + 0.87);
     });
 
     var afterCards = cardStart + cards.length * cardGap + 0.3;
-    prep(moreBtn, 'rv-rise', afterCards);
-    toReveal.push(moreBtn);
+    if (moreBtn) tl.fromTo(moreBtn, { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 0.733, ease: 'expo.out' }, afterCards);
+  }
 
-    var finalHeight = panel ? (function () {
-      // 결과 콘텐츠가 이미 표시된 상태의 자연 높이를 재기 위해 잠깐 height를 비운다
-      var prevInline = panel.style.height;
-      panel.style.height = 'auto';
-      var h = panel.offsetHeight;
-      panel.style.height = prevInline;
-      return h;
-    })() : 0;
-
-    if (reduceMotion || !hasGsap) {
-      reveal(toReveal.filter(Boolean));
-      return;
-    }
-    growPanel(fromHeight, 0.933);
-    reveal(toReveal.filter(Boolean));
+  /* 검색어 + 로딩 상태를 보여준 뒤, 일정 시간이 지나면 자동으로 결과를 연다.
+     — 최초 진입/홈에서 ?q=로 들어온 경우/검색창에 다시 제출한 경우 모두 동일 흐름. */
+  function startDemo() {
+    if (demoTimer) { clearTimeout(demoTimer); demoTimer = null; }
+    main.setAttribute('data-state', 'initial');
+    playSearchIntro();
+    playSkeletonIntro();
+    demoTimer = window.setTimeout(function () {
+      demoTimer = null;
+      playResultReveal();
+    }, reduceMotion ? 0 : LOADING_MS);
   }
 
   if (form) {
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       if (input && !input.value.trim()) input.value = '예술강사의 역할은 무엇인가요?';
-      if (main.getAttribute('data-state') === 'result') return;
-      playResultReveal();
+      startDemo();
     });
   }
 
-  /* 홈 검색창에서 ?q= 로 넘어온 경우 바로 결과 상태로 (모션 없이) */
   var q = new URLSearchParams(window.location.search).get('q');
-  var startedAsResult = !!(q && q.trim());
-  if (startedAsResult) {
-    if (input) input.value = q.trim();
-    main.setAttribute('data-state', 'result');
-  }
+  if (q && q.trim() && input) input.value = q.trim();
 
   /* --------------------------------------------------------------------
-     3. 키워드 검색 결과 탭 — "전체"만 제자리 페이드, 나머지는 "전체" 자리에
+     4. 키워드 검색 결과 탭 — "전체"만 제자리 페이드, 나머지는 "전체" 자리에
         겹쳐 있다가 다같이 제자리로 슬라이드. 실제 렌더 폭이 고정폭이 아니라서
-        각 탭의 오프셋을 실측(offsetLeft 차) 해서 --dx로 넘긴다.
+        각 탭의 오프셋을 실측(offsetLeft 차) 해서 시작 x로 넘긴다.
      -------------------------------------------------------------------- */
   function playKwTabsUnfurl() {
+    if (reduceMotion || !hasGsap) return;
     var tabs = document.querySelector('.kw-tabs');
-    if (!tabs || reduceMotion) return;
+    if (!tabs) return;
+    /* .kw-ext("국가학술정보 검색")도 같은 tablist 안의 button이라 querySelectorAll('button')에
+       이미 포함된다 — 전체~지역뿐 아니라 국가학술정보 검색까지 전부 "전체" 위치로 모였다가
+       제자리로 슬라이드된다. */
     var buttons = Array.prototype.slice.call(tabs.querySelectorAll('button'));
     if (buttons.length < 2) return;
-    var firstLeft = buttons[0].offsetLeft;
-    buttons.forEach(function (b, i) {
-      if (i === 0) return;
-      var dx = firstLeft - b.offsetLeft;
-      b.style.transform = 'translateX(' + dx + 'px)';
+
+    var first = buttons[0];
+    var rest = buttons.slice(1);
+    var firstLeft = first.offsetLeft;
+
+    var tl = gsap.timeline();
+    tl.fromTo(first, { opacity: 0 }, { opacity: 1, duration: 1.067, ease: 'power1.out' }, 0.1);
+    rest.forEach(function (b) {
+      gsap.set(b, { x: firstLeft - b.offsetLeft, opacity: 0 });
     });
-    tabs.classList.add('is-unfurling');
-    requestAnimationFrame(function () {
-      requestAnimationFrame(function () {
-        tabs.classList.add('in');
-        buttons.forEach(function (b) { b.style.transform = ''; });
-      });
-    });
+    tl.to(rest, { x: 0, opacity: 1, duration: 1.067, ease: 'expo.out' }, 0.233);
   }
 
   /* --------------------------------------------------------------------
-     4. 아래쪽 키워드 블록 — 스크롤 진입 시 썸네일 zoom + 텍스트 rise 스태거
+     4-1. 키워드 검색 결과 섹션 전체 — AI 답변(로딩 콩콩콩+쉬머)이 도는 동안
+        숨겨뒀다가, AI 생성 없이 바로 조회되는 값이라 더 짧은 시간(1초) 뒤에
+        먼저 열린다. 여기서 열리면서 위 kw-tabs 모으기 모션도 같이 재생한다.
+     -------------------------------------------------------------------- */
+  function playKwSectionReveal() {
+    var kw = document.querySelector('.kw');
+    if (!kw) return;
+    if (reduceMotion || !hasGsap) { playKwTabsUnfurl(); return; }
+    gsap.set(kw, { opacity: 0, y: 28 });
+    window.setTimeout(function () {
+      gsap.to(kw, { opacity: 1, y: 0, duration: 0.8, ease: 'expo.out' });
+      playKwTabsUnfurl();
+    }, KEYWORD_MS);
+  }
+
+  /* --------------------------------------------------------------------
+     5. 아래쪽 키워드 블록 — 스크롤 진입 시 썸네일 zoom + 텍스트 rise 스태거.
+        GSAP 타임라인에 scrollTrigger를 바로 물려서, 페이지 로드 시점에 이미
+        조건을 만족한 블록(예: 첫 블록)도 트랜지션 없이 순간 스냅되지 않고
+        정상적으로 처음부터 재생된다.
      -------------------------------------------------------------------- */
   function playKwBlocksScrollReveal() {
-    if (reduceMotion) return;
+    if (reduceMotion || !hasGsap) return;
     var blocks = Array.prototype.slice.call(document.querySelectorAll('.kw-block'));
     if (!blocks.length) return;
-
-    var hasScrollTrigger = typeof ScrollTrigger !== 'undefined';
-    if (hasGsap && hasScrollTrigger) gsap.registerPlugin(ScrollTrigger);
 
     blocks.forEach(function (block) {
       var head = block.querySelector('.kw-block-head');
@@ -183,38 +208,30 @@
       var date = block.querySelector('.kw-date');
       var desc = block.querySelector('.kw-item-d');
 
-      prep(head, 'rv-rise', 0);
-      prep(thumb, 'rv-zoom', 0.08);
-      prep(crumb, 'rv-rise', 0.05);
-      prep(title, 'rv-rise', 0.22);
-      prep(date, 'rv-rise', 0.38);
-      prep(desc, 'rv-rise', 0.55);
+      var tl = gsap.timeline({
+        paused: true,
+        scrollTrigger: hasScrollTrigger ? { trigger: block, start: 'top 88%', once: true } : undefined
+      });
 
-      var els = [head, thumb, crumb, title, date, desc].filter(Boolean);
-      if (!els.length) return;
+      if (head) tl.fromTo(head, { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 0.733, ease: 'expo.out' }, 0);
+      if (thumb) tl.fromTo(thumb, { scale: 1.15, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.2, ease: 'expo.out' }, 0.08);
+      if (crumb) tl.fromTo(crumb, { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 0.733, ease: 'expo.out' }, 0.05);
+      if (title) tl.fromTo(title, { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 0.733, ease: 'expo.out' }, 0.22);
+      if (date) tl.fromTo(date, { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 0.733, ease: 'expo.out' }, 0.38);
+      if (desc) tl.fromTo(desc, { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 0.733, ease: 'expo.out' }, 0.55);
 
-      if (hasGsap && hasScrollTrigger) {
-        ScrollTrigger.create({
-          trigger: block, start: 'top 88%', once: true,
-          onEnter: function () { els.forEach(function (el) { el.classList.add('in'); }); }
-        });
-      } else {
-        els.forEach(function (el) { el.classList.add('in'); });
-      }
+      if (!hasScrollTrigger) tl.play();
     });
   }
 
   document.addEventListener('DOMContentLoaded', function () {
-    if (!startedAsResult) {
-      playSearchIntro();
-      playSkeletonIntro();
-    }
-    playKwTabsUnfurl();
+    startDemo();
+    playKwSectionReveal();
     playKwBlocksScrollReveal();
   });
 
   /* --------------------------------------------------------------------
-     5. 탭 그룹 (AI 결과 분류 / 키워드 결과 분류) — 기존 접근성 로직 그대로
+     6. 탭 그룹 (AI 결과 분류 / 키워드 결과 분류) — 기존 접근성 로직 그대로
      -------------------------------------------------------------------- */
   document.querySelectorAll('[role="tablist"]').forEach(function (list) {
     var tabs = Array.prototype.slice.call(list.querySelectorAll('[role="tab"]'));
