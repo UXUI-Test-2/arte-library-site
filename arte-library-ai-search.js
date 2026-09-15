@@ -102,21 +102,12 @@
     if (desc) tl.fromTo(desc, { opacity: 0 }, { opacity: 1, duration: 1.067, ease: 'power1.out' }, 0);
     if (tabs.length) tl.fromTo(tabs, { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 0.733, ease: 'expo.out', stagger: 0.15 }, 0.2);
 
+    /* 카드 하나(테두리+썸네일+제목+배지+본문)를 쪼개서 순차적으로 보여주지 않고,
+       카드 자체를 통째로 한 번에 fade+rise 시킨다 — 카드 사이만 살짝 스태거. */
     var cardStart = 0.2 + tabs.length * 0.15 + 0.2;
-    var cardGap = 0.47;
+    var cardGap = 0.15;
 
-    cards.forEach(function (card, i) {
-      var d = cardStart + i * cardGap;
-      var thumb = card.querySelector('.ais-ev-thumb, .ais-ev-thumb--vid');
-      var title = card.querySelector('.ais-ev-t');
-      var badge = card.querySelector('.ais-ev-badge');
-      var body = card.querySelector('.ais-ev-x p, .ais-ev-x--plain');
-
-      if (thumb) tl.fromTo(thumb, { scale: 1.15, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.2, ease: 'expo.out' }, d);
-      if (title) tl.fromTo(title, { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 0.733, ease: 'expo.out' }, d + 0.53);
-      if (badge) tl.fromTo(badge, { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 0.733, ease: 'expo.out' }, d + 0.7);
-      if (body) tl.fromTo(body, { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 0.733, ease: 'expo.out' }, d + 0.87);
-    });
+    if (cards.length) tl.fromTo(cards, { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 0.733, ease: 'expo.out', stagger: cardGap }, cardStart);
 
     var afterCards = cardStart + cards.length * cardGap + 0.3;
     if (moreBtn) tl.fromTo(moreBtn, { y: 28, opacity: 0 }, { y: 0, opacity: 1, duration: 0.733, ease: 'expo.out' }, afterCards);
