@@ -961,7 +961,12 @@ h1, h2, h3, h4, p { margin: 0; }
   .reco-grid { gap: 20px; }
   .reco-body { padding: 20px; gap: 20px; }
 
-  .bookcur { gap: 24px; padding: 24px; }
+  /* .reco-row가 세로로 쌓이는 폭에서는 .bookcur의 flex:1 1 0(데스크톱 가로배치 전용, 가로
+     여백 균등분배 목적)이 반대로 세로축(높이) 기준이 되어버린다 — flex-basis:0에 이 요소의
+     overflow:hidden까지 겹치면 flex 자동 최소크기가 콘텐츠 기준이 아니라 0이 되는 스펙
+     동작 때문에, 늘려줄 여유 공간이 없는 auto-height 부모 안에서 높이가 통째로 0으로
+     찌부러져 북큐레이션 전체가 안 보이는 버그였다. flex:none으로 콘텐츠 높이를 그대로 쓰게 함. */
+  .bookcur { flex: none; gap: 24px; padding: 24px; }
   .bookcur-books { width: 100%; overflow-x: auto; scrollbar-width: none; }
   .bookcur-books::-webkit-scrollbar { display: none; }
   /* 좁은 카드(140px)에서는 고정 50% 오버레이에 2줄 제목+저자가 다 안 들어가 이미지 위로
