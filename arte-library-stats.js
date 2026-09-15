@@ -337,9 +337,19 @@
     main.appendChild(buildContent());
     root.appendChild(main);
 
-    revealTabs(root.querySelectorAll('.stat-tab'), isFirstRender ? 0.45 : 0);
-    revealStack(root.querySelectorAll('.chart-card'));
-    animateCharts(root);
+    /* 최초 렌더에서는 탭(revealTabs) → stat-head(제목/설명) → 그래프(카드+막대/꺾은선)
+       순으로 이어서 재생한다 — 전부 t=0에서 동시에 시작해 그래프 모션이 너무 빨리
+       스쳐 지나가 "모션이 없는 것처럼" 느껴지던 문제. 탭/항목 재클릭 시(재렌더)는
+       기다릴 필요 없이 즉시(0) 반응한다. */
+    var TABS_DELAY = 0.45, TAB_STAGGER = 0.15, TAB_DURATION = 0.5, TAB_COUNT = 3;
+    var STAT_HEAD_DURATION = 0.55;
+    var tabsEnd = isFirstRender ? TABS_DELAY + (TAB_COUNT - 1) * TAB_STAGGER + TAB_DURATION : 0;
+    var chartsStart = tabsEnd + (isFirstRender ? STAT_HEAD_DURATION + 0.15 : 0);
+
+    revealTabs(root.querySelectorAll('.stat-tab'), isFirstRender ? TABS_DELAY : 0);
+    revealStack(root.querySelectorAll('.stat-head'), tabsEnd);
+    revealStack(root.querySelectorAll('.chart-card'), chartsStart);
+    animateCharts(root, chartsStart);
     isFirstRender = false;
   }
 
@@ -435,7 +445,7 @@
      4. GSAP 스택 리빌 — 위에서부터 순서대로 착착 나타남
      -------------------------------------------------------------------- */
 
-  function revealStack(nodeList) {
+  function revealStack(nodeList, delay) {
     var nodes = Array.prototype.slice.call(nodeList);
     if (!nodes.length) return;
     var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -447,7 +457,7 @@
     gsap.fromTo(
       nodes,
       { opacity: 0, y: 28 },
-      { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out', stagger: 0.09, clearProps: 'transform' }
+      { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out', stagger: 0.09, delay: delay || 0, clearProps: 'transform' }
     );
   }
 
@@ -458,7 +468,8 @@
         이 페이지 로컬에 둔다.
      -------------------------------------------------------------------- */
 
-  function animateCharts(scopeEl) {
+  function animateCharts(scopeEl, delay) {
+    delay = delay || 0;
     var cards = scopeEl.querySelectorAll('.chart-card');
     if (!cards.length) return;
 
@@ -537,20 +548,20 @@
       var stagger = clusters.length > 1 ? Math.min(0.4, 0.4 / clusters.length) : 0;
       var finishAt = stagger * (clusters.length - 1) + barDuration;
 
-      gsap.fromTo(clusters, { scaleY: 0 }, { scaleY: 1, duration: barDuration, ease: 'power2.out', stagger: stagger });
+      gsap.fromTo(clusters, { scaleY: 0 }, { scaleY: 1, duration: barDuration, ease: 'power2.out', stagger: stagger, delay: delay });
 
       if (path && typeof path.getTotalLength === 'function') {
         var len = path.getTotalLength();
         path.style.strokeDasharray = len;
         path.style.strokeDashoffset = len;
-        gsap.to(path, { strokeDashoffset: 0, duration: finishAt, ease: 'power1.inOut' });
+        gsap.to(path, { strokeDashoffset: 0, duration: finishAt, ease: 'power1.inOut', delay: delay });
       }
 
       if (dots.length) {
         gsap.fromTo(
           dots,
           { opacity: 0, scale: 0 },
-          { opacity: 1, scale: 1, duration: 0.35, ease: 'back.out(2)', stagger: stagger, delay: finishAt - 0.35, transformOrigin: 'center' }
+          { opacity: 1, scale: 1, duration: 0.35, ease: 'back.out(2)', stagger: stagger, delay: delay + finishAt - 0.35, transformOrigin: 'center' }
         );
       }
       /* opacity만 애니메이션 — pointValues는 CSS transform(translate)으로 위치를 고정하고 있어
@@ -559,7 +570,7 @@
         gsap.fromTo(
           pointValues,
           { opacity: 0 },
-          { opacity: 1, duration: 0.35, ease: 'power1.out', stagger: stagger, delay: finishAt - 0.3 }
+          { opacity: 1, duration: 0.35, ease: 'power1.out', stagger: stagger, delay: delay + finishAt - 0.3 }
         );
       }
     });
