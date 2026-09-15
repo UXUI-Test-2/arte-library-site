@@ -82,7 +82,11 @@
 @media (max-width: 768px) {
   .lst-grid--video { grid-template-columns: 1fr; }
   .vidcard-body { padding: 20px; gap: 16px; }
-  .vidcard-meta { grid-template-columns: 76px 1fr; gap: 4px 12px; }
+  /* docs .doc-meta와 동일한 문제 — 76px 고정 라벨 칸이 좁은 화면에서 긴 값과
+     부딪혀 넘쳐 보임. 한 칸(fill)으로 합쳐 라벨 아래로 값이 내려가게 함. */
+  .vidcard-meta { grid-template-columns: 1fr; gap: 2px 0; }
+  .vidcard-meta dt { margin-top: 8px; }
+  .vidcard-meta dt:first-child { margin-top: 0; }
 }
 
 @media (max-width: 1024px) and (min-width: 769px) {

@@ -250,7 +250,12 @@
   .lst-tip { margin-top: -16px; font-size: 13px; }
   .lst-grid { grid-template-columns: 1fr; }
   .doc-body { padding: 20px; gap: 16px; }
-  .doc-meta { grid-template-columns: 76px 1fr; gap: 4px 12px; }
+  /* 76px 고정 라벨 칸 + 1fr 값 칸이 좁은 화면에서 "만든이(단체)" 같은 긴 값을
+     욱여넣다 넘쳐 보이던 문제 — 라벨/값을 한 칸(fill)으로 합쳐 라벨 아래로
+     값이 줄바꿈되어 내려가는 형태로 변경. */
+  .doc-meta { grid-template-columns: 1fr; gap: 2px 0; }
+  .doc-meta dt { margin-top: 8px; }
+  .doc-meta dt:first-child { margin-top: 0; }
   .pager { gap: 16px; }
   .pager-nums { gap: 4px; }
 }
