@@ -922,12 +922,11 @@ h1, h2, h3, h4, p { margin: 0; }
 
   .hd-account {
     order: 6; width: 100%; margin-top: 4px;
-    flex-direction: column; align-items: stretch; gap: 0;
-    background: none; border-radius: 0; padding: 0;
+    flex-direction: row; align-items: center; gap: 8px;
+    background: none; border-radius: 0; padding: 10px 4px;
     font-size: 13px;
   }
-  .hd-account a { padding: 10px 4px; }
-  .hd-bar { display: none; }
+  .hd-account a { padding: 0; }
 }
 
 @media (max-width: 768px) {
