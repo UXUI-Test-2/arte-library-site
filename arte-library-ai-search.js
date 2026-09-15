@@ -139,15 +139,6 @@
     main.setAttribute('data-state', 'result');
   }
 
-  /* 다시 생성 버튼 — 초기 상태로 되돌린다(모션 없이, 데모 목적의 결과 재생성이라
-     스켈레톤을 다시 보여주는 건 오히려 어색해 즉시 전환) */
-  var action = document.querySelector('.ais-action');
-  if (action) {
-    action.addEventListener('click', function () {
-      main.setAttribute('data-state', 'result');
-    });
-  }
-
   /* --------------------------------------------------------------------
      3. 키워드 검색 결과 탭 — "전체"만 제자리 페이드, 나머지는 "전체" 자리에
         겹쳐 있다가 다같이 제자리로 슬라이드. 실제 렌더 폭이 고정폭이 아니라서

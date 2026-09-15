@@ -82,9 +82,14 @@
             <img src="assets/icon-ai.svg" alt="" width="28" height="28">
             AI 검색 결과
           </span>
-          <button class="ais-action" type="button" data-when="initial" aria-label="다시 생성">
-            <img src="assets/icon-ai-action.svg" alt="" width="44" height="44">
-          </button>
+          <div class="ais-loading" data-when="initial" aria-hidden="true">
+            <svg class="ais-loading-dots" width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle class="dot dot-1" cx="5.5" cy="22.5" r="2.5" fill="black"/>
+              <circle class="dot dot-2" cx="16.5" cy="22.5" r="2.5" fill="black"/>
+              <circle class="dot dot-3" cx="27.5" cy="22.5" r="2.5" fill="black"/>
+              <circle class="dot dot-4" cx="38.5" cy="22.5" r="2.5" fill="black"/>
+            </svg>
+          </div>
           <p class="ais-quota" data-when="result"><b>9회 남음</b> <span>(일일 최대 10회)</span></p>
         </div>
 
