@@ -29,8 +29,13 @@
 /* ---- 모바일 ------------------------------------------------------------- */
 
 @media (max-width: 768px) {
-  .lst-grid--reco { grid-template-columns: repeat(2, 1fr); }
+  .lst-grid--reco { grid-template-columns: 1fr; }
   .recocard-body { padding: 20px; }
+  /* 분류 탭이 6개(전체 포함)라 docs.css의 공용 모바일 가로스크롤 처리를 쓰면
+     한 줄에 다닥다닥 붙어 좁아 보인다 — lst-cat 기본(flex-wrap:wrap) 그대로
+     되돌려 텍스트 길이에 맞게 자연스럽게 2줄 정도로 줄바꿈되게 한다. */
+  .lst-cat { flex-wrap: wrap; overflow-x: visible; }
+  .lst-cat button { white-space: normal; }
 }
 
 @media (max-width: 1200px) and (min-width: 769px) {
