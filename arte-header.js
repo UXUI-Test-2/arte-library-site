@@ -42,8 +42,9 @@
       a.addEventListener('click', closeMenu);
     });
 
+    /* CSS 햄버거 전환 기준(arte-library-line.css @media max-width:1200px)과 동일 값 */
     window.addEventListener('resize', function () {
-      if (window.innerWidth > 768) closeMenu();
+      if (window.innerWidth > 1200) closeMenu();
     });
 
     /* 스크롤 시 헤더 축소 — 참고: uxui-test-1.github.io/arte-main (arte-document/arte-location).

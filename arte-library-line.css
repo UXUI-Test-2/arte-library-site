@@ -159,7 +159,9 @@ h1, h2, h3, h4, p { margin: 0; }
 .hd.is-scrolled .hd-in { padding-top: 16px; padding-bottom: 16px; }
 .hd-logo img { width: 199px; height: 28px; object-fit: contain; }
 
-@media (min-width: 769px) {
+/* GNB가 실제로 펼쳐진 채로 표시되는 구간(1201px~)에서만 스크롤 페이드 적용 —
+   1200px 이하는 이제 햄버거 메뉴로 전환되므로 이 트랜지션이 무의미하다 */
+@media (min-width: 1201px) {
   .gnb, .hd-account { transition: opacity 0.3s ease; }
   .hd.is-scrolled .gnb,
   .hd.is-scrolled .hd-account { opacity: 0; pointer-events: none; }
@@ -886,14 +888,21 @@ h1, h2, h3, h4, p { margin: 0; }
    모바일 (768px 이하)
    ========================================================================== */
 
-@media (max-width: 768px) {
-  body { overflow-x: hidden; }
-  .mh-in { font-size: 12px; }
-  .hd-in { flex-wrap: wrap; gap: 12px; padding: 16px var(--side); position: relative; }
-  .hd-logo img { width: 150px; height: auto; }
+/* ==========================================================================
+   헤더 햄버거 전환 (1200px 이하) — "노트북 기준" 짤림 버그 수정
+   전체 GNB(6개) + 계정 메뉴 + 로고를 한 줄에 다 못 넣는 768~1200px 구간(노트북·
+   작은 데스크톱 창)에서 로고나 검색/전체메뉴 아이콘이 뷰포트 밖으로 밀려 잘려
+   보이던 문제 — 기존엔 768px 이하에서만 햄버거로 전환하고 그 위(769~1200px)는
+   풀 데스크톱 GNB를 그대로 썼는데, 실측 결과 1024~1150px 부근에서 이미 겹치거나
+   밀려나 로고가 통째로 사라지는 폭이 있었다. 햄버거 전환 폭을 1200px로 올려서
+   그 구간을 없앤다(768px 이하 전용 세부 스타일은 아래 별도 블록에서 이어서 덮어씀 —
+   max-width는 서로 배타적이지 않으므로 두 블록 다 적용된다). arte-header.js의
+   resize 리스너 임계값(768)도 같이 1200으로 맞춰뒀다. */
+@media (max-width: 1200px) {
+  .hd-in { flex-wrap: wrap; gap: 12px; position: relative; }
   .hd-btn { flex-wrap: wrap; justify-content: flex-end; gap: 10px; }
 
-  /* 모바일: 로고 + 검색/전체메뉴 아이콘만 상시 노출. GNB·계정 메뉴는 햄버거로 여닫는다
+  /* 로고 + 검색/전체메뉴 아이콘만 상시 노출. GNB·계정 메뉴는 햄버거로 여닫는다
      (Figma 모바일 목업 node 20312:21146 기준 — 2026-09-10 모바일 동기화). */
   .gnb, .hd-account { display: none; }
   .hd.is-menu-open .gnb,
@@ -918,6 +927,13 @@ h1, h2, h3, h4, p { margin: 0; }
   }
   .hd-account a { padding: 10px 4px; }
   .hd-bar { display: none; }
+}
+
+@media (max-width: 768px) {
+  body { overflow-x: hidden; }
+  .mh-in { font-size: 12px; }
+  .hd-in { padding: 16px var(--side); }
+  .hd-logo img { width: 150px; height: auto; }
 
   .kv { padding: 32px 0 40px; }
   .kvs { border-bottom-width: 3px; padding: 12px 0 14px; }
