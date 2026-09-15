@@ -97,5 +97,20 @@
      그대로 채우게 두면(base .rg-map { width:100% }) 핀 %가 항상 지도와
      일치한다. 모바일에서는 wrap 자체 폭만 살짝 좁혀 지도가 자연히 작아지게. */
   .rg-map-wrap { max-width: 240px; margin-inline: auto; }
+
+  /* 최신순/조회순/N개씩 보기 줄이 좁은 폭에서 왼쪽에 붙어 오른쪽이 텅 비어
+     보이던 것 — lst-sort를 꽉 채우고 마지막(N개씩 보기)만 auto 마진으로
+     오른쪽 끝까지 밀어 붙인다. */
+  .lst-bar { flex-direction: column; align-items: stretch; }
+  .lst-sort { width: 100%; }
+  .lst-sort .lst-per { margin-left: auto; }
+
+  /* 프로그램 카드 — PC의 가로형(썸네일 좌측+본문 우측)은 좁은 화면에서
+     썸네일이 지나치게 작아지므로, docs/video/reco 카드처럼 썸네일을 위로
+     올려 3:4 비율로 확대하고 본문은 그 아래 세로로 배치. 메타 태그도
+     한 줄에 우겨넣지 않고 각자 아래로 내려가게 세로로 쌓는다. */
+  .prog { flex-direction: column; align-items: stretch; }
+  .prog-thumb { width: 100%; height: auto; aspect-ratio: 3 / 4; }
   .prog-body { padding: 16px; gap: 10px; }
+  .prog-meta { flex-direction: column; align-items: flex-start; gap: 4px; }
 }
