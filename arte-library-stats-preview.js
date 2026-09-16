@@ -333,7 +333,12 @@
     /* 2026-09-14: Figma 20516:21721 확인 결과 값 라벨은 옆에 쌓인 범례 목록이 아니라
        각 조각 바깥에 각도에 맞춰 흩어진 텍스트다 — 점(dot) 없이 조각별 텍스트 색으로만
        구분하고, 파이 중심에서 조각 중간각도 방향으로 뻗어나가는 위치에 배치한다. */
-    var size = 132, r = size / 2, labelR = r + 20;
+    /* 카드 폭(3열 그리드라 뷰포트에 따라 꽤 좁아질 수 있음)에 비례해 반지름을 정하되
+       132~180px로 clamp — 좁은 3열 구간(768~1200px 부근)에서 라벨이 카드 밖으로
+       넘치지 않으면서, 넓은 화면/모바일 1열에서는 확실히 커 보이게 한다. */
+    var containerW = root.clientWidth || 240;
+    var size = Math.max(132, Math.min(180, containerW * 0.5));
+    var r = size / 2, labelR = r + 20;
     var stage = el('div', 'pchart-pie-stage');
     stage.style.width = size + 'px';
     stage.style.height = size + 'px';
